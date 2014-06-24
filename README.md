@@ -57,6 +57,25 @@ fast.forEach(arr, logIt); // faster than arr.forEach(logIt)
 
 By optimising for the 99% use case, fast.js methods can be up to 5x faster than their native equivalents.
 
+## Caveats
+
+As mentioned above, fast.js does not conform 100% to the ECMAScript specification and is therefore not a drop in replacement 100% of the time. There are at least two scenarios where the behavior differs from the spec:
+
+1. Sparse arrays are not supported. A sparse array will be treated just like a normal array, with unpopulated slots containing `undefined` values. This means that iteration functions such as `.map()` and `.forEach()` will visit these empty slots, receiving `undefined` as an argument. This is in contrast to the native implementations where these unfilled slots will be skipped entirely by the iterators. In the real world, sparse arrays are very rare. This is evidenced by the very popular [underscore.js](http://underscorejs.org/)'s lack of support.
+
+2. Functions created using `fast.bind()` and `fast.partial()` are not identical to functions created by the native `Function.prototype.bind()`, specifically:
+
+
+    - The partial implementation creates functions that do not have immutable "poison pill" caller and arguments properties that throw a TypeError upon get, set, or deletion.
+
+    - The partial implementation creates functions that have a prototype property. (Proper bound functions have none.)
+
+    - The partial implementation creates bound functions whose length property does not agree with that mandated by ECMA-262: it creates functions with length 0, while a full implementation, depending on the length of the target function and the number of pre-specified arguments, may return a non-zero length.
+
+  See the documentation for `Function.prototype.bind()` on [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Compatibility) for more details.
+
+In practice, it's extremely unlikely that any of these caveats will have an impact on real world code. These constructs are extremely uncommon.
+
 ## Benchmarks
 
 To run the benchmarks:

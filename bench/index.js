@@ -16,10 +16,21 @@ run([
   bench('Native .bind() vs fast.partial() vs underscore.partial() vs lodash.partial()', require('./partial')),
   bench('Native .bind() vs fast.partial() with prebound functions', require('./partial-prebound')),
 
-  bench('Native .map() vs fast.map() vs underscore.map() vs lodash.map()', require('./map')),
-  bench('Native .reduce() vs fast.reduce() vs underscore.reduce() vs lodash.reduce()', require('./reduce')),
-  bench('Native .forEach() vs fast.forEach() vs underscore.forEach() vs lodash.forEach()', require('./for-each')),
-  bench('Native .concat() vs fast.concat() vs underscore.concat() vs lodash.concat()', require('./concat'))
+  bench('Native .map() vs fast.map() vs underscore.map() vs lodash.map() (3 items)', require('./map-3')),
+  bench('Native .map() vs fast.map() vs underscore.map() vs lodash.map() (10 items)', require('./map-10')),
+  bench('Native .map() vs fast.map() vs underscore.map() vs lodash.map() (1000 items)', require('./map-1000')),
+
+  bench('Native .reduce() vs fast.reduce() vs underscore.reduce() vs lodash.reduce() (3 items)', require('./reduce-3')),
+  bench('Native .reduce() vs fast.reduce() vs underscore.reduce() vs lodash.reduce() (10 items)', require('./reduce-10')),
+  bench('Native .reduce() vs fast.reduce() vs underscore.reduce() vs lodash.reduce() (1000 items)', require('./reduce-1000')),
+
+  bench('Native .forEach() vs fast.forEach() vs underscore.forEach() vs lodash.forEach() (3 items)', require('./for-each-3')),
+  bench('Native .forEach() vs fast.forEach() vs underscore.forEach() vs lodash.forEach() (10 items)', require('./for-each-10')),
+  bench('Native .forEach() vs fast.forEach() vs underscore.forEach() vs lodash.forEach() (1000 items)', require('./for-each-1000')),
+
+  bench('Native .concat() vs fast.concat() vs underscore.concat() vs lodash.concat() (3 items)', require('./concat-3')),
+  bench('Native .concat() vs fast.concat() vs underscore.concat() vs lodash.concat() (10 items)', require('./concat-10')),
+  bench('Native .concat() vs fast.concat() vs underscore.concat() vs lodash.concat() (1000 items)', require('./concat-1000'))
 
 ]);
 
