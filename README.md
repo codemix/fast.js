@@ -1,5 +1,8 @@
 # fast.js
 
+
+[![Build Status](https://travis-ci.org/codemix/fast.js.svg?branch=master)](https://travis-ci.org/codemix/fast.js)
+
 Faster user-land reimplementations for several common builtin native JavaScript functions.
 
 ## What?
