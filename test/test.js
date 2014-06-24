@@ -35,6 +35,20 @@ describe('fast.partial()', function () {
 });
 
 
+describe('fast.clone()', function () {
+  it('should return primitives directly', function () {
+    fast.clone(0).should.equal(0);
+    fast.clone("hello world").should.equal("hello world");
+  });
+  it('should clone arrays', function () {
+    fast.clone([1,2,3]).should.eql([1,2,3]);
+  });
+  it('should clone objects', function () {
+    fast.clone({a: 1, b: 2, c: 3}).should.eql({a: 1, b: 2, c: 3});
+  });
+});
+
+
 describe('fast.cloneArray()', function () {
   var input = [1,2,3,4,5];
 

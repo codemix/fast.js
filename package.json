@@ -1,7 +1,7 @@
 {
   "name": "fast.js",
   "version": "0.0.0",
-  "description": "Faster user-land reimplementations of native functions with extra helpers",
+  "description": "Faster user-land reimplementations of native functions with extra helpers.",
   "main": "lib/index.js",
   "scripts": {
     "jshint": "jshint ./lib",
