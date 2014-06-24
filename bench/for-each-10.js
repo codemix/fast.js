@@ -1,4 +1,5 @@
-var fast = require('../lib');
+var fast = require('../lib'),
+    history = require('../test/history');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
 var acc = 0;
@@ -13,4 +14,9 @@ exports['Array::forEach()'] = function () {
 exports['fast.forEach()'] = function () {
   acc = 0;
   fast.forEach(input, iterator);
+};
+
+exports['fast.forEach() v0.0.0'] = function () {
+  acc = 0;
+  history.forEach_0_0_0(input, iterator);
 };
