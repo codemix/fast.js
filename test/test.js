@@ -96,6 +96,11 @@ describe('fast.map()', function () {
     });
     result.should.eql([1, 4, 9, 16, 25]);
   });
+  it('should take context', function() {
+    fast.map([1], function() {
+      this.should.equal(fast);
+    }, fast);
+  });
 });
 
 
@@ -108,6 +113,11 @@ describe('fast.reduce()', function () {
     }, 0);
     result.should.equal(15);
   });
+  it('should take context', function() {
+    fast.reduce([1], function() {
+      this.should.equal(fast);
+    }, {}, fast);
+  });
 });
 
 describe('fast.forEach()', function () {
@@ -119,6 +129,11 @@ describe('fast.forEach()', function () {
       result += item;
     });
     result.should.equal(15);
+  });
+  it('should take context', function() {
+    fast.forEach([1], function() {
+      this.should.equal(fast);
+    }, fast);
   });
 });
 
