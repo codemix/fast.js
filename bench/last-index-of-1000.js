@@ -1,4 +1,5 @@
-var fast = require('../lib');
+var fast = require('../lib'),
+    history = require('../test/history');
 
 var input = [];
 
@@ -15,3 +16,6 @@ exports['fast.lastIndexOf()'] = function () {
   return fast.lastIndexOf(input, 999) + fast.lastIndexOf(input, 1);
 };
 
+exports['fast.lastIndexOf() v0.0.0'] = function () {
+  return history.lastIndexOf_0_0_0(input, 999) + history.lastIndexOf_0_0_0(input, 1);
+};

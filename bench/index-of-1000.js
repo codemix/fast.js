@@ -1,4 +1,5 @@
-var fast = require('../lib');
+var fast = require('../lib'),
+    history = require('../test/history');
 
 var input = [];
 
@@ -15,3 +16,6 @@ exports['fast.indexOf()'] = function () {
   return fast.indexOf(input, 1) + fast.indexOf(input, 999);
 };
 
+exports['fast.indexOf() v0.0.0'] = function () {
+  return history.indexOf_0_0_0(input, 1) + fast.indexOf(input, 999);
+};
