@@ -10,16 +10,16 @@ run([
   bench('Native .indexOf() vs fast.indexOf() vs underscore.indexOf() vs lodash.indexOf() (10 items)', require('./index-of-10')),
   bench('Native .indexOf() vs fast.indexOf() vs underscore.indexOf() vs lodash.indexOf() (1000 items)', require('./index-of-1000')),
 
-  bench('Native .bind() vs fast.bind()', require('./bind')),
-  bench('Native .bind() vs fast.bind() with prebound functions', require('./bind-prebound')),
+  bench('Native .bind() vs fast.bind() vs underscore.bind() vs lodash.bind()', require('./bind')),
+  bench('Native .bind() vs fast.bind() vs underscore.bind() vs lodash.bind() with prebound functions', require('./bind-prebound')),
 
-  bench('Native .bind() vs fast.partial()', require('./partial')),
+  bench('Native .bind() vs fast.partial() vs underscore.partial() vs lodash.partial()', require('./partial')),
   bench('Native .bind() vs fast.partial() with prebound functions', require('./partial-prebound')),
 
   bench('Native .map() vs fast.map() vs underscore.map() vs lodash.map()', require('./map')),
-  bench('Native .reduce() vs fast.reduce()', require('./reduce')),
+  bench('Native .reduce() vs fast.reduce() vs underscore.reduce() vs lodash.reduce()', require('./reduce')),
   bench('Native .forEach() vs fast.forEach() vs underscore.forEach() vs lodash.forEach()', require('./for-each')),
-  bench('Native .concat() vs fast.concat()', require('./concat'))
+  bench('Native .concat() vs fast.concat() vs underscore.concat() vs lodash.concat()', require('./concat'))
 
 ]);
 
