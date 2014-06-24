@@ -1,0 +1,36 @@
+{
+  "name": "fast.js",
+  "version": "0.0.0",
+  "description": "Faster user-land reimplementations of native functions with extra helpers",
+  "main": "lib/index.js",
+  "scripts": {
+    "jshint": "jshint ./lib",
+    "pretest": "npm run jshint",
+    "test": "mocha",
+    "bench": "node ./bench/index.js",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/codemix/fast.js"
+  },
+  "keywords": [
+    "fast",
+    "native"
+  ],
+  "author": "Charles Pick <charles@codemix.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codemix/fast.js/issues"
+  },
+  "homepage": "https://github.com/codemix/fast.js",
+  "devDependencies": {
+    "expect.js": "~0.3.1",
+    "should": "~4.0.4",
+    "mocha": "~1.20.1",
+    "benchmark": "~1.0.0",
+    "microtime": "~0.6.0",
+    "istanbul": "~0.2.11",
+    "jshint": "~2.5.1"
+  }
+}
