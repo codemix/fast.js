@@ -1,4 +1,6 @@
 var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
     history = require('../test/history');
 
 var input = [];
@@ -24,4 +26,14 @@ exports['fast.forEach()'] = function () {
 exports['fast.forEach() v0.0.0'] = function () {
   acc = 0;
   history.forEach_0_0_0(input, iterator);
+};
+
+exports['underscore.forEach()'] = function () {
+  acc = 0;
+  underscore.forEach(input, iterator);
+};
+
+exports['lodash.forEach()'] = function () {
+  acc = 0;
+  lodash.forEach(input, iterator);
 };

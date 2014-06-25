@@ -1,4 +1,6 @@
 var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
     history = require('../test/history');
 
 var input = [1,2,3];
@@ -15,4 +17,12 @@ exports['fast.map()'] = function () {
 
 exports['fast.map() v0.0.0'] = function () {
   history.map_0_0_0(input, mapper);
+};
+
+exports['underscore.map()'] = function () {
+  underscore.map(input, mapper);
+};
+
+exports['lodash.map()'] = function () {
+  lodash.map(input, mapper);
 };

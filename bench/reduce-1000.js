@@ -1,4 +1,6 @@
-var fast = require('../lib'),
+var fast = require('../lib'), 
+    underscore = require('underscore'),
+    lodash = require('lodash'),
     history = require('../test/history');
 
 var input = [];
@@ -19,4 +21,12 @@ exports['fast.reduce()'] = function () {
 
 exports['fast.reduce() v0.0.0'] = function () {
   history.reduce_0_0_0(input, reducer, 0);
+};
+
+exports['underscore.reduce()'] = function () {
+  underscore.reduce(input, reducer, 0);
+};
+
+exports['lodash.reduce()'] = function () {
+  lodash.reduce(input, reducer, 0);
 };
