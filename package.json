@@ -1,6 +1,6 @@
 {
   "name": "fast.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Faster user-land reimplementations of native functions with extra helpers.",
   "main": "lib/index.js",
   "scripts": {

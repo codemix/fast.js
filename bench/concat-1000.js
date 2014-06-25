@@ -1,4 +1,5 @@
-var fast = require('../lib');
+var fast = require('../lib'),
+    history = require('../test/history');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
 
@@ -12,10 +13,7 @@ var chunks = [
 var pointer = 0;
 
 for (var i = 0; i < 1000; i++) {
-  if (pointer > 3) {
-    pointer = 0;
-  }
-  chunks[pointer].push(i);
+  chunks[pointer % 4].push(i);
   pointer++;
 }
 
