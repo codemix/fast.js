@@ -1,9 +1,10 @@
-var fast = require('../lib');
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash');
 
 var input = function (a, b, c) {
   return a + b + c;
 };
-
 
 exports['Function::bind()'] = function () {
   var fn = input.bind(this, 1, 2);
@@ -12,6 +13,16 @@ exports['Function::bind()'] = function () {
 
 exports['fast.partial()'] = function () {
   var fn = fast.partial(input, 1, 2);
+  return fn(3);
+};
+
+exports['underscore.partial()'] = function () {
+  var fn = underscore.partial(input, 1, 2);
+  return fn(3);
+};
+
+exports['lodash.partial()'] = function () {
+  var fn = lodash.partial(input, 1, 2);
   return fn(3);
 };
 
