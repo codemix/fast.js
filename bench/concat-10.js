@@ -10,7 +10,3 @@ exports['Array::concat()'] = function () {
 exports['fast.concat()'] = function () {
   return fast.concat(input, 11, 12, [13, 14, 15], 16, 17, [18, 19], 20);
 };
-
-exports['fast.concat() v0.0.0'] = function () {
-  return history.concat_0_0_0(input, 11, 12, [13, 14, 15], 16, 17, [18, 19], 20);
-};

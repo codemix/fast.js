@@ -13,10 +13,7 @@ var chunks = [
 var pointer = 0;
 
 for (var i = 0; i < 1000; i++) {
-  if (pointer > 3) {
-    pointer = 0;
-  }
-  chunks[pointer].push(i);
+  chunks[pointer % 4].push(i);
   pointer++;
 }
 
@@ -26,8 +23,4 @@ exports['Array::concat()'] = function () {
 
 exports['fast.concat()'] = function () {
   return fast.concat(input, chunks[0], chunks[1], chunks[2], chunks[3]);
-};
-
-exports['fast.concat() v0.0.0'] = function () {
-  return history.concat_0_0_0(input, chunks[0], chunks[1], chunks[2], chunks[3]);
 };
