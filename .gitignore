@@ -1,3 +1,9 @@
 node_modules
 coverage
 npm-debug.log
+test/macros.js
+
+# The following are generated from sweet.js macros
+bench/map-3.js
+bench/map-10.js
+bench/map-1000.js
