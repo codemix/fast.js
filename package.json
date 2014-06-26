@@ -8,7 +8,9 @@
     "pretest": "npm run jshint",
     "test": "mocha",
     "bench": "node ./bench/index.js",
-    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha"
+    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha",
+    "install-sm": "wget http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-trunk/jsshell-linux-x86_64.zip -O ./ci/environments/sm/sm.zip; unzip -o -d ./ci/environments/sm ./ci/environments/sm/sm.zip",
+    "sm": "browserify ./bench/index.js | cat ./ci/sm-shim.js - > ./ci/environments/sm/bench.js; ./ci/environments/sm/js -f ./ci/environments/sm/bench.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +35,7 @@
     "istanbul": "~0.2.11",
     "jshint": "~2.5.1",
     "underscore": "^1.6.0",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "browserify": "~4.1.11"
   }
 }
