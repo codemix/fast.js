@@ -33,6 +33,7 @@
     "istanbul": "~0.2.11",
     "jshint": "~2.5.1",
     "underscore": "^1.6.0",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "sweet.js": "~0.6.1"
   }
 }
