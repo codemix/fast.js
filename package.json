@@ -4,9 +4,9 @@
   "description": "Faster user-land reimplementations of native functions with extra helpers.",
   "main": "lib/index.js",
   "scripts": {
-    "macros": "cat ./macros-src/*.sjs > ./macros.sjs",
+    "macros": "cat ./macros-src/*.sjs > ./macros.sjs; cat test/macros/*.sjs | sjs -s -r -m ./macros.sjs > ./test/macros.js",
     "jshint": "jshint ./lib",
-    "pretest": "npm run jshint",
+    "pretest": "npm run jshint; npm run macros",
     "test": "mocha",
     "bench": "node ./bench/index.js",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha"
