@@ -86,5 +86,5 @@ macro (fast-slice) {
 }
 
 
-export (fast-slice)
+export (fast-slice);
 

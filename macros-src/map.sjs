@@ -122,3 +122,4 @@ macro (fast-map) {
 }
 
 export (fast-map);
+

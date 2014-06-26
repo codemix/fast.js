@@ -60,3 +60,4 @@ macro (fast-clone-object) {
 export (fast-clone);
 export (fast-clone-object);
 export (fast-clone-array);
+
