@@ -8,26 +8,49 @@ var input = [];
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var mapper = function (item) { return item * item; };
+var mapper = function (item) { return item * item + Math.random(); };
 
 
 exports['Array::map()'] = function () {
-  input.map(mapper);
+  return input.map(mapper);
 };
 
 exports['fast.map()'] = function () {
-  fast.map(input, mapper);
+  return fast.map(input, mapper);
 };
 
 exports['fast.map() v0.0.0'] = function () {
-  history.map_0_0_0(input, mapper);
+  return history.map_0_0_0(input, mapper);
 };
 
+exports['fast-map (macro)'] = function () {
+  fast-map input as result mapper;
+  return result;
+};
+
+exports['fast-map (macro, inline)'] = function () {
+  fast-map input as result (item) {
+    return item * item + Math.random();
+  };
+  return result;
+};
+
+exports['fast-map (macro, expression)'] = function () {
+  return fast-map input mapper;
+};
+
+exports['fast-map (macro, inline expression)'] = function () {
+  return fast-map input (item) {
+    return item * item + Math.random();
+  };
+};
+
+
 exports['underscore.map()'] = function () {
-  underscore.map(input, mapper);
+  return underscore.map(input, mapper);
 };
 
 exports['lodash.map()'] = function () {
-  lodash.map(input, mapper);
+  return lodash.map(input, mapper);
 };
 
