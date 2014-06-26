@@ -5,10 +5,11 @@
   "main": "lib/index.js",
   "scripts": {
     "macros": "cat ./macros-src/*.sjs > ./macros.sjs; cat test/macros/*.sjs | sjs -s -r -m ./macros.sjs > ./test/macros.js",
+    "bench-macros": "sjs -r -m ./macros.sjs -o ./bench/map-3.js ./bench-src/map-3.sjs; sjs -r -m ./macros.sjs -o ./bench/map-10.js ./bench-src/map-10.sjs; sjs -r -m ./macros.sjs -o ./bench/map-1000.js ./bench-src/map-1000.sjs;",
     "jshint": "jshint ./lib",
     "pretest": "npm run jshint; npm run macros",
     "test": "mocha",
-    "bench": "node ./bench/index.js",
+    "bench": "npm run macros; npm run bench-macros; node ./bench/index.js",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha"
   },
   "repository": {
