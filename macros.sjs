@@ -121,6 +121,7 @@ export (fast-each);
 var mapInvokeCounter = 0;
 
 macro (fast-map) {
+
   // fast-map things as others (item, key, list) { return item + 1; }
   case { $ctx $source as $as ($value:ident, $key:ident, $original:ident) { $body...} ;... } => {
     var name = makeIdent('return', #{ $ctx });
@@ -232,6 +233,7 @@ macro (fast-map) {
       }
     };
   }
+
   // var others = fast-map things (item) { return item + 1; }
   case { $ctx $source ($value:ident) { $body...} ;... } => {
     var name = makeIdent('return', #{ $ctx });
@@ -262,8 +264,9 @@ macro (fast-map) {
       })($source)
     };
   }
+
   // fast-map things as others (function (item) { return item + 1; })
-  case { $ctx $source as $as $fn ;... } => {
+  case { $ctx $source as $as $fn:expr ;... } => {
     return #{
       var source = $source,
           length = source.length,
@@ -276,7 +279,7 @@ macro (fast-map) {
     };
   }
   // var others = fast-map things (function (item) { return item + 1; })
-  case { $ctx $source ($value:ident) $fn ;... } => {
+  case { $ctx $source $fn:expr ;... } => {
     return #{
       (function (source) {
         var length = source.length,
@@ -290,6 +293,7 @@ macro (fast-map) {
       })($source)
     };
   }
+
 }
 
 export (fast-map);

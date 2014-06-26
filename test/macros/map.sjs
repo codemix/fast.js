@@ -59,4 +59,19 @@ describe("fast-map", function () {
     fast-map input as result mapper;
     result.should.eql([2,3,4]);
   });
+
+ it('should iterate the items in the array, using a normal function as the mapper, as an expression', function () {
+    var result = fast-map input (function (item) {
+      return item + 1;
+    });
+    result.should.eql([2,3,4]);
+  });
+
+  it('should iterate the items in the array, using an identified function as the mapper, as an expression', function () {
+    function mapper (item) {
+      return item + 1;
+    }
+    var result = fast-map input mapper;
+    result.should.eql([2,3,4]);
+  });
 });
