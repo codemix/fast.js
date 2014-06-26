@@ -4,6 +4,7 @@
   "description": "Faster user-land reimplementations of native functions with extra helpers.",
   "main": "lib/index.js",
   "scripts": {
+    "macros": "cat ./macros-src/*.sjs > ./macros.sjs",
     "jshint": "jshint ./lib",
     "pretest": "npm run jshint",
     "test": "mocha",
