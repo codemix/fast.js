@@ -34,6 +34,46 @@ describe('fast.partial()', function () {
   })
 });
 
+describe('fast.partialConstructor()', function () {
+  var Constructor = function (baz, greeting) {
+    this.bar = 10;
+    this.baz = baz;
+    this.greeting = greeting;
+  };
+  Constructor.prototype.foo = function () {
+    return this.bar + this.baz;
+  };
+
+  var Partial = fast.partialConstructor(Constructor, 32),
+      instance;
+
+  beforeEach(function () {
+    instance = new Partial("hello world");
+  });
+
+  it('should be an instanceof the original constructor', function () {
+    instance.should.be.an.instanceOf(Constructor);
+  });
+
+  it('should apply the bound arguments', function () {
+    instance.baz.should.equal(32);
+  });
+
+  it('should apply the supplied arguments', function () {
+    instance.greeting.should.equal("hello world");
+  });
+
+  it('should supply methods from the prototype', function () {
+    instance.foo().should.equal(42);
+  });
+
+  it('should work without the new keyword', function () {
+    instance = Partial('hello world');
+    instance.should.be.an.instanceOf(Constructor);
+    instance.foo().should.equal(42);
+    instance.greeting.should.equal('hello world');
+  });
+});
 
 describe('fast.clone()', function () {
   it('should return primitives directly', function () {
