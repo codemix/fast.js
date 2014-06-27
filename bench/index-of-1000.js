@@ -18,8 +18,7 @@ exports['fast.indexOf()'] = function () {
 };
 
 exports['underscore.indexOf()'] = function () {
-  return underscore.indexOf(input, 1) + underscore.indexOf(input, 999) + un
-  .indexOf(input, Math.random());
+  return underscore.indexOf(input, 1) + underscore.indexOf(input, 999) + underscore.indexOf(input, Math.random());
 };
 
 exports['lodash.indexOf()'] = function () {

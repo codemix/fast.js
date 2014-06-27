@@ -10,7 +10,7 @@
     "bench": "node ./bench/index.js",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha",
     "install-sm": "wget http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-trunk/jsshell-linux-x86_64.zip -O ./ci/environments/sm/sm.zip; unzip -o -d ./ci/environments/sm ./ci/environments/sm/sm.zip",
-    "sm": "browserify ./bench/index.js | cat ./ci/sm-shim.js - > ./ci/environments/sm/bench.js; ./ci/environments/sm/js -f ./ci/environments/sm/bench.js"
+    "bench-sm": "browserify ./bench/index.js | cat ./ci/sm-shim.js - > ./ci/environments/sm/bench.js; ./ci/environments/sm/js -f ./ci/environments/sm/bench.js"
   },
   "repository": {
     "type": "git",
