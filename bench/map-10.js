@@ -14,9 +14,14 @@ exports['fast.map()'] = function () {
   fast.map(input, mapper);
 };
 
+exports['fast.map() v0.0.1'] = function () {
+  history.map_0_0_1(input, mapper);
+};
+
 exports['fast.map() v0.0.0'] = function () {
   history.map_0_0_0(input, mapper);
 };
+
 
 exports['underscore.map()'] = function () {
   underscore.map(input, mapper);

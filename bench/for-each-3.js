@@ -17,6 +17,12 @@ exports['fast.forEach()'] = function () {
   fast.forEach(input, iterator);
 };
 
+exports['fast.forEach() v0.0.1'] = function () {
+  acc = 0;
+  history.forEach_0_0_1(input, iterator);
+};
+
+
 exports['fast.forEach() v0.0.0'] = function () {
   acc = 0;
   history.forEach_0_0_0(input, iterator);
