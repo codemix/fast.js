@@ -1,3 +1,23 @@
+exports.concat_0_0_0 = function fastConcat () {
+  var length = arguments.length,
+      arr = [],
+      i, item, childLength, j;
+
+  for (i = 0; i < length; i++) {
+    item = arguments[i];
+    if (Array.isArray(item)) {
+      childLength = item.length;
+      for (j = 0; j < childLength; j++) {
+        arr.push(item[j]);
+      }
+    }
+    else {
+      arr.push(item);
+    }
+  }
+  return arr;
+};
+
 exports.bind_0_0_0 = function fastBind (fn, thisContext) {
   var boundLength = arguments.length - 2,
       boundArgs;
@@ -81,4 +101,31 @@ exports.forEach_0_0_0 = function fastForEach (subject, fn, thisContext) {
   for (i = 0; i < length; i++) {
     fn.call(thisContext, subject[i], i, subject);
   }
+};
+
+
+
+// v0.0.1
+
+
+exports.indexOf_0_0_1 = function fastIndexOf (subject, target) {
+  var length = subject.length,
+      i;
+  for (i = 0; i < length; i++) {
+    if (subject[i] === target) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+exports.lastIndexOf_0_0_1 = function fastLastIndexOf (subject, target) {
+  var length = subject.length,
+      i;
+  for (i = length - 1; i >= 0; i--) {
+    if (subject[i] === target) {
+      return i;
+    }
+  }
+  return -1;
 };

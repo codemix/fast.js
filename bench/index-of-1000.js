@@ -1,4 +1,5 @@
 var fast = require('../lib'),
+    history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
 
@@ -9,18 +10,18 @@ for (var i = 0; i < 1000; i++) {
 }
 
 exports['Array::indexOf()'] = function () {
-  return input.indexOf(1) + input.indexOf(999);
+  return input.indexOf(1) + input.indexOf(999) + input.indexOf(Math.random());
 };
 
 exports['fast.indexOf()'] = function () {
-  return fast.indexOf(input, 1) + fast.indexOf(input, 999);
+  return fast.indexOf(input, 1) + fast.indexOf(input, 999) + fast.indexOf(input, Math.random());
 };
 
 exports['underscore.indexOf()'] = function () {
-  return underscore.indexOf(input, 1) + fast.indexOf(input, 999);
+  return underscore.indexOf(input, 1) + underscore.indexOf(input, 999) + underscore.indexOf(input, Math.random());
 };
 
 exports['lodash.indexOf()'] = function () {
-  return lodash.indexOf(input, 1) + fast.indexOf(input, 999);
+  return lodash.indexOf(input, 1) + lodash.indexOf(input, 999) + lodash.indexOf(input, Math.random());
 };
 
