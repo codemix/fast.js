@@ -118,12 +118,11 @@ describe('fast.reduce()', function () {
       this.should.equal(fast);
     }, {}, fast);
   });
-  it('should provide an initial value if none given', function () {
-    fast.reduce([1], function (last, item) {
-      last.should.equal(1);
-      item.should.equal(1);
-      return item;
-    }).should.equal(1);
+  it('should use the input[0] if initialValue isn\'t provided', function() {
+    var result = fast.reduce(input, function (last, item) {
+      return last + item;
+    });
+    result.should.equal(15);
   });
 });
 
