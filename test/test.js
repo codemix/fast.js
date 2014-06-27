@@ -96,8 +96,8 @@ describe('fast.map()', function () {
     });
     result.should.eql([1, 4, 9, 16, 25]);
   });
-  it('should take context', function() {
-    fast.map([1], function() {
+  it('should take context', function () {
+    fast.map([1], function () {
       this.should.equal(fast);
     }, fast);
   });
@@ -113,10 +113,17 @@ describe('fast.reduce()', function () {
     }, 0);
     result.should.equal(15);
   });
-  it('should take context', function() {
-    fast.reduce([1], function() {
+  it('should take context', function () {
+    fast.reduce([1], function () {
       this.should.equal(fast);
     }, {}, fast);
+  });
+  it('should provide an initial value if none given', function () {
+    fast.reduce([1], function (last, item) {
+      last.should.equal(1);
+      item.should.equal(1);
+      return item;
+    }).should.equal(1);
   });
 });
 
@@ -130,8 +137,8 @@ describe('fast.forEach()', function () {
     });
     result.should.equal(15);
   });
-  it('should take context', function() {
-    fast.forEach([1], function() {
+  it('should take context', function () {
+    fast.forEach([1], function () {
       this.should.equal(fast);
     }, fast);
   });
