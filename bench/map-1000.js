@@ -19,6 +19,10 @@ exports['fast.map()'] = function () {
   fast.map(input, mapper);
 };
 
+exports['fast.map() v0.0.2a'] = function () {
+  history.map_0_0_2a(input, mapper);
+};
+
 exports['fast.map() v0.0.1'] = function () {
   history.map_0_0_1(input, mapper);
 };

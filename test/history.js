@@ -174,3 +174,49 @@ exports.lastIndexOf_0_0_1 = function fastLastIndexOf (subject, target) {
   }
   return -1;
 };
+
+// v0.0.2a
+
+exports.map_0_0_2a = function fastMap (subject, fn, thisContext) {
+  var length = subject.length,
+      result = new Array(length),
+      i,
+      iterator = arguments.length > 2 ? bindInternal3_0_0_2a(fn, thisContext) : fn;
+  for (i = 0; i < length; i++) {
+    result[i] = iterator(subject[i], i, subject);
+  }
+  return result;
+};
+
+
+exports.reduce_0_0_2a = function fastReduce (subject, fn, initialValue, thisContext) {
+  var length = subject.length,
+      result = initialValue,
+      i,
+      iterator = arguments.length > 3 ? bindInternal4_0_0_2a(fn, thisContext) : fn;
+  for (i = 0; i < length; i++) {
+    result = iterator(result, subject[i], i, subject);
+  }
+  return result;
+};
+
+exports.forEach_0_0_2a = function fastForEach (subject, fn, thisContext) {
+  var length = subject.length,
+      i,
+      iterator = arguments.length > 2 ? bindInternal3_0_0_2a(fn, thisContext) : fn;
+  for (i = 0; i < length; i++) {
+    iterator(subject[i], i, subject);
+  }
+};
+
+function bindInternal3_0_0_2a (func, thisContext) {
+  return function (a, b, c) {
+    return func.call(thisContext, a, b, c);
+  };
+}
+
+function bindInternal4_0_0_2a (func, thisContext) {
+  return function (a, b, c, d) {
+    return func.call(thisContext, a, b, c, d);
+  };
+}
