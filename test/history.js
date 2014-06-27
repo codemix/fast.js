@@ -102,3 +102,30 @@ exports.forEach_0_0_0 = function fastForEach (subject, fn, thisContext) {
     fn.call(thisContext, subject[i], i, subject);
   }
 };
+
+
+
+// v0.0.1
+
+
+exports.indexOf_0_0_1 = function fastIndexOf (subject, target) {
+  var length = subject.length,
+      i;
+  for (i = 0; i < length; i++) {
+    if (subject[i] === target) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+exports.lastIndexOf_0_0_1 = function fastLastIndexOf (subject, target) {
+  var length = subject.length,
+      i;
+  for (i = length - 1; i >= 0; i--) {
+    if (subject[i] === target) {
+      return i;
+    }
+  }
+  return -1;
+};
