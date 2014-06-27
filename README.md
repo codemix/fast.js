@@ -80,13 +80,29 @@ In practice, it's extremely unlikely that any of these caveats will have an impa
 
 ## Benchmarks
 
-To run the benchmarks:
+To run the benchmarks in node.js:
 
 ```
 npm run bench
 ```
 
-Example output:
+To run the benchmarks in SpiderMonkey, you must first download [js-shell](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Introduction_to_the_JavaScript_shell).
+If you're on linux, this can be done by running:
+
+```
+npm run install-sm
+```
+
+This will download the [latest nightly build](http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-trunk/) of the js-shell binary and extract it to [ci/environments/sm](./ci/environments/sm). If you're on mac or windows, you should download the appropriate build for your platform and place the extracted files in that directory.
+
+After js-shell has been downloaded, you can run the SpiderMonkey benchmarks by running:
+
+
+```
+npm run bench-sm
+```
+
+### Example benchmark output
 
 ```
 
