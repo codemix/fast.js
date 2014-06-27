@@ -118,6 +118,12 @@ describe('fast.reduce()', function () {
       this.should.equal(fast);
     }, {}, fast);
   });
+  it('should use the input[0] if initialValue isn\'t provided', function() {
+    var result = fast.reduce(input, function (last, item) {
+      return last + item;
+    });
+    result.should.equal(15);
+  });
 });
 
 describe('fast.forEach()', function () {
