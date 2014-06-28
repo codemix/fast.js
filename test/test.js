@@ -215,12 +215,18 @@ describe('fast.try()', function () {
     var result = fast.try(function () {
       return 123;
     });
-    result.value.should.equal(123);
+    result.should.equal(123);
   });
   it('should return the error, if thrown', function () {
     var result = fast.try(function () {
       throw new Error('foo');
     });
-    result.error.should.be.an.instanceOf(Error);
+    result.should.be.an.instanceOf(Error);
+  });
+  it('should return the error, if thrown, even if it\'s a string error', function () {
+    var result = fast.try(function () {
+      throw new "Please don't do this, use an Error object";
+    });
+    result.should.be.an.instanceOf(Error);
   });
 });

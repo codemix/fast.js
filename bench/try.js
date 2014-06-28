@@ -42,6 +42,5 @@ exports['try...catch'] = function () {
 }
 
 exports['fast.try()'] = function () {
-  var result = fast.try(doSomeWork);
-  return result.error || result.value;
+  return fast.try(doSomeWork);
 };
