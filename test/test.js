@@ -208,3 +208,25 @@ describe('fast.lastIndexOf()', function () {
     fast.lastIndexOf(input, 1000).should.equal(-1);
   });
 });
+
+
+describe('fast.try()', function () {
+  it('should return the value', function () {
+    var result = fast.try(function () {
+      return 123;
+    });
+    result.should.equal(123);
+  });
+  it('should return the error, if thrown', function () {
+    var result = fast.try(function () {
+      throw new Error('foo');
+    });
+    result.should.be.an.instanceOf(Error);
+  });
+  it('should return the error, if thrown, even if it\'s a string error', function () {
+    var result = fast.try(function () {
+      throw "Please don't do this, use an Error object";
+    });
+    result.should.be.an.instanceOf(Error);
+  });
+});
