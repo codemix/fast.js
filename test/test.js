@@ -208,3 +208,19 @@ describe('fast.lastIndexOf()', function () {
     fast.lastIndexOf(input, 1000).should.equal(-1);
   });
 });
+
+
+describe('fast.try()', function () {
+  it('should return the value', function () {
+    var result = fast.try(function () {
+      return 123;
+    });
+    result.value.should.equal(123);
+  });
+  it('should return the error, if thrown', function () {
+    var result = fast.try(function () {
+      throw new Error('foo');
+    });
+    result.error.should.be.an.instanceOf(Error);
+  });
+});
