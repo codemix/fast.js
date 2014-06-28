@@ -220,3 +220,30 @@ function bindInternal4_0_0_2a (func, thisContext) {
     return func.call(thisContext, a, b, c, d);
   };
 }
+
+// v0.0.2b
+
+exports.reduce_0_0_2b = function fastReduce (subject, fn, initialValue, thisContext) {
+  var length = subject.length,
+      result = initialValue,
+      i,
+      iterator = thisContext !== undefined ? bindInternal4_0_0_2a(fn, thisContext) : fn;
+  for (i = 0; i < length; i++) {
+    result = iterator(result, subject[i], i, subject);
+  }
+  return result;
+};
+
+// v0.0.2c
+exports.reduce_0_0_2c = function fastReduce (subject, fn, initialValue, thisContext) {
+  var length = subject.length,
+      i = 0,
+      result = arguments.length < 3 ? subject[i++] : initialValue,
+      iterator = thisContext !== undefined > 3 ? bindInternal4_0_0_2a(fn, thisContext) : fn;
+
+  for (; i < length; i++) {
+    result = iterator(result, subject[i], i, subject);
+  }
+
+  return result;
+};
