@@ -15,6 +15,14 @@ exports['fast.reduce()'] = function () {
   fast.reduce(input, reducer, 0);
 };
 
+exports['fast.reduce() v0.0.2c'] = function () {
+  history.reduce_0_0_2c(input, reducer, 0);
+};
+
+exports['fast.reduce() v0.0.2b'] = function () {
+  history.reduce_0_0_2b(input, reducer, 0);
+};
+
 exports['fast.reduce() v0.0.2a'] = function () {
   history.reduce_0_0_2a(input, reducer, 0);
 };
