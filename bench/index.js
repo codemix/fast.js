@@ -57,12 +57,18 @@ function bench (title, config) {
       console.log("    \033[0;32m\✓\033[0m \033[0;37m " + event.target + "\033[0m");
     });
     suite.on('complete', function () {
-      var fastest = this.filter('fastest')[0],
-          slowest = this.filter('slowest')[0],
-          diff = fastest.hz - slowest.hz,
-          percentage = ((diff / slowest.hz) * 100).toFixed(2);
+      var buildInSuite = this.shift(),
+          fastJSSuite = this.shift(),
+          diff = fastJSSuite.hz - buildInSuite.hz,
+          percentage = ((diff / buildInSuite.hz) * 100).toFixed(2),
+          relation = 'faster';
 
-      console.log('\n    \033[0;37mWinner is:\033[0m ' + this.filter('fastest').pluck('name') + ' \033[0;37m(\033[0m' + percentage + '%\033[0;37m faster)\033[0m\n');
+      if (percentage < 0) {
+        relation = 'slower';
+        percentage *= -1;
+      }
+
+      console.log('\n Result: fast.js is %s\% %s than build-in version.\n', percentage + '', relation);
       next();
     });
     suite.run({
