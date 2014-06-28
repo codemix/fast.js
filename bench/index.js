@@ -2,6 +2,9 @@ var Benchmark = require('benchmark');
 
 run([
 
+  bench('fast.try() vs try {} catch (e) {}', require('./try')),
+
+  bench('fast.clone() vs underscore.clone() vs lodash.clone()', require('./clone')),
 
   bench('Native .indexOf() vs fast.indexOf() (3 items)', require('./index-of-3')),
   bench('Native .indexOf() vs fast.indexOf() (10 items)', require('./index-of-10')),
