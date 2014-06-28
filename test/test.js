@@ -225,7 +225,7 @@ describe('fast.try()', function () {
   });
   it('should return the error, if thrown, even if it\'s a string error', function () {
     var result = fast.try(function () {
-      throw new "Please don't do this, use an Error object";
+      throw "Please don't do this, use an Error object";
     });
     result.should.be.an.instanceOf(Error);
   });
