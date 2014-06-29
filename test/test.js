@@ -230,3 +230,216 @@ describe('fast.try()', function () {
     result.should.be.an.instanceOf(Error);
   });
 });
+
+describe('fast.apply()', function () {
+  var fn = function (a, b, c, d, e, f, g, h, i, j, k) {
+    return {
+      a: a,
+      b: b,
+      c: c,
+      d: d,
+      e: e,
+      f: f,
+      g: g,
+      h: h,
+      i: i,
+      j: j,
+      this: this
+    };
+  };
+
+  describe('noContext', function () {
+    it ('should apply 0 arguments', function () {
+      var result = fast.apply(fn, undefined, []);
+      expect(result.a).to.equal(undefined);
+    });
+    it ('should apply 1 argument', function () {
+      var result = fast.apply(fn, undefined, [1]);
+      expect(result.a).to.equal(1);
+    });
+    it ('should apply 2 arguments', function () {
+      var result = fast.apply(fn, undefined, [1, 2]);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+    });
+    it ('should apply 3 arguments', function () {
+      var result = fast.apply(fn, undefined, [1, 2, 3]);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+    });
+    it ('should apply 4 arguments', function () {
+      var result = fast.apply(fn, undefined, [1, 2, 3, 4]);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+    });
+    it ('should apply 5 arguments', function () {
+      var result = fast.apply(fn, undefined, [1, 2, 3, 4, 5]);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+    });
+    it ('should apply 6 arguments', function () {
+      var result = fast.apply(fn, undefined, [1, 2, 3, 4, 5, 6]);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+    });
+    it ('should apply 7 arguments', function () {
+      var result = fast.apply(fn, undefined, [1, 2, 3, 4, 5, 6, 7]);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+      expect(result.g).to.equal(7);
+    });
+    it ('should apply 8 arguments', function () {
+      var result = fast.apply(fn, undefined, [1, 2, 3, 4, 5, 6, 7, 8]);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+      expect(result.g).to.equal(7);
+      expect(result.h).to.equal(8);
+    });
+    it ('should apply 9 arguments', function () {
+      var result = fast.apply(fn, undefined, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+      expect(result.g).to.equal(7);
+      expect(result.h).to.equal(8);
+      expect(result.i).to.equal(9);
+    });
+    it ('should apply 10 arguments', function () {
+      var result = fast.apply(fn, undefined, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+      expect(result.g).to.equal(7);
+      expect(result.h).to.equal(8);
+      expect(result.i).to.equal(9);
+      expect(result.j).to.equal(10);
+    });
+  });
+  describe('withContext', function () {
+    var obj = {};
+    it ('should apply 0 arguments', function () {
+      var result = fast.apply(fn, obj, []);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(undefined);
+    });
+    it ('should apply 1 argument', function () {
+      var result = fast.apply(fn, obj, [1]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+    });
+    it ('should apply 2 arguments', function () {
+      var result = fast.apply(fn, obj, [1, 2]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+    });
+    it ('should apply 3 arguments', function () {
+      var result = fast.apply(fn, obj, [1, 2, 3]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+    });
+    it ('should apply 4 arguments', function () {
+      var result = fast.apply(fn, obj, [1, 2, 3, 4]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+    });
+    it ('should apply 5 arguments', function () {
+      var result = fast.apply(fn, obj, [1, 2, 3, 4, 5]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+    });
+    it ('should apply 6 arguments', function () {
+      var result = fast.apply(fn, obj, [1, 2, 3, 4, 5, 6]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+    });
+    it ('should apply 7 arguments', function () {
+      var result = fast.apply(fn, obj, [1, 2, 3, 4, 5, 6, 7]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+      expect(result.g).to.equal(7);
+    });
+    it ('should apply 8 arguments', function () {
+      var result = fast.apply(fn, obj, [1, 2, 3, 4, 5, 6, 7, 8]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+      expect(result.g).to.equal(7);
+      expect(result.h).to.equal(8);
+    });
+    it ('should apply 9 arguments', function () {
+      var result = fast.apply(fn, obj, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+      expect(result.g).to.equal(7);
+      expect(result.h).to.equal(8);
+      expect(result.i).to.equal(9);
+    });
+    it ('should apply 10 arguments', function () {
+      var result = fast.apply(fn, obj, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      expect(result.this).to.equal(obj);
+      expect(result.a).to.equal(1);
+      expect(result.b).to.equal(2);
+      expect(result.c).to.equal(3);
+      expect(result.d).to.equal(4);
+      expect(result.e).to.equal(5);
+      expect(result.f).to.equal(6);
+      expect(result.g).to.equal(7);
+      expect(result.h).to.equal(8);
+      expect(result.i).to.equal(9);
+      expect(result.j).to.equal(10);
+    });
+  });
+});

@@ -2,7 +2,16 @@ var Benchmark = require('benchmark');
 
 run([
 
-  bench('fast.try() vs try {} catch (e) {}', require('./try')),
+  bench('Native .apply() vs fast.apply() (3 items, no context)', require('./apply-3')),
+  bench('Native .apply() vs fast.apply() (3 items, with context)', require('./apply-context-3')),
+
+  bench('Native .apply() vs fast.apply() (6 items, no context)', require('./apply-6')),
+  bench('Native .apply() vs fast.apply() (6 items, with context)', require('./apply-context-6')),
+
+  bench('Native .apply() vs fast.apply() (10 items, no context)', require('./apply-10')),
+  bench('Native .apply() vs fast.apply() (10 items, with context)', require('./apply-context-10')),
+
+  bench('Native try {} catch (e) {} vs fast.try()', require('./try')),
 
   bench('fast.clone() vs underscore.clone() vs lodash.clone()', require('./clone')),
 
