@@ -79,10 +79,7 @@ function bench (title, config) {
         percentage *= -1;
       }
 
-      console.log('\n    \033[0;37mResult:\033[0m fast.js \033[0;37mis\033[0m %s\% %s \033[0;37mthan\033[0m %s.\n',
-        percentage + '',
-        relation,
-        baselineSuite.name);
+      console.log('\n    \033[0;37mResult:\033[0m fast.js \033[0;37mis\033[0m ' + percentage + '% ' + relation + ' \033[0;37mthan\033[0m ' + baselineSuite.name + '.\n');
       next();
     });
     suite.run({
