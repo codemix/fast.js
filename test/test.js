@@ -143,6 +143,21 @@ describe('fast.map()', function () {
   });
 });
 
+describe('fast.filter()', function () {
+  var input = [1,2,3,4,5];
+
+  it('should filter a list of items', function () {
+    var result = fast.filter(input, function (item) {
+      return item % 2;
+    });
+    result.should.eql([1, 3, 5]);
+  });
+  it('should take context', function () {
+    fast.map([1], function () {
+      this.should.equal(fast);
+    }, fast);
+  });
+});
 
 describe('fast.reduce()', function () {
   var input = [1,2,3,4,5];

@@ -32,6 +32,10 @@ run([
   bench('Native .map() vs fast.map() (10 items)', require('./map-10')),
   bench('Native .map() vs fast.map() (1000 items)', require('./map-1000')),
 
+  bench('Native .filter() vs fast.filter() (3 items)', require('./filter-3')),
+  bench('Native .filter() vs fast.filter() (10 items)', require('./filter-10')),
+  bench('Native .filter() vs fast.filter() (1000 items)', require('./filter-1000')),
+
   bench('Native .reduce() vs fast.reduce() (3 items)', require('./reduce-3')),
   bench('Native .reduce() vs fast.reduce() (10 items)', require('./reduce-10')),
   bench('Native .reduce() vs fast.reduce() (1000 items)', require('./reduce-1000')),
