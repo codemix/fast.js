@@ -111,231 +111,232 @@ npm run bench-sm
   Running 25 benchmarks, please wait...
 
   fast.try() vs try {} catch (e) {}
-    ✓  try...catch x 111,674 ops/sec ±1.75% (87 runs sampled)
-    ✓  fast.try() x 3,645,964 ops/sec ±1.47% (81 runs sampled)
+    ✓  try...catch x 110,381 ops/sec ±1.41% (83 runs sampled)
+    ✓  fast.try() x 3,659,573 ops/sec ±1.00% (89 runs sampled)
 
-    Winner is: fast.try() (3164.83% faster)
+    Result: fast.js is 3215.41% faster than try...catch.
 
   fast.clone() vs underscore.clone() vs lodash.clone()
-    ✓  fast.clone() x 930,073 ops/sec ±1.46% (90 runs sampled)
-    ✓  underscore.clone() x 663,308 ops/sec ±1.64% (71 runs sampled)
-    ✓  lodash.clone() x 440,378 ops/sec ±1.33% (87 runs sampled)
+    ✓  fast.clone() x 937,426 ops/sec ±1.09% (86 runs sampled)
+    ✓  underscore.clone() x 616,846 ops/sec ±1.24% (79 runs sampled)
+    ✓  lodash.clone() x 415,277 ops/sec ±1.06% (90 runs sampled)
 
-    Winner is: fast.clone() (111.20% faster)
+    Result: fast.js is 125.74% faster than lodash.clone().
 
   Native .indexOf() vs fast.indexOf() (3 items)
-    ✓  Array::indexOf() x 17,470,925 ops/sec ±1.32% (86 runs sampled)
-    ✓  fast.indexOf() x 28,458,752 ops/sec ±1.51% (88 runs sampled)
-    ✓  underscore.indexOf() x 13,523,186 ops/sec ±1.41% (88 runs sampled)
-    ✓  lodash.indexOf() x 17,842,266 ops/sec ±1.54% (81 runs sampled)
+    ✓  Array::indexOf() x 16,243,854 ops/sec ±1.10% (88 runs sampled)
+    ✓  fast.indexOf() x 28,148,059 ops/sec ±1.02% (87 runs sampled)
+    ✓  underscore.indexOf() x 12,596,681 ops/sec ±1.16% (85 runs sampled)
+    ✓  lodash.indexOf() x 18,189,447 ops/sec ±1.39% (83 runs sampled)
 
-    Winner is: fast.indexOf() (110.44% faster)
+    Result: fast.js is 73.28% faster than Array::indexOf().
 
   Native .indexOf() vs fast.indexOf() (10 items)
-    ✓  Array::indexOf() x 13,104,332 ops/sec ±1.54% (85 runs sampled)
-    ✓  fast.indexOf() x 17,788,810 ops/sec ±1.82% (86 runs sampled)
-    ✓  underscore.indexOf() x 10,545,351 ops/sec ±1.39% (85 runs sampled)
-    ✓  lodash.indexOf() x 11,937,231 ops/sec ±1.40% (89 runs sampled)
+    ✓  Array::indexOf() x 12,944,245 ops/sec ±1.69% (71 runs sampled)
+    ✓  fast.indexOf() x 16,825,143 ops/sec ±0.98% (81 runs sampled)
+    ✓  underscore.indexOf() x 10,283,163 ops/sec ±1.03% (86 runs sampled)
+    ✓  lodash.indexOf() x 12,762,890 ops/sec ±1.23% (86 runs sampled)
 
-    Winner is: fast.indexOf() (68.69% faster)
+    Result: fast.js is 29.98% faster than Array::indexOf().
 
   Native .indexOf() vs fast.indexOf() (1000 items)
-    ✓  Array::indexOf() x 363,740 ops/sec ±1.49% (89 runs sampled)
-    ✓  fast.indexOf() x 372,780 ops/sec ±1.38% (84 runs sampled)
-    ✓  underscore.indexOf() x 385,047 ops/sec ±1.34% (88 runs sampled)
-    ✓  lodash.indexOf() x 317,854 ops/sec ±2.73% (85 runs sampled)
+    ✓  Array::indexOf() x 362,980 ops/sec ±0.87% (86 runs sampled)
+    ✓  fast.indexOf() x 364,560 ops/sec ±1.34% (84 runs sampled)
+    ✓  underscore.indexOf() x 360,412 ops/sec ±0.97% (89 runs sampled)
+    ✓  lodash.indexOf() x 332,227 ops/sec ±0.95% (93 runs sampled)
 
-    Winner is: underscore.indexOf() (21.14% faster)
+    Result: fast.js is 0.44% faster than Array::indexOf().
 
   Native .lastIndexOf() vs fast.lastIndexOf() (3 items)
-    ✓  Array::lastIndexOf() x 32,625,107 ops/sec ±1.38% (90 runs sampled)
-    ✓  fast.lastIndexOf() x 53,556,177 ops/sec ±1.44% (85 runs sampled)
-    ✓  underscore.lastIndexOf() x 23,888,669 ops/sec ±1.47% (81 runs sampled)
-    ✓  lodash.lastIndexOf() x 40,738,058 ops/sec ±1.56% (91 runs sampled)
+    ✓  Array::lastIndexOf() x 31,660,815 ops/sec ±1.29% (77 runs sampled)
+    ✓  fast.lastIndexOf() x 50,697,942 ops/sec ±1.55% (78 runs sampled)
+    ✓  underscore.lastIndexOf() x 23,522,818 ops/sec ±1.56% (90 runs sampled)
+    ✓  lodash.lastIndexOf() x 37,920,386 ops/sec ±1.01% (87 runs sampled)
 
-    Winner is: fast.lastIndexOf() (124.19% faster)
+    Result: fast.js is 60.13% faster than Array::lastIndexOf().
 
   Native .lastIndexOf() vs fast.lastIndexOf() (10 items)
-    ✓  Array::lastIndexOf() x 17,072,572 ops/sec ±1.68% (87 runs sampled)
-    ✓  fast.lastIndexOf() x 31,520,653 ops/sec ±1.68% (94 runs sampled)
-    ✓  underscore.lastIndexOf() x 11,527,390 ops/sec ±1.31% (89 runs sampled)
-    ✓  lodash.lastIndexOf() x 20,743,479 ops/sec ±1.33% (89 runs sampled)
+    ✓  Array::lastIndexOf() x 16,962,641 ops/sec ±0.82% (87 runs sampled)
+    ✓  fast.lastIndexOf() x 30,599,087 ops/sec ±1.09% (82 runs sampled)
+    ✓  underscore.lastIndexOf() x 11,813,800 ops/sec ±1.40% (83 runs sampled)
+    ✓  lodash.lastIndexOf() x 22,413,564 ops/sec ±0.87% (85 runs sampled)
 
-    Winner is: fast.lastIndexOf() (173.44% faster)
+    Result: fast.js is 80.39% faster than Array::lastIndexOf().
 
   Native .lastIndexOf() vs fast.lastIndexOf() (1000 items)
-    ✓  Array::lastIndexOf() x 803,629 ops/sec ±1.38% (85 runs sampled)
-    ✓  fast.lastIndexOf() x 932,659 ops/sec ±1.26% (85 runs sampled)
-    ✓  underscore.lastIndexOf() x 791,447 ops/sec ±1.30% (83 runs sampled)
-    ✓  lodash.lastIndexOf() x 807,753 ops/sec ±1.49% (84 runs sampled)
+    ✓  Array::lastIndexOf() x 802,775 ops/sec ±1.11% (89 runs sampled)
+    ✓  fast.lastIndexOf() x 941,816 ops/sec ±1.33% (84 runs sampled)
+    ✓  underscore.lastIndexOf() x 789,320 ops/sec ±1.10% (91 runs sampled)
+    ✓  lodash.lastIndexOf() x 830,827 ops/sec ±1.48% (88 runs sampled)
 
-    Winner is: fast.lastIndexOf() (17.84% faster)
+    Result: fast.js is 17.32% faster than Array::lastIndexOf().
 
   Native .bind() vs fast.bind()
-    ✓  Function::bind() x 932,194 ops/sec ±1.70% (78 runs sampled)
-    ✓  fast.bind() x 7,205,754 ops/sec ±1.33% (86 runs sampled)
-    ✓  underscore.bind() x 569,459 ops/sec ±1.57% (80 runs sampled)
-    ✓  lodash.bind() x 339,274 ops/sec ±2.47% (80 runs sampled)
+    ✓  Function::bind() x 861,131 ops/sec ±1.60% (79 runs sampled)
+    ✓  fast.bind() x 7,050,467 ops/sec ±1.57% (85 runs sampled)
+    ✓  underscore.bind() x 516,136 ops/sec ±1.75% (81 runs sampled)
+    ✓  lodash.bind() x 333,180 ops/sec ±2.44% (78 runs sampled)
 
-    Winner is: fast.bind() (2023.88% faster)
+    Result: fast.js is 718.75% faster than Function::bind().
 
   Native .bind() vs fast.bind() with prebound functions
-    ✓  Function::bind() x 4,688,131 ops/sec ±1.46% (88 runs sampled)
-    ✓  fast.bind() x 15,220,719 ops/sec ±2.02% (83 runs sampled)
-    ✓  underscore.bind() x 4,611,203 ops/sec ±1.42% (78 runs sampled)
-    ✓  lodash.bind() x 5,112,402 ops/sec ±1.51% (92 runs sampled)
+    ✓  Function::bind() x 4,135,823 ops/sec ±1.18% (85 runs sampled)
+    ✓  fast.bind() x 14,880,669 ops/sec ±1.30% (90 runs sampled)
+    ✓  underscore.bind() x 4,151,707 ops/sec ±1.35% (87 runs sampled)
+    ✓  lodash.bind() x 4,954,635 ops/sec ±1.50% (83 runs sampled)
 
-    Winner is: fast.bind() (230.08% faster)
+    Result: fast.js is 259.80% faster than Function::bind().
 
   Native .bind() vs fast.partial()
-    ✓  Function::bind() x 894,170 ops/sec ±1.73% (85 runs sampled)
-    ✓  fast.partial() x 7,179,954 ops/sec ±1.49% (87 runs sampled)
-    ✓  fast.partial() v0.0.0 x 7,366,673 ops/sec ±1.59% (89 runs sampled)
-    ✓  underscore.partial() x 1,607,674 ops/sec ±1.26% (91 runs sampled)
-    ✓  lodash.partial() x 320,828 ops/sec ±2.08% (58 runs sampled)
+    ✓  Function::bind() x 852,188 ops/sec ±1.79% (85 runs sampled)
+    ✓  fast.partial() x 7,290,720 ops/sec ±1.38% (84 runs sampled)
+    ✓  fast.partial() v0.0.0 x 7,079,796 ops/sec ±1.28% (85 runs sampled)
+    ✓  underscore.partial() x 1,525,651 ops/sec ±1.23% (88 runs sampled)
+    ✓  lodash.partial() x 313,839 ops/sec ±2.17% (79 runs sampled)
 
-    Winner is: fast.partial() v0.0.0 (2196.14% faster)
+    Result: fast.js is 755.53% faster than Function::bind().
 
   Native .bind() vs fast.partial() with prebound functions
-    ✓  Function::bind() x 4,618,279 ops/sec ±1.40% (90 runs sampled)
-    ✓  fast.partial() x 15,789,028 ops/sec ±1.54% (89 runs sampled)
-    ✓  fast.partial() v0.0.0 x 16,177,063 ops/sec ±1.43% (87 runs sampled)
-    ✓  underscore.partial() x 7,093,514 ops/sec ±1.29% (89 runs sampled)
-    ✓  lodash.partial() x 5,029,836 ops/sec ±1.43% (92 runs sampled)
+    ✓  Function::bind() x 4,083,932 ops/sec ±1.34% (86 runs sampled)
+    ✓  fast.partial() x 14,965,028 ops/sec ±1.39% (80 runs sampled)
+    ✓  fast.partial() v0.0.0 x 15,356,082 ops/sec ±1.29% (85 runs sampled)
+    ✓  underscore.partial() x 6,937,118 ops/sec ±1.33% (91 runs sampled)
+    ✓  lodash.partial() x 4,741,111 ops/sec ±1.48% (82 runs sampled)
 
-    Winner is: fast.partial() v0.0.0,fast.partial() (250.28% faster)
+    Result: fast.js is 266.44% faster than Function::bind().
 
   Native .map() vs fast.map() (3 items)
-    ✓  Array::map() x 2,296,569 ops/sec ±1.52% (66 runs sampled)
-    ✓  fast.map() x 17,949,866 ops/sec ±1.26% (93 runs sampled)
-    ✓  fast.map() v0.0.2a x 15,395,462 ops/sec ±1.61% (87 runs sampled)
-    ✓  fast.map() v0.0.1 x 15,375,447 ops/sec ±1.46% (90 runs sampled)
-    ✓  fast.map() v0.0.0 x 14,646,133 ops/sec ±1.65% (88 runs sampled)
-    ✓  underscore.map() x 2,009,610 ops/sec ±1.33% (81 runs sampled)
-    ✓  lodash.map() x 9,644,801 ops/sec ±1.33% (92 runs sampled)
+    ✓  Array::map() x 2,250,928 ops/sec ±2.48% (80 runs sampled)
+    ✓  fast.map() x 17,284,397 ops/sec ±1.17% (91 runs sampled)
+    ✓  fast.map() v0.0.2a x 15,435,277 ops/sec ±1.35% (90 runs sampled)
+    ✓  fast.map() v0.0.1 x 15,310,008 ops/sec ±0.82% (92 runs sampled)
+    ✓  fast.map() v0.0.0 x 13,979,861 ops/sec ±1.99% (78 runs sampled)
+    ✓  underscore.map() x 1,913,620 ops/sec ±2.05% (82 runs sampled)
+    ✓  lodash.map() x 9,148,979 ops/sec ±1.25% (86 runs sampled)
 
-    Winner is: fast.map() (793.20% faster)
+    Result: fast.js is 667.88% faster than Array::map().
 
   Native .map() vs fast.map() (10 items)
-    ✓  Array::map() x 1,481,946 ops/sec ±1.29% (88 runs sampled)
-    ✓  fast.map() x 8,201,687 ops/sec ±1.49% (91 runs sampled)
-    ✓  fast.map() v0.0.2a x 7,384,574 ops/sec ±1.49% (83 runs sampled)
-    ✓  fast.map() v0.0.1 x 7,155,350 ops/sec ±2.13% (84 runs sampled)
-    ✓  fast.map() v0.0.0 x 5,421,029 ops/sec ±1.02% (89 runs sampled)
-    ✓  underscore.map() x 1,286,126 ops/sec ±2.01% (82 runs sampled)
-    ✓  lodash.map() x 5,121,532 ops/sec ±1.01% (88 runs sampled)
+    ✓  Array::map() x 1,483,390 ops/sec ±1.55% (86 runs sampled)
+    ✓  fast.map() x 7,781,073 ops/sec ±1.38% (84 runs sampled)
+    ✓  fast.map() v0.0.2a x 7,542,045 ops/sec ±1.36% (84 runs sampled)
+    ✓  fast.map() v0.0.1 x 7,288,604 ops/sec ±1.29% (86 runs sampled)
+    ✓  fast.map() v0.0.0 x 5,358,938 ops/sec ±1.17% (87 runs sampled)
+    ✓  underscore.map() x 1,283,788 ops/sec ±2.16% (80 runs sampled)
+    ✓  lodash.map() x 5,227,038 ops/sec ±1.59% (85 runs sampled)
 
-    Winner is: fast.map() (537.70% faster)
+    Result: fast.js is 424.55% faster than Array::map().
 
   Native .map() vs fast.map() (1000 items)
-    ✓  Array::map() x 32,195 ops/sec ±1.38% (90 runs sampled)
-    ✓  fast.map() x 98,574 ops/sec ±1.35% (91 runs sampled)
-    ✓  fast.map() v0.0.2a x 96,183 ops/sec ±1.01% (85 runs sampled)
-    ✓  fast.map() v0.0.1 x 96,931 ops/sec ±1.23% (87 runs sampled)
-    ✓  fast.map() v0.0.0 x 65,906 ops/sec ±1.44% (86 runs sampled)
-    ✓  underscore.map() x 30,215 ops/sec ±1.28% (81 runs sampled)
-    ✓  lodash.map() x 76,277 ops/sec ±1.10% (93 runs sampled)
+    ✓  Array::map() x 32,971 ops/sec ±1.47% (87 runs sampled)
+    ✓  fast.map() x 95,182 ops/sec ±1.51% (82 runs sampled)
+    ✓  fast.map() v0.0.2a x 99,468 ops/sec ±1.32% (91 runs sampled)
+    ✓  fast.map() v0.0.1 x 99,425 ops/sec ±1.66% (91 runs sampled)
+    ✓  fast.map() v0.0.0 x 67,765 ops/sec ±1.60% (84 runs sampled)
+    ✓  underscore.map() x 32,942 ops/sec ±1.45% (92 runs sampled)
+    ✓  lodash.map() x 77,364 ops/sec ±1.42% (89 runs sampled)
 
-    Winner is: fast.map(),fast.map() v0.0.1 (226.24% faster)
+    Result: fast.js is 188.68% faster than Array::map().
 
   Native .reduce() vs fast.reduce() (3 items)
-    ✓  Array::reduce() x 6,740,018 ops/sec ±1.19% (94 runs sampled)
-    ✓  fast.reduce() x 19,081,489 ops/sec ±1.15% (80 runs sampled)
-    ✓  fast.reduce() v0.0.2c x 7,560,788 ops/sec ±1.23% (88 runs sampled)
-    ✓  fast.reduce() v0.0.2b x 19,719,768 ops/sec ±1.32% (79 runs sampled)
-    ✓  fast.reduce() v0.0.2a x 16,834,515 ops/sec ±1.01% (86 runs sampled)
-    ✓  fast.reduce() v0.0.1 x 16,543,416 ops/sec ±1.06% (86 runs sampled)
-    ✓  fast.reduce() v0.0.0 x 15,519,000 ops/sec ±1.54% (85 runs sampled)
-    ✓  underscore.reduce() x 4,640,693 ops/sec ±1.93% (84 runs sampled)
-    ✓  lodash.reduce() x 7,786,112 ops/sec ±1.92% (86 runs sampled)
+    ✓  Array::reduce() x 6,448,402 ops/sec ±1.30% (89 runs sampled)
+    ✓  fast.reduce() x 19,481,196 ops/sec ±1.55% (89 runs sampled)
+    ✓  fast.reduce() v0.0.2c x 7,348,613 ops/sec ±1.63% (80 runs sampled)
+    ✓  fast.reduce() v0.0.2b x 19,278,387 ops/sec ±1.62% (88 runs sampled)
+    ✓  fast.reduce() v0.0.2a x 16,584,054 ops/sec ±1.74% (86 runs sampled)
+    ✓  fast.reduce() v0.0.1 x 16,253,304 ops/sec ±1.57% (80 runs sampled)
+    ✓  fast.reduce() v0.0.0 x 14,627,168 ops/sec ±1.25% (92 runs sampled)
+    ✓  underscore.reduce() x 4,658,207 ops/sec ±1.75% (79 runs sampled)
+    ✓  lodash.reduce() x 7,587,191 ops/sec ±2.20% (80 runs sampled)
 
-    Winner is: fast.reduce() v0.0.2b (324.93% faster)
+    Result: fast.js is 202.11% faster than Array::reduce().
 
   Native .reduce() vs fast.reduce() (10 items)
-    ✓  Array::reduce() x 2,663,679 ops/sec ±2.02% (87 runs sampled)
-    ✓  fast.reduce() x 8,630,731 ops/sec ±1.73% (87 runs sampled)
-    ✓  fast.reduce() v0.0.2c x 3,539,359 ops/sec ±1.90% (86 runs sampled)
-    ✓  fast.reduce() v0.0.2b x 9,438,456 ops/sec ±1.77% (94 runs sampled)
-    ✓  fast.reduce() v0.0.2a x 8,151,273 ops/sec ±2.10% (89 runs sampled)
-    ✓  fast.reduce() v0.0.1 x 8,072,734 ops/sec ±2.09% (90 runs sampled)
-    ✓  fast.reduce() v0.0.0 x 5,735,105 ops/sec ±2.16% (88 runs sampled)
-    ✓  underscore.reduce() x 2,276,072 ops/sec ±2.03% (87 runs sampled)
-    ✓  lodash.reduce() x 4,241,529 ops/sec ±1.79% (87 runs sampled)
+    ✓  Array::reduce() x 2,602,067 ops/sec ±1.75% (89 runs sampled)
+    ✓  fast.reduce() x 8,845,851 ops/sec ±1.63% (84 runs sampled)
+    ✓  fast.reduce() v0.0.2c x 3,582,170 ops/sec ±1.63% (86 runs sampled)
+    ✓  fast.reduce() v0.0.2b x 8,966,775 ops/sec ±1.90% (85 runs sampled)
+    ✓  fast.reduce() v0.0.2a x 8,259,564 ops/sec ±1.42% (90 runs sampled)
+    ✓  fast.reduce() v0.0.1 x 8,154,716 ops/sec ±1.41% (86 runs sampled)
+    ✓  fast.reduce() v0.0.0 x 5,625,457 ops/sec ±1.43% (81 runs sampled)
+    ✓  underscore.reduce() x 2,365,741 ops/sec ±1.29% (91 runs sampled)
+    ✓  lodash.reduce() x 4,377,301 ops/sec ±1.04% (89 runs sampled)
 
-    Winner is: fast.reduce() v0.0.2b (314.68% faster)
+    Result: fast.js is 239.95% faster than Array::reduce().
 
   Native .reduce() vs fast.reduce() (1000 items)
-    ✓  Array::reduce() x 35,888 ops/sec ±2.05% (86 runs sampled)
-    ✓  fast.reduce() x 119,069 ops/sec ±1.98% (95 runs sampled)
-    ✓  fast.reduce() v0.0.2c x 53,979 ops/sec ±2.09% (92 runs sampled)
-    ✓  fast.reduce() v0.0.2b x 113,122 ops/sec ±1.96% (90 runs sampled)
-    ✓  fast.reduce() v0.0.2a x 110,815 ops/sec ±2.13% (82 runs sampled)
-    ✓  fast.reduce() v0.0.1 x 110,717 ops/sec ±2.06% (88 runs sampled)
-    ✓  fast.reduce() v0.0.0 x 67,373 ops/sec ±2.05% (86 runs sampled)
-    ✓  underscore.reduce() x 35,569 ops/sec ±1.87% (93 runs sampled)
-    ✓  lodash.reduce() x 75,208 ops/sec ±2.03% (87 runs sampled)
+    ✓  Array::reduce() x 34,689 ops/sec ±1.11% (91 runs sampled)
+    ✓  fast.reduce() x 114,548 ops/sec ±0.89% (87 runs sampled)
+    ✓  fast.reduce() v0.0.2c x 53,104 ops/sec ±1.06% (87 runs sampled)
+    ✓  fast.reduce() v0.0.2b x 117,505 ops/sec ±1.25% (92 runs sampled)
+    ✓  fast.reduce() v0.0.2a x 111,065 ops/sec ±1.44% (82 runs sampled)
+    ✓  fast.reduce() v0.0.1 x 112,467 ops/sec ±1.58% (92 runs sampled)
+    ✓  fast.reduce() v0.0.0 x 67,903 ops/sec ±1.14% (83 runs sampled)
+    ✓  underscore.reduce() x 33,465 ops/sec ±1.32% (92 runs sampled)
+    ✓  lodash.reduce() x 75,810 ops/sec ±1.22% (86 runs sampled)
 
-    Winner is: fast.reduce() (234.75% faster)
+    Result: fast.js is 230.21% faster than Array::reduce().
 
   Native .forEach() vs fast.forEach() (3 items)
-    ✓  Array::forEach() x 6,408,443 ops/sec ±2.18% (87 runs sampled)
-    ✓  fast.forEach() x 18,970,081 ops/sec ±1.73% (89 runs sampled)
-    ✓  fast.forEach() v0.0.2a x 16,840,805 ops/sec ±1.84% (91 runs sampled)
-    ✓  fast.forEach() v0.0.1 x 17,192,767 ops/sec ±2.03% (84 runs sampled)
-    ✓  fast.forEach() v0.0.0 x 13,896,390 ops/sec ±1.90% (85 runs sampled)
-    ✓  underscore.forEach() x 6,154,190 ops/sec ±2.13% (84 runs sampled)
-    ✓  lodash.forEach() x 18,006,082 ops/sec ±2.19% (83 runs sampled)
+    ✓  Array::forEach() x 6,400,618 ops/sec ±1.31% (89 runs sampled)
+    ✓  fast.forEach() x 18,629,928 ops/sec ±1.75% (85 runs sampled)
+    ✓  fast.forEach() v0.0.2a x 16,535,424 ops/sec ±1.49% (79 runs sampled)
+    ✓  fast.forEach() v0.0.1 x 15,876,806 ops/sec ±1.18% (89 runs sampled)
+    ✓  fast.forEach() v0.0.0 x 14,941,456 ops/sec ±0.87% (92 runs sampled)
+    ✓  underscore.forEach() x 5,878,481 ops/sec ±0.98% (84 runs sampled)
+    ✓  lodash.forEach() x 17,595,886 ops/sec ±1.13% (84 runs sampled)
 
-    Winner is: fast.forEach() (208.25% faster)
+    Result: fast.js is 191.06% faster than Array::forEach().
 
   Native .forEach() vs fast.forEach() (10 items)
-    ✓  Array::forEach() x 2,645,051 ops/sec ±2.16% (89 runs sampled)
-    ✓  fast.forEach() x 7,860,550 ops/sec ±2.09% (85 runs sampled)
-    ✓  fast.forEach() v0.0.2a x 7,290,637 ops/sec ±2.08% (82 runs sampled)
-    ✓  fast.forEach() v0.0.1 x 7,419,130 ops/sec ±1.70% (83 runs sampled)
-    ✓  fast.forEach() v0.0.0 x 5,420,590 ops/sec ±2.03% (83 runs sampled)
-    ✓  underscore.forEach() x 2,599,008 ops/sec ±2.20% (85 runs sampled)
-    ✓  lodash.forEach() x 7,876,815 ops/sec ±2.03% (82 runs sampled)
+    ✓  Array::forEach() x 2,698,005 ops/sec ±1.20% (89 runs sampled)
+    ✓  fast.forEach() x 7,937,313 ops/sec ±1.10% (86 runs sampled)
+    ✓  fast.forEach() v0.0.2a x 7,507,948 ops/sec ±0.96% (89 runs sampled)
+    ✓  fast.forEach() v0.0.1 x 7,661,800 ops/sec ±1.04% (92 runs sampled)
+    ✓  fast.forEach() v0.0.0 x 5,436,453 ops/sec ±0.96% (88 runs sampled)
+    ✓  underscore.forEach() x 2,614,153 ops/sec ±1.03% (77 runs sampled)
+    ✓  lodash.forEach() x 7,869,966 ops/sec ±0.89% (87 runs sampled)
 
-    Winner is: lodash.forEach(),fast.forEach() (203.07% faster)
+    Result: fast.js is 194.19% faster than Array::forEach().
 
   Native .forEach() vs fast.forEach() (1000 items)
-    ✓  Array::forEach() x 32,845 ops/sec ±2.01% (86 runs sampled)
-    ✓  fast.forEach() x 97,161 ops/sec ±1.87% (85 runs sampled)
-    ✓  fast.forEach() v0.0.2a x 93,166 ops/sec ±1.94% (82 runs sampled)
-    ✓  fast.forEach() v0.0.1 x 94,455 ops/sec ±2.22% (82 runs sampled)
-    ✓  fast.forEach() v0.0.0 x 67,732 ops/sec ±1.58% (89 runs sampled)
-    ✓  underscore.forEach() x 33,663 ops/sec ±1.18% (84 runs sampled)
-    ✓  lodash.forEach() x 95,291 ops/sec ±1.41% (89 runs sampled)
+    ✓  Array::forEach() x 34,398 ops/sec ±0.99% (90 runs sampled)
+    ✓  fast.forEach() x 93,377 ops/sec ±0.90% (87 runs sampled)
+    ✓  fast.forEach() v0.0.2a x 93,894 ops/sec ±1.42% (85 runs sampled)
+    ✓  fast.forEach() v0.0.1 x 98,412 ops/sec ±1.58% (91 runs sampled)
+    ✓  fast.forEach() v0.0.0 x 66,422 ops/sec ±1.30% (87 runs sampled)
+    ✓  underscore.forEach() x 33,300 ops/sec ±1.30% (82 runs sampled)
+    ✓  lodash.forEach() x 95,146 ops/sec ±1.18% (88 runs sampled)
 
-    Winner is: fast.forEach(),fast.forEach() v0.0.1 (195.82% faster)
+    Result: fast.js is 171.46% faster than Array::forEach().
 
   Native .concat() vs fast.concat() (3 items)
-    ✓  Array::concat() x 1,372,494 ops/sec ±1.91% (84 runs sampled)
-    ✓  fast.concat() x 6,866,453 ops/sec ±2.12% (84 runs sampled)
+    ✓  Array::concat() x 1,402,328 ops/sec ±1.16% (92 runs sampled)
+    ✓  fast.concat() x 6,891,377 ops/sec ±1.09% (91 runs sampled)
 
-    Winner is: fast.concat() (400.29% faster)
+    Result: fast.js is 391.42% faster than Array::concat().
 
   Native .concat() vs fast.concat() (10 items)
-    ✓  Array::concat() x 1,155,658 ops/sec ±2.19% (84 runs sampled)
-    ✓  fast.concat() x 4,910,178 ops/sec ±2.63% (91 runs sampled)
+    ✓  Array::concat() x 1,185,402 ops/sec ±1.03% (90 runs sampled)
+    ✓  fast.concat() x 4,722,002 ops/sec ±1.07% (87 runs sampled)
 
-    Winner is: fast.concat() (324.88% faster)
+    Result: fast.js is 298.35% faster than Array::concat().
 
   Native .concat() vs fast.concat() (1000 items)
-    ✓  Array::concat() x 866,697 ops/sec ±1.73% (88 runs sampled)
-    ✓  fast.concat() x 183,090 ops/sec ±2.13% (92 runs sampled)
+    ✓  Array::concat() x 849,536 ops/sec ±0.90% (91 runs sampled)
+    ✓  fast.concat() x 185,219 ops/sec ±0.75% (92 runs sampled)
 
-    Winner is: Array::concat() (373.37% faster)
+    Result: fast.js is 78.2% slower than Array::concat().
 
   Native .concat() vs fast.concat() (1000 items, using apply)
-    ✓  Array::concat() x 38,468 ops/sec ±2.17% (85 runs sampled)
-    ✓  fast.concat() x 74,954 ops/sec ±1.93% (87 runs sampled)
+    ✓  Array::concat() x 39,207 ops/sec ±0.98% (91 runs sampled)
+    ✓  fast.concat() x 77,692 ops/sec ±1.04% (89 runs sampled)
 
-    Winner is: fast.concat() (94.85% faster)
+    Result: fast.js is 98.16% faster than Array::concat().
 
+  
+Finished in 1371 seconds
 
-Finished in 1370 seconds
 
 ```
 
