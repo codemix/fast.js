@@ -57,10 +57,21 @@ function bench (title, config) {
       console.log("    \033[0;32m\✓\033[0m \033[0;37m " + event.target + "\033[0m");
     });
     suite.on('complete', function () {
-      var buildInSuite = this.shift(),
-          fastJSSuite = this.shift(),
-          diff = fastJSSuite.hz - buildInSuite.hz,
-          percentage = ((diff / buildInSuite.hz) * 100).toFixed(2),
+      var slowest = this.filter('slowest')[0],
+          baselineSuite = this.shift(),
+          fastJSSuite = this.shift();
+
+      // In most benchmarks, the first entry is the native implementation and
+      // the second entry is the fast.js one. However, not all benchmarks have
+      // a native baseline implementation (e.g. there is none for "clone").
+      // In such a case, use the slowest benchmark result as a baseline.
+      if (fastJSSuite.name.indexOf('fast') != 0) {
+        fastJSSuite = baselineSuite;
+        baselineSuite = slowest;
+      }
+
+      var diff = fastJSSuite.hz - baselineSuite.hz,
+          percentage = ((diff / baselineSuite.hz) * 100).toFixed(2),
           relation = 'faster';
 
       if (percentage < 0) {
@@ -68,7 +79,10 @@ function bench (title, config) {
         percentage *= -1;
       }
 
-      console.log('\n Result: fast.js is %s\% %s than build-in version.\n', percentage + '', relation);
+      console.log('\n    \033[0;37mResult:\033[0m fast.js \033[0;37mis\033[0m %s\% %s \033[0;37mthan\033[0m %s.\n',
+        percentage + '',
+        relation,
+        baselineSuite.name);
       next();
     });
     suite.run({
