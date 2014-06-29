@@ -26,10 +26,7 @@ function factorial(op) {
 
 exports['try...catch'] = function () {
   try {
-    var d = 0;
-    d += factorial(10 * Math.random());
-    d += factorial(2 * Math.random());
-    return d;
+    return doSomeWork();
   }
   catch (e) {
     return e;
@@ -37,10 +34,13 @@ exports['try...catch'] = function () {
 }
 
 exports['fast.try()'] = function () {
-  return fast.try(function () {
-    var d = 0;
-    d += factorial(10 * Math.random());
-    d += factorial(2 * Math.random());
-    return d;
-  });
+  return fast.try(doSomeWork);
 };
+
+
+function doSomeWork () {
+  var d = 0;
+  d += factorial(10 * Math.random());
+  d += factorial(2 * Math.random());
+  return d;
+}
