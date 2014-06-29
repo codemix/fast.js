@@ -148,6 +148,83 @@ describe('fast.indexOf()', function () {
   it('should return -1 if the item does not exist in the array', function () {
     fast.indexOf(input, 1000).should.equal(-1);
   });
+
+  var arr = [1,2,3];
+  arr[-2] = 4; // Throw a wrench in the gears by assigning a non-valid array index as object property.
+
+  it('finds 1', function() {
+    fast.indexOf(arr, 1).should.equal(0);
+  });
+  it('finds 1 and is result strictly it', function() {
+    fast.indexOf(arr, 1).should.equal(0);
+  });
+  it('does not find 4', function() {
+    fast.indexOf(arr, 4).should.equal(-1);
+  });
+  it('Uses strict equality', function() {
+    fast.indexOf(arr, '1').should.equal(-1);
+  });
+  it('from index 1', function() {
+    fast.indexOf(arr, 2, 1).should.equal(1);
+  });
+  it('from index 2', function() {
+    fast.indexOf(arr, 2, 2).should.equal(-1);
+  });
+  it('from index 3', function() {
+    fast.indexOf(arr, 2, 3).should.equal(-1);
+  });
+  it('from index 4', function() {
+    fast.indexOf(arr, 2, 4).should.equal(-1);
+  });
+  it('from index -1', function() {
+    fast.indexOf(arr, 3, -1).should.equal(2);
+  });
+  it('from index -2', function() {
+    fast.indexOf(arr, 3, -2).should.equal(2);
+  });
+  it('from index -3', function() {
+    fast.indexOf(arr, 3, -3).should.equal(2);
+  });
+  it('from index -4', function() {
+    fast.indexOf(arr, 3, -4).should.equal(2);
+  });
+  // These tests will by proxy be stress testing the toInteger internal private function.
+  it('index NaN becomes 0', function() {
+    fast.indexOf(arr, 1, NaN).should.equal(0);
+  });
+  it('index true becomes 1', function() {
+    fast.indexOf(arr, 1, true).should.equal(-1);
+  });
+  it('index false becomes 0', function() {
+    fast.indexOf(arr, 1, false).should.equal(0);
+  });
+  it('index 0.1 becomes 0', function() {
+    fast.indexOf(arr, 1, 0.1).should.equal(0);
+  });
+  it('index 1.1 becomes 1', function() {
+    fast.indexOf(arr, 1, 1.1).should.equal(-1);
+  });
+  it('index -0.1 becomes 0', function() {
+    fast.indexOf(arr, 3, -0.1).should.equal(2);
+  });
+  it('index -1.1 becomes -1', function() {
+    fast.indexOf(arr, 3, -1.1).should.equal(2);
+  });
+  it('index 1.7 becomes 1', function() {
+    fast.indexOf(arr, 1, 1.7).should.equal(-1);
+  });
+  it('index -1.7 becomes -1', function() {
+    fast.indexOf(arr, 3, -1.7).should.equal(2);
+  });
+  it('misc', function() {
+    var fn  = function(){};
+    var reg = /arf/;
+    var obj = { moo: 'cow' };
+
+    fast.indexOf([fn], fn).should.equal(0);
+    fast.indexOf([obj], obj).should.equal(0);
+    fast.indexOf([reg], obj).should.equal(0);
+  });
 });
 
 describe('fast.lastIndexOf()', function () {
