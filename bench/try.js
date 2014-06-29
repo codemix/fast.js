@@ -11,8 +11,9 @@ function factorial(op) {
   var d1 = Math.sqrt(2 * Math.PI) / z;
   var d2 = p[0];
 
-  for (var i = 1; i <= 6; ++i)
-  d2 += p[i] / (z + i);
+  for (var i = 1; i <= 6; ++i) {
+    d2 += p[i] / (z + i);
+  }
 
   var d3 = Math.pow((z + 5.5), (z + 0.5));
   var d4 = Math.exp(-(z + 5.5));
@@ -22,18 +23,12 @@ function factorial(op) {
   return d;
 }
 
-function doSomeWork () {
-  var d = 0;
-  factorial(10);
-  factorial(2);
-  return d;
-}
 
 exports['try...catch'] = function () {
   try {
     var d = 0;
-    factorial(10);
-    factorial(2);
+    d += factorial(10 * Math.random());
+    d += factorial(2 * Math.random());
     return d;
   }
   catch (e) {
@@ -42,5 +37,10 @@ exports['try...catch'] = function () {
 }
 
 exports['fast.try()'] = function () {
-  return fast.try(doSomeWork);
+  return fast.try(function () {
+    var d = 0;
+    d += factorial(10 * Math.random());
+    d += factorial(2 * Math.random());
+    return d;
+  });
 };
