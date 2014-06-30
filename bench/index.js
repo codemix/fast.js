@@ -41,6 +41,10 @@ run([
   bench('Native .reduce() vs fast.reduce() (10 items)', require('./reduce-10')),
   bench('Native .reduce() vs fast.reduce() (1000 items)', require('./reduce-1000')),
 
+  bench('Native .reduceRight() vs fast.reduceRight() (3 items)', require('./reduce-right-3')),
+  bench('Native .reduceRight() vs fast.reduceRight() (10 items)', require('./reduce-right-10')),
+  bench('Native .reduceRight() vs fast.reduceRight() (1000 items)', require('./reduce-right-1000')),
+
   bench('Native .forEach() vs fast.forEach() (3 items)', require('./for-each-3')),
   bench('Native .forEach() vs fast.forEach() (10 items)', require('./for-each-10')),
   bench('Native .forEach() vs fast.forEach() (1000 items)', require('./for-each-1000')),
