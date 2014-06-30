@@ -143,6 +143,21 @@ describe('fast.map()', function () {
   });
 });
 
+describe('fast.filter()', function () {
+  var input = [1,2,3,4,5];
+
+  it('should filter a list of items', function () {
+    var result = fast.filter(input, function (item) {
+      return item % 2;
+    });
+    result.should.eql([1, 3, 5]);
+  });
+  it('should take context', function () {
+    fast.map([1], function () {
+      this.should.equal(fast);
+    }, fast);
+  });
+});
 
 describe('fast.reduce()', function () {
   var input = [1,2,3,4,5];
@@ -158,11 +173,33 @@ describe('fast.reduce()', function () {
       this.should.equal(fast);
     }, {}, fast);
   });
-  it('should use the input[0] if initialValue isn\'t provided', function() {
+  it('should use input[0] if initialValue isn\'t provided', function() {
     var result = fast.reduce(input, function (last, item) {
       return last + item;
     });
     result.should.equal(15);
+  });
+});
+
+describe('fast.reduceRight()', function () {
+  var input = ["a", "b", "c"];
+
+  it('should reduce a list of items', function () {
+    var result = fast.reduceRight(input, function (last, item) {
+      return last + item;
+    }, "z");
+    result.should.equal("zcba");
+  });
+  it('should take context', function () {
+    fast.reduceRight([1], function () {
+      this.should.equal(fast);
+    }, {}, fast);
+  });
+  it('should use input[input.length - 1] if initialValue isn\'t provided', function() {
+    var result = fast.reduceRight(input, function (last, item) {
+      return last + item;
+    });
+    result.should.equal("cba");
   });
 });
 
@@ -183,6 +220,29 @@ describe('fast.forEach()', function () {
   });
 });
 
+describe('fast.some()', function () {
+  var input = [1,2,3,4,5];
+
+  it('should return true if the check passes', function () {
+    var result = fast.some(input, function (item) {
+      return item === 3;
+    });
+    result.should.be.true;
+  });
+  it('should return false if the check fails', function () {
+    var result = fast.some(input, function (item) {
+      return item === 30000;
+    });
+    result.should.be.false;
+  });
+  it('should take context', function () {
+    fast.some([1], function () {
+      this.should.equal(fast);
+    }, fast);
+  });
+});
+
+
 describe('fast.indexOf()', function () {
   var input = [1,2,3,4,5];
   it('should return the index of the first item', function () {
@@ -193,6 +253,74 @@ describe('fast.indexOf()', function () {
   });
   it('should return -1 if the item does not exist in the array', function () {
     fast.indexOf(input, 1000).should.equal(-1);
+  });
+
+  var arr = [1,2,3];
+  arr[-2] = 4; // Throw a wrench in the gears by assigning a non-valid array index as object property.
+
+  it('finds 1', function() {
+    fast.indexOf(arr, 1).should.equal(0);
+  });
+  it('finds 1 and is result strictly it', function() {
+    fast.indexOf(arr, 1).should.equal(0);
+  });
+  it('does not find 4', function() {
+    fast.indexOf(arr, 4).should.equal(-1);
+  });
+  it('Uses strict equality', function() {
+    fast.indexOf(arr, '1').should.equal(-1);
+  });
+  it('from index 1', function() {
+    fast.indexOf(arr, 2, 1).should.equal(1);
+  });
+  it('from index 2', function() {
+    fast.indexOf(arr, 2, 2).should.equal(-1);
+  });
+  it('from index 3', function() {
+    fast.indexOf(arr, 2, 3).should.equal(-1);
+  });
+  it('from index 4', function() {
+    fast.indexOf(arr, 2, 4).should.equal(-1);
+  });
+  it('from index -1', function() {
+    fast.indexOf(arr, 3, -1).should.equal(2);
+  });
+  it('from index -2', function() {
+    fast.indexOf(arr, 3, -2).should.equal(2);
+  });
+  it('from index -3', function() {
+    fast.indexOf(arr, 3, -3).should.equal(2);
+  });
+  it('from index -4', function() {
+    fast.indexOf(arr, 3, -4).should.equal(2);
+  });
+  // These tests will by proxy be stress testing the toInteger internal private function.
+  it('index NaN becomes 0', function() {
+    fast.indexOf(arr, 1, NaN).should.equal(0);
+  });
+  it('index true becomes 1', function() {
+    fast.indexOf(arr, 1, true).should.equal(-1);
+  });
+  it('index false becomes 0', function() {
+    fast.indexOf(arr, 1, false).should.equal(0);
+  });
+  it('index 0.1 becomes 0', function() {
+    fast.indexOf(arr, 1, 0.1).should.equal(0);
+  });
+  it('index 1.1 becomes 1', function() {
+    fast.indexOf(arr, 1, 1.1).should.equal(-1);
+  });
+  it('index -0.1 becomes 0', function() {
+    fast.indexOf(arr, 3, -0.1).should.equal(2);
+  });
+  it('index -1.1 becomes -1', function() {
+    fast.indexOf(arr, 3, -1.1).should.equal(2);
+  });
+  it('index 1.7 becomes 1', function() {
+    fast.indexOf(arr, 1, 1.7).should.equal(-1);
+  });
+  it('index -1.7 becomes -1', function() {
+    fast.indexOf(arr, 3, -1.7).should.equal(2);
   });
 });
 
@@ -206,6 +334,46 @@ describe('fast.lastIndexOf()', function () {
   });
   it('should return -1 if the item does not exist in the array', function () {
     fast.lastIndexOf(input, 1000).should.equal(-1);
+  });
+
+  var arr = ['a', 1, 'a'];
+  arr[-2] = 'a'; // Throw a wrench in the gears by assigning a non-valid array index as object property.
+
+  it('Array#lastIndexOf | finds a', function () {
+    fast.lastIndexOf(arr, 'a').should.equal(2);
+  });
+  it('Array#lastIndexOf | does not find c', function () {
+    fast.lastIndexOf(arr, 'c').should.equal(-1);
+  });
+  it( 'Array#lastIndexOf | Uses strict equality', function () {
+    fast.lastIndexOf(arr, '1').should.equal(-1);
+  });
+  it( 'Array#lastIndexOf | from index 1', function () {
+    fast.lastIndexOf(arr, 'a', 1).should.equal(0);
+  });
+  it( 'Array#lastIndexOf | from index 2', function () {
+    fast.lastIndexOf(arr, 'a', 2).should.equal(2);
+  });
+  it( 'Array#lastIndexOf | from index 3', function () {
+    fast.lastIndexOf(arr, 'a', 3).should.equal(2);
+  });
+  it( 'Array#lastIndexOf | from index 4', function () {
+    fast.lastIndexOf(arr, 'a', 4).should.equal(2);
+  });
+  it( 'Array#lastIndexOf | from index 0', function () {
+    fast.lastIndexOf(arr, 'a', 0).should.equal(0);
+  });
+  it('Array#lastIndexOf | from index -1', function () {
+    fast.lastIndexOf(arr, 'a', -1).should.equal(2);
+  });
+  it('Array#lastIndexOf | from index -2', function () {
+    fast.lastIndexOf(arr, 'a', -2).should.equal(0);
+  });
+  it('Array#lastIndexOf | from index -3', function () {
+    fast.lastIndexOf(arr, 'a', -3).should.equal(0);
+  });
+  it('Array#lastIndexOf | from index -4', function () {
+    fast.lastIndexOf(arr, 'a', -4).should.equal(-1);
   });
 });
 

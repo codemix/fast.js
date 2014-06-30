@@ -1,4 +1,5 @@
 var fast = require('../lib'),
+    history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
 
@@ -10,6 +11,10 @@ exports['Array::lastIndexOf()'] = function () {
 
 exports['fast.lastIndexOf()'] = function () {
   return fast.lastIndexOf(input, 1);
+};
+
+exports['fast.lastIndexOf() v0.0.2'] = function () {
+  return history.lastIndexOf_0_0_2(input, 1);
 };
 
 exports['underscore.lastIndexOf()'] = function () {

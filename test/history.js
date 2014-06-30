@@ -247,3 +247,30 @@ exports.reduce_0_0_2c = function fastReduce (subject, fn, initialValue, thisCont
 
   return result;
 };
+
+
+// v0.0.2
+
+
+exports.indexOf_0_0_2 = function fastIndexOf (subject, target) {
+  var length = subject.length,
+      i;
+  for (i = 0; i < length; i++) {
+    if (subject[i] === target) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+
+exports.lastIndexOf_0_0_2 = function fastLastIndexOf (subject, target) {
+  var length = subject.length,
+      i;
+  for (i = length - 1; i >= 0; i--) {
+    if (subject[i] === target) {
+      return i;
+    }
+  }
+  return -1;
+};

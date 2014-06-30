@@ -1,6 +1,8 @@
 var Benchmark = require('benchmark');
 
 run([
+  bench('Native try {} catch (e) {} vs fast.try()', require('./try')),
+  bench('Native try {} catch (e) {} vs fast.try() (single function call)', require('./try-fn')),
 
   bench('Native .apply() vs fast.apply() (3 items, no context)', require('./apply-3')),
   bench('Native .apply() vs fast.apply() (3 items, with context)', require('./apply-context-3')),
@@ -11,7 +13,6 @@ run([
   bench('Native .apply() vs fast.apply() (10 items, no context)', require('./apply-10')),
   bench('Native .apply() vs fast.apply() (10 items, with context)', require('./apply-context-10')),
 
-  bench('Native try {} catch (e) {} vs fast.try()', require('./try')),
 
   bench('fast.clone() vs underscore.clone() vs lodash.clone()', require('./clone')),
 
@@ -32,13 +33,25 @@ run([
   bench('Native .map() vs fast.map() (10 items)', require('./map-10')),
   bench('Native .map() vs fast.map() (1000 items)', require('./map-1000')),
 
+  bench('Native .filter() vs fast.filter() (3 items)', require('./filter-3')),
+  bench('Native .filter() vs fast.filter() (10 items)', require('./filter-10')),
+  bench('Native .filter() vs fast.filter() (1000 items)', require('./filter-1000')),
+
   bench('Native .reduce() vs fast.reduce() (3 items)', require('./reduce-3')),
   bench('Native .reduce() vs fast.reduce() (10 items)', require('./reduce-10')),
   bench('Native .reduce() vs fast.reduce() (1000 items)', require('./reduce-1000')),
 
+  bench('Native .reduceRight() vs fast.reduceRight() (3 items)', require('./reduce-right-3')),
+  bench('Native .reduceRight() vs fast.reduceRight() (10 items)', require('./reduce-right-10')),
+  bench('Native .reduceRight() vs fast.reduceRight() (1000 items)', require('./reduce-right-1000')),
+
   bench('Native .forEach() vs fast.forEach() (3 items)', require('./for-each-3')),
   bench('Native .forEach() vs fast.forEach() (10 items)', require('./for-each-10')),
   bench('Native .forEach() vs fast.forEach() (1000 items)', require('./for-each-1000')),
+
+  bench('Native .some() vs fast.some() (3 items)', require('./some-3')),
+  bench('Native .some() vs fast.some() (10 items)', require('./some-10')),
+  bench('Native .some() vs fast.some() (1000 items)', require('./some-1000')),
 
   bench('Native .concat() vs fast.concat() (3 items)', require('./concat-3')),
   bench('Native .concat() vs fast.concat() (10 items)', require('./concat-10')),

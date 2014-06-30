@@ -17,6 +17,10 @@ exports['fast.indexOf()'] = function () {
   return fast.indexOf(input, 1) + fast.indexOf(input, 999) + fast.indexOf(input, Math.random());
 };
 
+exports['fast.indexOf() v0.0.2'] = function () {
+  return history.indexOf_0_0_2(input, 1) + history.indexOf_0_0_2(input, 999) + history.indexOf_0_0_2(input, Math.random());
+};
+
 exports['underscore.indexOf()'] = function () {
   return underscore.indexOf(input, 1) + underscore.indexOf(input, 999) + underscore.indexOf(input, Math.random());
 };
