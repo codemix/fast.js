@@ -173,11 +173,33 @@ describe('fast.reduce()', function () {
       this.should.equal(fast);
     }, {}, fast);
   });
-  it('should use the input[0] if initialValue isn\'t provided', function() {
+  it('should use input[0] if initialValue isn\'t provided', function() {
     var result = fast.reduce(input, function (last, item) {
       return last + item;
     });
     result.should.equal(15);
+  });
+});
+
+describe('fast.reduceRight()', function () {
+  var input = ["a", "b", "c"];
+
+  it('should reduce a list of items', function () {
+    var result = fast.reduceRight(input, function (last, item) {
+      return last + item;
+    }, "z");
+    result.should.equal("zcba");
+  });
+  it('should take context', function () {
+    fast.reduceRight([1], function () {
+      this.should.equal(fast);
+    }, {}, fast);
+  });
+  it('should use input[input.length - 1] if initialValue isn\'t provided', function() {
+    var result = fast.reduceRight(input, function (last, item) {
+      return last + item;
+    });
+    result.should.equal("cba");
   });
 });
 
