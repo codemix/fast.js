@@ -198,6 +198,29 @@ describe('fast.forEach()', function () {
   });
 });
 
+describe('fast.some()', function () {
+  var input = [1,2,3,4,5];
+
+  it('should return true if the check passes', function () {
+    var result = fast.some(input, function (item) {
+      return item === 3;
+    });
+    result.should.be.true;
+  });
+  it('should return false if the check fails', function () {
+    var result = fast.some(input, function (item) {
+      return item === 30000;
+    });
+    result.should.be.false;
+  });
+  it('should take context', function () {
+    fast.some([1], function () {
+      this.should.equal(fast);
+    }, fast);
+  });
+});
+
+
 describe('fast.indexOf()', function () {
   var input = [1,2,3,4,5];
   it('should return the index of the first item', function () {

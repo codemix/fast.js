@@ -45,6 +45,10 @@ run([
   bench('Native .forEach() vs fast.forEach() (10 items)', require('./for-each-10')),
   bench('Native .forEach() vs fast.forEach() (1000 items)', require('./for-each-1000')),
 
+  bench('Native .some() vs fast.some() (3 items)', require('./some-3')),
+  bench('Native .some() vs fast.some() (10 items)', require('./some-10')),
+  bench('Native .some() vs fast.some() (1000 items)', require('./some-1000')),
+
   bench('Native .concat() vs fast.concat() (3 items)', require('./concat-3')),
   bench('Native .concat() vs fast.concat() (10 items)', require('./concat-10')),
   bench('Native .concat() vs fast.concat() (1000 items)', require('./concat-1000')),
