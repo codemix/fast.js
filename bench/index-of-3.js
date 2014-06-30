@@ -13,6 +13,10 @@ exports['fast.indexOf()'] = function () {
   return fast.indexOf(input, 3) + fast.indexOf(input, Math.random());
 };
 
+exports['fast.indexOf() v0.0.2'] = function () {
+  return history.indexOf_0_0_2(input, 3) + history.indexOf_0_0_2(input, Math.random());
+};
+
 exports['underscore.indexOf()'] = function () {
   return underscore.indexOf(input, 3) + underscore.indexOf(input, Math.random());
 };
