@@ -1,28 +1,30 @@
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item === 999');
 
 var input = [];
 
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var check = function (item) { return item === 999; };
 
 
 exports['Array::some()'] = function () {
-  return input.some(check);
+  return input.some(fns());
 };
 
 exports['fast.some()'] = function () {
-  return fast.some(input, check);
+  return fast.some(input, fns());
 };
 
 exports['underscore.some()'] = function () {
-  return underscore.some(input, check);
+  return underscore.some(input, fns());
 };
 
 exports['lodash.some()'] = function () {
-  return lodash.some(input, check);
+  return lodash.some(input, fns());
 };

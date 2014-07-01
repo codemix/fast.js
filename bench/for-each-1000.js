@@ -1,7 +1,11 @@
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+global.BENCH_ACC = 0;
+var fns = utils.fns('item', 'global.BENCH_ACC += item');
 
 var input = [];
 
@@ -9,41 +13,37 @@ for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
 
-var acc = 0;
-var iterator = function (item) { acc += item; };
-
-
 exports['Array::forEach()'] = function () {
-  acc = 0;
-  input.forEach(iterator);
+  global.BENCH_ACC = 0;
+  input.forEach(fns());
 };
 
 exports['fast.forEach()'] = function () {
-  acc = 0;
-  fast.forEach(input, iterator);
+  global.BENCH_ACC = 0;
+  fast.forEach(input, fns());
 };
 
 exports['fast.forEach() v0.0.2a'] = function () {
-  acc = 0;
-  history.forEach_0_0_2a(input, iterator);
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_2a(input, fns());
 };
 
 exports['fast.forEach() v0.0.1'] = function () {
-  acc = 0;
-  history.forEach_0_0_1(input, iterator);
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_1(input, fns());
 };
 
 exports['fast.forEach() v0.0.0'] = function () {
-  acc = 0;
-  history.forEach_0_0_0(input, iterator);
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_0(input, fns());
 };
 
 exports['underscore.forEach()'] = function () {
-  acc = 0;
-  underscore.forEach(input, iterator);
+  global.BENCH_ACC = 0;
+  underscore.forEach(input, fns());
 };
 
 exports['lodash.forEach()'] = function () {
-  acc = 0;
-  lodash.forEach(input, iterator);
+  global.BENCH_ACC = 0;
+  lodash.forEach(input, fns());
 };
