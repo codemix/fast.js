@@ -274,3 +274,84 @@ exports.lastIndexOf_0_0_2 = function fastLastIndexOf (subject, target) {
   }
   return -1;
 };
+
+
+exports.bind_0_0_2 = function fastBind (fn, thisContext) {
+  var boundLength = arguments.length - 2,
+      boundArgs;
+
+  if (boundLength > 0) {
+    boundArgs = new Array(boundLength);
+    for (var i = 0; i < boundLength; i++) {
+      boundArgs[i] = arguments[i + 2];
+    }
+    return function () {
+      var length = arguments.length,
+          args = new Array(boundLength + length),
+          i;
+      for (i = 0; i < boundLength; i++) {
+        args[i] = boundArgs[i];
+      }
+      for (i = 0; i < length; i++) {
+        args[boundLength + i] = arguments[i];
+      }
+      return fn.apply(thisContext, args);
+    };
+  }
+  return function () {
+    return fn.apply(thisContext, arguments);
+  };
+};
+
+exports.partial_0_0_2 = function fastPartial (fn) {
+  var boundLength = arguments.length - 1,
+      boundArgs;
+
+  boundArgs = new Array(boundLength);
+  for (var i = 0; i < boundLength; i++) {
+    boundArgs[i] = arguments[i + 1];
+  }
+  return function () {
+    var length = arguments.length,
+        args = new Array(boundLength + length),
+        i;
+    for (i = 0; i < boundLength; i++) {
+      args[i] = boundArgs[i];
+    }
+    for (i = 0; i < length; i++) {
+      args[boundLength + i] = arguments[i];
+    }
+    return fn.apply(this, args);
+  };
+};
+
+exports.partialConstructor_0_0_2 = function fastPartialConstructor (fn) {
+  var boundLength = arguments.length - 1,
+      boundArgs;
+
+  boundArgs = new Array(boundLength);
+  for (var i = 0; i < boundLength; i++) {
+    boundArgs[i] = arguments[i + 1];
+  }
+  return function partialed () {
+    var length = arguments.length,
+        args = new Array(boundLength + length),
+        i;
+    for (i = 0; i < boundLength; i++) {
+      args[i] = boundArgs[i];
+    }
+    for (i = 0; i < length; i++) {
+      args[boundLength + i] = arguments[i];
+    }
+
+    var thisContext = Object.create(fn.prototype),
+        result = fn.apply(thisContext, args);
+
+    if (result != null && (typeof result === 'object' || typeof result === 'function')) {
+      return result;
+    }
+    else {
+      return thisContext;
+    }
+  };
+};

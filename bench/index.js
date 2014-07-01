@@ -23,6 +23,7 @@ run([
   bench('Native .lastIndexOf() vs fast.lastIndexOf() (3 items)', require('./last-index-of-3')),
   bench('Native .lastIndexOf() vs fast.lastIndexOf() (10 items)', require('./last-index-of-10')),
   bench('Native .lastIndexOf() vs fast.lastIndexOf() (1000 items)', require('./last-index-of-1000')),
+
   bench('Native .bind() vs fast.bind()', require('./bind')),
   bench('Native .bind() vs fast.bind() with prebound functions', require('./bind-prebound')),
 
