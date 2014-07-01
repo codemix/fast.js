@@ -1,4 +1,4 @@
-window = (function () { return this; })();
+global = window = (function () { return this; })();
 console = {
   log: typeof print === 'function' ? print : function () {}
 };
