@@ -1,9 +1,9 @@
 var Benchmark = require('benchmark');
 
 run([
-  bench('Native try {} catch (e) {} vs fast.try()', require('./try')),
+/*  bench('Native try {} catch (e) {} vs fast.try()', require('./try')),
   bench('Native try {} catch (e) {} vs fast.try() (single function call)', require('./try-fn')),
-
+*/
   bench('Native .apply() vs fast.apply() (3 items, no context)', require('./apply-3')),
   bench('Native .apply() vs fast.apply() (3 items, with context)', require('./apply-context-3')),
 
