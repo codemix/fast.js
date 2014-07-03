@@ -61,7 +61,7 @@ By optimising for the 99% use case, fast.js methods can be up to 5x faster than 
 
 ## Caveats
 
-As mentioned above, fast.js does not conform 100% to the ECMAScript specification and is therefore not a drop in replacement 100% of the time. There are at least four scenarios where the behavior differs from the spec:
+As mentioned above, fast.js does not conform 100% to the ECMAScript specification and is therefore not a drop in replacement 100% of the time. There are at least three scenarios where the behavior differs from the spec:
 
 - Sparse arrays are not supported. A sparse array will be treated just like a normal array, with unpopulated slots containing `undefined` values. This means that iteration functions such as `.map()` and `.forEach()` will visit these empty slots, receiving `undefined` as an argument. This is in contrast to the native implementations where these unfilled slots will be skipped entirely by the iterators. In the real world, sparse arrays are very rare. This is evidenced by the very popular [underscore.js](http://underscorejs.org/)'s lack of support.
 
@@ -82,7 +82,6 @@ As mentioned above, fast.js does not conform 100% to the ECMAScript specificatio
 
     - A 4th argument is supported - `thisContext`, the context to bind the reducer function to. This is not present in the spec but is provided for convenience.
 
-- The `fromIndex` parameter for `fast.indexOf()` and `fast.lastIndexOf()` has a maximum useful value of `2147483647`. Values which exceed this will produce unexpected results.
 
 In practice, it's extremely unlikely that any of these caveats will have an impact on real world code. These constructs are extremely uncommon.
 
