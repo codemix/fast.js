@@ -294,34 +294,6 @@ describe('fast.indexOf()', function () {
   it('from index -4', function() {
     fast.indexOf(arr, 3, -4).should.equal(2);
   });
-  // These tests will by proxy be stress testing the toInteger internal private function.
-  it('index NaN becomes 0', function() {
-    fast.indexOf(arr, 1, NaN).should.equal(0);
-  });
-  it('index true becomes 1', function() {
-    fast.indexOf(arr, 1, true).should.equal(-1);
-  });
-  it('index false becomes 0', function() {
-    fast.indexOf(arr, 1, false).should.equal(0);
-  });
-  it('index 0.1 becomes 0', function() {
-    fast.indexOf(arr, 1, 0.1).should.equal(0);
-  });
-  it('index 1.1 becomes 1', function() {
-    fast.indexOf(arr, 1, 1.1).should.equal(-1);
-  });
-  it('index -0.1 becomes 0', function() {
-    fast.indexOf(arr, 3, -0.1).should.equal(2);
-  });
-  it('index -1.1 becomes -1', function() {
-    fast.indexOf(arr, 3, -1.1).should.equal(2);
-  });
-  it('index 1.7 becomes 1', function() {
-    fast.indexOf(arr, 1, 1.7).should.equal(-1);
-  });
-  it('index -1.7 becomes -1', function() {
-    fast.indexOf(arr, 3, -1.7).should.equal(2);
-  });
 });
 
 describe('fast.lastIndexOf()', function () {
