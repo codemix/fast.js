@@ -1,102 +1,98 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var fast = require('../lib');
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
 
-var fn = function (a, b, c) {
-  return a + b + c * Math.random();
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();')
 
 exports['Function::apply()'] = function () {
-  return fn.apply(null, input);
+  return fns().apply(null, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, null, input);
+  return fast.apply(fns(), null, input);
 };
 
-},{"../lib":43}],2:[function(require,module,exports){
-var fast = require('../lib');
+},{"../lib":44,"./utils":43}],2:[function(require,module,exports){
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3];
 
-var fn = function (a, b, c) {
-  return a + b + c * Math.random();
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();')
 
 exports['Function::apply()'] = function () {
-  return fn.apply(null, input);
+  return fns().apply(null, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, null, input);
+  return fast.apply(fns(), null, input);
 };
 
-},{"../lib":43}],3:[function(require,module,exports){
+},{"../lib":44,"./utils":43}],3:[function(require,module,exports){
 module.exports=require(2)
-},{"../lib":43}],4:[function(require,module,exports){
-var fast = require('../lib');
+},{"../lib":44,"./utils":43}],4:[function(require,module,exports){
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
 
-var fn = function (a, b, c) {
-  return a + b + c * Math.random() + this.foo;
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random() + this.foo;')
 
 exports['Function::apply()'] = function () {
-  return fn.apply({foo: 1}, input);
+  return fns().apply({foo: 1}, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, {foo: 1}, input);
+  return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../lib":43}],5:[function(require,module,exports){
-var fast = require('../lib');
+},{"../lib":44,"./utils":43}],5:[function(require,module,exports){
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3];
 
-var fn = function (a, b, c) {
-  return a + b + c * Math.random() + this.foo;
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();');
 
 exports['Function::apply()'] = function () {
-  return fn.apply({foo: 1}, input);
+  return fns().apply({foo: 1}, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, {foo: 1}, input);
+  return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../lib":43}],6:[function(require,module,exports){
-var fast = require('../lib');
+},{"../lib":44,"./utils":43}],6:[function(require,module,exports){
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3,4,5,6];
-
-var fn = function (a, b, c) {
-  return a + b + c * Math.random() + this.foo;
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();')
 
 exports['Function::apply()'] = function () {
-  return fn.apply({foo: 1}, input);
+  return fns().apply({foo: 1}, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, {foo: 1}, input);
+  return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../lib":43}],7:[function(require,module,exports){
+},{"../lib":44,"./utils":43}],7:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
-    lodash = require('lodash');
+    lodash = require('lodash'),
+    history = require('../test/history');
 
 var input = function (a, b, c) {
-  return a + b + c;
+  return a + b + c * Math.random();
 };
 
 // Prebindings
 var nativeBound = input.bind(this, 1, 2);
 var fastBound = fast.bind(input, this, 1, 2);
+var fastBound_0_0_2 = history.bind_0_0_2(input, this, 1, 2);
 var underBound = underscore.bind(input, this, 1, 2);
 var loBound = lodash.bind(input, this, 1, 2);
 
@@ -108,6 +104,10 @@ exports['fast.bind()'] = function () {
   return fastBound(3);
 };
 
+exports['fast.bind() v0.0.2'] = function () {
+  return fastBound_0_0_2(3);
+};
+
 exports['underscore.bind()'] = function () {
   return underBound(3);
 };
@@ -117,37 +117,42 @@ exports['lodash.bind()'] = function () {
 };
 
 
-},{"../lib":43,"lodash":46,"underscore":47}],8:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"lodash":47,"underscore":48}],8:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
-    lodash = require('lodash');
+    lodash = require('lodash'),
+    utils = require('./utils'),
+    history = require('../test/history');
 
-var input = function (a, b, c) {
-  return a + b + c;
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();')
 
 exports['Function::bind()'] = function () {
-  var fn = input.bind(this, 1, 2);
+  var fn = fns().bind(this, 1, 2);
   return fn(3);
 };
 
 exports['fast.bind()'] = function () {
-  var fn = fast.bind(input, this, 1, 2);
+  var fn = fast.bind(fns(), this, 1, 2);
+  return fn(3);
+};
+
+exports['fast.bind() v0.0.2'] = function () {
+  var fn = history.bind_0_0_2(fns(), this, 1, 2);
   return fn(3);
 };
 
 exports['underscore.bind()'] = function () {
-  var fn = underscore.bind(input, this, 1, 2);
+  var fn = underscore.bind(fns(), this, 1, 2);
   return fn(3);
 };
 
 exports['lodash.bind()'] = function () {
-  var fn = lodash.bind(input, this, 1, 2);
+  var fn = lodash.bind(fns(), this, 1, 2);
   return fn(3);
 };
 
 
-},{"../lib":43,"lodash":46,"underscore":47}],9:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],9:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -185,7 +190,7 @@ exports['lodash.clone()'] = function () {
 };
 
 
-},{"../lib":43,"lodash":46,"underscore":47}],10:[function(require,module,exports){
+},{"../lib":44,"lodash":47,"underscore":48}],10:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history');
 
@@ -199,7 +204,7 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, 11, 12, [13, 14, 15], 16, 17, [18, 19], 20);
 };
 
-},{"../lib":43,"../test/history":48}],11:[function(require,module,exports){
+},{"../lib":44,"../test/history":49}],11:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history');
 
@@ -217,7 +222,7 @@ exports['fast.concat()'] = function () {
   return fast.concat.apply(fast, input);
 };
 
-},{"../lib":43,"../test/history":48}],12:[function(require,module,exports){
+},{"../lib":44,"../test/history":49}],12:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history');
 
@@ -245,7 +250,7 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, chunks[0], chunks[1], chunks[2], chunks[3]);
 };
 
-},{"../lib":43,"../test/history":48}],13:[function(require,module,exports){
+},{"../lib":44,"../test/history":49}],13:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history');
 
@@ -259,139 +264,42 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, 11, 12, [13]);
 };
 
-},{"../lib":43,"../test/history":48}],14:[function(require,module,exports){
+},{"../lib":44,"../test/history":49}],14:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return (item + Math.random()) % 2;');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var filter = function (item) { return (item + Math.random()) % 2; };
 
 
 exports['Array::filter()'] = function () {
-  return input.filter(filter);
+  return input.filter(fns());
 };
 
 exports['fast.filter()'] = function () {
-  return fast.filter(input, filter);
+  return fast.filter(input, fns());
 };
 
 exports['underscore.filter()'] = function () {
-  return underscore.filter(input, filter);
+  return underscore.filter(input, fns());
 };
 
 exports['lodash.filter()'] = function () {
-  return lodash.filter(input, filter);
+  return lodash.filter(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],15:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],15:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
 
-var input = [];
-
-for (var i = 0; i < 1000; i++) {
-  input.push(i);
-}
-var filter = function (item) { return (item + Math.random()) % 2; };
-
-
-exports['Array::filter()'] = function () {
-  return input.filter(filter);
-};
-
-exports['fast.filter()'] = function () {
-  return fast.filter(input, filter);
-};
-
-exports['underscore.filter()'] = function () {
-  return underscore.filter(input, filter);
-};
-
-exports['lodash.filter()'] = function () {
-  return lodash.filter(input, filter);
-};
-
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],16:[function(require,module,exports){
-var fast = require('../lib'),
-    underscore = require('underscore'),
-    lodash = require('lodash'),
-    history = require('../test/history');
-
-var input = [1,2,3];
-var filter = function (item) { return (item + Math.random()) % 2; };
-
-
-exports['Array::filter()'] = function () {
-  return input.filter(filter);
-};
-
-exports['fast.filter()'] = function () {
-  return fast.filter(input, filter);
-};
-
-exports['underscore.filter()'] = function () {
-  return underscore.filter(input, filter);
-};
-
-exports['lodash.filter()'] = function () {
-  return lodash.filter(input, filter);
-};
-
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],17:[function(require,module,exports){
-var fast = require('../lib'),
-    underscore = require('underscore'),
-    lodash = require('lodash'),
-    history = require('../test/history');
-
-var input = [1,2,3,4,5,6,7,8,9,10];
-var acc = 0;
-var iterator = function (item) { acc += item; };
-
-exports['Array::forEach()'] = function () {
-  acc = 0;
-  input.forEach(iterator);
-};
-
-exports['fast.forEach()'] = function () {
-  acc = 0;
-  fast.forEach(input, iterator);
-};
-
-exports['fast.forEach() v0.0.2a'] = function () {
-  acc = 0;
-  history.forEach_0_0_2a(input, iterator);
-};
-
-exports['fast.forEach() v0.0.1'] = function () {
-  acc = 0;
-  history.forEach_0_0_1(input, iterator);
-};
-
-exports['fast.forEach() v0.0.0'] = function () {
-  acc = 0;
-  history.forEach_0_0_0(input, iterator);
-};
-
-
-exports['underscore.forEach()'] = function () {
-  acc = 0;
-  underscore.forEach(input, iterator);
-};
-
-exports['lodash.forEach()'] = function () {
-  acc = 0;
-  lodash.forEach(input, iterator);
-};
-
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],18:[function(require,module,exports){
-var fast = require('../lib'),
-    underscore = require('underscore'),
-    lodash = require('lodash'),
-    history = require('../test/history');
+var fns = utils.fns('item', 'return (item + Math.random()) % 2;');
 
 var input = [];
 
@@ -399,92 +307,203 @@ for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
 
-var acc = 0;
-var iterator = function (item) { acc += item; };
-
-
-exports['Array::forEach()'] = function () {
-  acc = 0;
-  input.forEach(iterator);
+exports['Array::filter()'] = function () {
+  return input.filter(fns());
 };
 
-exports['fast.forEach()'] = function () {
-  acc = 0;
-  fast.forEach(input, iterator);
+exports['fast.filter()'] = function () {
+  return fast.filter(input, fns());
 };
 
-exports['fast.forEach() v0.0.2a'] = function () {
-  acc = 0;
-  history.forEach_0_0_2a(input, iterator);
+exports['underscore.filter()'] = function () {
+  return underscore.filter(input, fns());
 };
 
-exports['fast.forEach() v0.0.1'] = function () {
-  acc = 0;
-  history.forEach_0_0_1(input, iterator);
+exports['lodash.filter()'] = function () {
+  return lodash.filter(input, fns());
 };
 
-exports['fast.forEach() v0.0.0'] = function () {
-  acc = 0;
-  history.forEach_0_0_0(input, iterator);
-};
-
-exports['underscore.forEach()'] = function () {
-  acc = 0;
-  underscore.forEach(input, iterator);
-};
-
-exports['lodash.forEach()'] = function () {
-  acc = 0;
-  lodash.forEach(input, iterator);
-};
-
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],19:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],16:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
 
+var fns = utils.fns('item', 'return (item + Math.random()) % 2;');
 var input = [1,2,3];
-var acc = 0;
-var iterator = function (item) { acc += item; };
+
+
+exports['Array::filter()'] = function () {
+  return input.filter(fns());
+};
+
+exports['fast.filter()'] = function () {
+  return fast.filter(input, fns());
+};
+
+exports['underscore.filter()'] = function () {
+  return underscore.filter(input, fns());
+};
+
+exports['lodash.filter()'] = function () {
+  return lodash.filter(input, fns());
+};
+
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],17:[function(require,module,exports){
+(function (global){
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    history = require('../test/history'),
+    utils = require('./utils');
+
+global.BENCH_ACC = 0;
+var fns = utils.fns('item', 'global.BENCH_ACC += item');
+
+var input = [1,2,3,4,5,6,7,8,9,10];
 
 exports['Array::forEach()'] = function () {
-  acc = 0;
-  input.forEach(iterator);
+  global.BENCH_ACC = 0;
+  input.forEach(fns());
 };
 
 exports['fast.forEach()'] = function () {
-  acc = 0;
-  fast.forEach(input, iterator);
+  global.BENCH_ACC = 0;
+  fast.forEach(input, fns());
 };
 
 exports['fast.forEach() v0.0.2a'] = function () {
-  acc = 0;
-  history.forEach_0_0_2a(input, iterator);
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_2a(input, fns());
 };
 
 exports['fast.forEach() v0.0.1'] = function () {
-  acc = 0;
-  history.forEach_0_0_1(input, iterator);
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_1(input, fns());
+};
+
+exports['fast.forEach() v0.0.0'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_0(input, fns());
+};
+
+
+exports['underscore.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  underscore.forEach(input, fns());
+};
+
+exports['lodash.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  lodash.forEach(input, fns());
+};
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],18:[function(require,module,exports){
+(function (global){
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    history = require('../test/history'),
+    utils = require('./utils');
+
+global.BENCH_ACC = 0;
+var fns = utils.fns('item', 'global.BENCH_ACC += item');
+
+var input = [];
+
+for (var i = 0; i < 1000; i++) {
+  input.push(i);
+}
+
+exports['Array::forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  input.forEach(fns());
+};
+
+exports['fast.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  fast.forEach(input, fns());
+};
+
+exports['fast.forEach() v0.0.2a'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_2a(input, fns());
+};
+
+exports['fast.forEach() v0.0.1'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_1(input, fns());
+};
+
+exports['fast.forEach() v0.0.0'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_0(input, fns());
+};
+
+exports['underscore.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  underscore.forEach(input, fns());
+};
+
+exports['lodash.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  lodash.forEach(input, fns());
+};
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],19:[function(require,module,exports){
+(function (global){
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    history = require('../test/history'),
+    utils = require('./utils');
+
+global.BENCH_ACC = 0;
+var fns = utils.fns('item', 'global.BENCH_ACC += item');
+
+var input = [1,2,3];
+
+exports['Array::forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  input.forEach(fns());
+};
+
+exports['fast.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  fast.forEach(input, fns());
+};
+
+exports['fast.forEach() v0.0.2a'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_2a(input, fns());
+};
+
+exports['fast.forEach() v0.0.1'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_1(input, fns());
 };
 
 
 exports['fast.forEach() v0.0.0'] = function () {
-  acc = 0;
-  history.forEach_0_0_0(input, iterator);
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_0(input, fns());
 };
 
 exports['underscore.forEach()'] = function () {
-  acc = 0;
-  underscore.forEach(input, iterator);
+  global.BENCH_ACC = 0;
+  underscore.forEach(input, fns());
 };
 
 exports['lodash.forEach()'] = function () {
-  acc = 0;
-  lodash.forEach(input, iterator);
+  global.BENCH_ACC = 0;
+  lodash.forEach(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],20:[function(require,module,exports){
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],20:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -513,7 +532,7 @@ exports['lodash.indexOf()'] = function () {
   return lodash.indexOf(input, 9) + lodash.indexOf(input, Math.random());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],21:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"lodash":47,"underscore":48}],21:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -546,7 +565,7 @@ exports['lodash.indexOf()'] = function () {
 };
 
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],22:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"lodash":47,"underscore":48}],22:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -574,7 +593,7 @@ exports['lodash.indexOf()'] = function () {
   return lodash.indexOf(input, 3) + lodash.indexOf(input, Math.random());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],23:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"lodash":47,"underscore":48}],23:[function(require,module,exports){
 var Benchmark = require('benchmark');
 
 run([
@@ -600,6 +619,7 @@ run([
   bench('Native .lastIndexOf() vs fast.lastIndexOf() (3 items)', require('./last-index-of-3')),
   bench('Native .lastIndexOf() vs fast.lastIndexOf() (10 items)', require('./last-index-of-10')),
   bench('Native .lastIndexOf() vs fast.lastIndexOf() (1000 items)', require('./last-index-of-1000')),
+
   bench('Native .bind() vs fast.bind()', require('./bind')),
   bench('Native .bind() vs fast.bind() with prebound functions', require('./bind-prebound')),
 
@@ -708,7 +728,7 @@ function run (benchmarks) {
   continuation();
 }
 
-},{"./apply-10":1,"./apply-3":2,"./apply-6":3,"./apply-context-10":4,"./apply-context-3":5,"./apply-context-6":6,"./bind":8,"./bind-prebound":7,"./clone":9,"./concat-10":10,"./concat-1000":12,"./concat-1000-apply":11,"./concat-3":13,"./filter-10":14,"./filter-1000":15,"./filter-3":16,"./for-each-10":17,"./for-each-1000":18,"./for-each-3":19,"./index-of-10":20,"./index-of-1000":21,"./index-of-3":22,"./last-index-of-10":24,"./last-index-of-1000":25,"./last-index-of-3":26,"./map-10":27,"./map-1000":28,"./map-3":29,"./partial":31,"./partial-prebound":30,"./reduce-10":32,"./reduce-1000":33,"./reduce-3":34,"./reduce-right-10":35,"./reduce-right-1000":36,"./reduce-right-3":37,"./some-10":38,"./some-1000":39,"./some-3":40,"./try":42,"./try-fn":41,"benchmark":44}],24:[function(require,module,exports){
+},{"./apply-10":1,"./apply-3":2,"./apply-6":3,"./apply-context-10":4,"./apply-context-3":5,"./apply-context-6":6,"./bind":8,"./bind-prebound":7,"./clone":9,"./concat-10":10,"./concat-1000":12,"./concat-1000-apply":11,"./concat-3":13,"./filter-10":14,"./filter-1000":15,"./filter-3":16,"./for-each-10":17,"./for-each-1000":18,"./for-each-3":19,"./index-of-10":20,"./index-of-1000":21,"./index-of-3":22,"./last-index-of-10":24,"./last-index-of-1000":25,"./last-index-of-3":26,"./map-10":27,"./map-1000":28,"./map-3":29,"./partial":31,"./partial-prebound":30,"./reduce-10":32,"./reduce-1000":33,"./reduce-3":34,"./reduce-right-10":35,"./reduce-right-1000":36,"./reduce-right-3":37,"./some-10":38,"./some-1000":39,"./some-3":40,"./try":42,"./try-fn":41,"benchmark":45}],24:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -736,7 +756,7 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 9) + lodash.lastIndexOf(input, 1);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],25:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"lodash":47,"underscore":48}],25:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -768,7 +788,7 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 999) + lodash.lastIndexOf(input, 1);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],26:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"lodash":47,"underscore":48}],26:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -796,138 +816,142 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 1);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],27:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"lodash":47,"underscore":48}],27:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item * item + Math.random()');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var mapper = function (item) { return item * item; };
 
 exports['Array::map()'] = function () {
-  input.map(mapper);
+  return input.map(fns());
 };
 
 exports['fast.map()'] = function () {
-  fast.map(input, mapper);
+  return fast.map(input, fns());
 };
 
 exports['fast.map() v0.0.2a'] = function () {
-  history.map_0_0_2a(input, mapper);
+  return history.map_0_0_2a(input, fns());
 };
 
 exports['fast.map() v0.0.1'] = function () {
-  history.map_0_0_1(input, mapper);
+  return history.map_0_0_1(input, fns());
 };
 
 exports['fast.map() v0.0.0'] = function () {
-  history.map_0_0_0(input, mapper);
+  return history.map_0_0_0(input, fns());
 };
 
 
 exports['underscore.map()'] = function () {
-  underscore.map(input, mapper);
+  return underscore.map(input, fns());
 };
 
 exports['lodash.map()'] = function () {
-  lodash.map(input, mapper);
+  return lodash.map(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],28:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],28:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item * item + Math.random()');
 
 var input = [];
 
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var mapper = function (item) { return item * item; };
-
 
 exports['Array::map()'] = function () {
-  input.map(mapper);
+  return input.map(fns());
 };
 
 exports['fast.map()'] = function () {
-  fast.map(input, mapper);
+  return fast.map(input, fns());
 };
 
 exports['fast.map() v0.0.2a'] = function () {
-  history.map_0_0_2a(input, mapper);
+  return history.map_0_0_2a(input, fns());
 };
 
 exports['fast.map() v0.0.1'] = function () {
-  history.map_0_0_1(input, mapper);
+  return history.map_0_0_1(input, fns());
 };
 
 exports['fast.map() v0.0.0'] = function () {
-  history.map_0_0_0(input, mapper);
+  return history.map_0_0_0(input, fns());
 };
 
 exports['underscore.map()'] = function () {
-  underscore.map(input, mapper);
+  return underscore.map(input, fns());
 };
 
 exports['lodash.map()'] = function () {
-  lodash.map(input, mapper);
+  return lodash.map(input, fns());
 };
 
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],29:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],29:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
 
+var fns = utils.fns('item', 'return item * item + Math.random()');
 var input = [1,2,3];
-var mapper = function (item) { return item * item; };
-
 
 exports['Array::map()'] = function () {
-  input.map(mapper);
+  return input.map(fns());
 };
 
 exports['fast.map()'] = function () {
-  fast.map(input, mapper);
+  return fast.map(input, fns());
 };
 
 exports['fast.map() v0.0.2a'] = function () {
-  history.map_0_0_2a(input, mapper);
+  return history.map_0_0_2a(input, fns());
 };
 
 exports['fast.map() v0.0.1'] = function () {
-  history.map_0_0_1(input, mapper);
+  return history.map_0_0_1(input, fns());
 };
 
 exports['fast.map() v0.0.0'] = function () {
-  history.map_0_0_0(input, mapper);
+  return history.map_0_0_0(input, fns());
 };
 
 exports['underscore.map()'] = function () {
-  underscore.map(input, mapper);
+  return underscore.map(input, fns());
 };
 
 exports['lodash.map()'] = function () {
-  lodash.map(input, mapper);
+  return lodash.map(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],30:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],30:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
 
 var input = function (a, b, c) {
-  return a + b + c;
+  return a + b + c * Math.random();
 };
 
 var nativeBound = input.bind(undefined, 1, 2);
 var fastPartial = fast.partial(input, 1, 2);
 var fastPartial_0_0_0 = history.partial_0_0_0(input, 1, 2);
+var fastPartial_0_0_2 = history.partial_0_0_2(input, 1, 2);
 var underPartial = underscore.partial(input, 1, 2);
 var loPartial = lodash.partial(input, 1, 2);
 
@@ -937,6 +961,10 @@ exports['Function::bind()'] = function () {
 
 exports['fast.partial()'] = function () {
   return fastPartial(3);
+};
+
+exports['fast.partial() v0.0.2'] = function () {
+  return fastPartial_0_0_2(3);
 };
 
 exports['fast.partial() v0.0.0'] = function () {
@@ -951,14 +979,14 @@ exports['lodash.partial()'] = function () {
   return loPartial(3);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],31:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"lodash":47,"underscore":48}],31:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
 
 var input = function (a, b, c) {
-  return a + b + c;
+  return a + b + c * Math.random();
 };
 
 exports['Function::bind()'] = function () {
@@ -971,6 +999,10 @@ exports['fast.partial()'] = function () {
   return fn(3);
 };
 
+exports['fast.partial() v0.0.2'] = function () {
+  var fn = history.partial_0_0_2(input, 1, 2);
+  return fn(3);
+};
 
 exports['fast.partial() v0.0.0'] = function () {
   var fn = history.partial_0_0_0(input, 1, 2);
@@ -988,314 +1020,327 @@ exports['lodash.partial()'] = function () {
 };
 
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],32:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"lodash":47,"underscore":48}],32:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var reducer = function (last, item) { return last + item; };
 
 exports['Array::reduce()'] = function () {
-  input.reduce(reducer, 0);
+  return input.reduce(fns(), 0);
 };
 
 exports['fast.reduce()'] = function () {
-  fast.reduce(input, reducer, 0);
+  return fast.reduce(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2c'] = function () {
-  history.reduce_0_0_2c(input, reducer, 0);
+  return history.reduce_0_0_2c(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2b'] = function () {
-  history.reduce_0_0_2b(input, reducer, 0);
+  return history.reduce_0_0_2b(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2a'] = function () {
-  history.reduce_0_0_2a(input, reducer, 0);
+  return history.reduce_0_0_2a(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.1'] = function () {
-  history.reduce_0_0_1(input, reducer, 0);
+  return history.reduce_0_0_1(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.0'] = function () {
-  history.reduce_0_0_0(input, reducer, 0);
+  return history.reduce_0_0_0(input, fns(), 0);
 };
 
 
 exports['underscore.reduce()'] = function () {
-  underscore.reduce(input, reducer, 0)
+  return underscore.reduce(input, fns(), 0)
 };
 
 exports['lodash.reduce()'] = function () {
-  lodash.reduce(input, reducer, 0)
+  return lodash.reduce(input, fns(), 0)
 };
 
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],33:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],33:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [];
 
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var reducer = function (last, item) { return last + item; };
-
 
 exports['Array::reduce()'] = function () {
-  input.reduce(reducer, 0);
+  return input.reduce(fns(), 0);
 };
 
 exports['fast.reduce()'] = function () {
-  fast.reduce(input, reducer, 0);
+  return fast.reduce(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2c'] = function () {
-  history.reduce_0_0_2c(input, reducer, 0);
+  return history.reduce_0_0_2c(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2b'] = function () {
-  history.reduce_0_0_2b(input, reducer, 0);
+  return history.reduce_0_0_2b(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2a'] = function () {
-  history.reduce_0_0_2a(input, reducer, 0);
+  return history.reduce_0_0_2a(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.1'] = function () {
-  history.reduce_0_0_1(input, reducer, 0);
+  return history.reduce_0_0_1(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.0'] = function () {
-  history.reduce_0_0_0(input, reducer, 0);
+  return history.reduce_0_0_0(input, fns(), 0);
 };
 
 exports['underscore.reduce()'] = function () {
-  underscore.reduce(input, reducer, 0);
+  return underscore.reduce(input, fns(), 0);
 };
 
 exports['lodash.reduce()'] = function () {
-  lodash.reduce(input, reducer, 0);
+  return lodash.reduce(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],34:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],34:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [1,2,3];
-var reducer = function (last, item) { return last + item; };
 
 
 exports['Array::reduce()'] = function () {
-  input.reduce(reducer, 0);
+  return input.reduce(fns(), 0);
 };
 
 exports['fast.reduce()'] = function () {
-  fast.reduce(input, reducer, 0);
+  return fast.reduce(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2c'] = function () {
-  history.reduce_0_0_2c(input, reducer, 0);
+  return history.reduce_0_0_2c(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2b'] = function () {
-  history.reduce_0_0_2b(input, reducer, 0);
+  return history.reduce_0_0_2b(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2a'] = function () {
-  history.reduce_0_0_2a(input, reducer, 0);
+  return history.reduce_0_0_2a(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.1'] = function () {
-  history.reduce_0_0_1(input, reducer, 0);
+  return history.reduce_0_0_1(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.0'] = function () {
-  history.reduce_0_0_0(input, reducer, 0);
+  return history.reduce_0_0_0(input, fns(), 0);
 };
 
 exports['underscore.reduce()'] = function () {
-  underscore.reduce(input, reducer, 0);
+  return underscore.reduce(input, fns(), 0);
 };
 
 exports['lodash.reduce()'] = function () {
-  lodash.reduce(input, reducer, 0);
+  return lodash.reduce(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],35:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],35:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var reducer = function (last, item) { return last + item + Math.random(); };
-
 
 exports['Array::reduceRight()'] = function () {
-  return input.reduceRight(reducer, 0);
+  return input.reduceRight(fns(), 0);
 };
 
 exports['fast.reduceRight()'] = function () {
-  return fast.reduceRight(input, reducer, 0);
+  return fast.reduceRight(input, fns(), 0);
 };
 
 exports['underscore.reduceRight()'] = function () {
-  return underscore.reduceRight(input, reducer, 0);
+  return underscore.reduceRight(input, fns(), 0);
 };
 
 exports['lodash.reduceRight()'] = function () {
-  return lodash.reduceRight(input, reducer, 0);
+  return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],36:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],36:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [];
 
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var reducer = function (last, item) { return last + item + Math.random(); };
-
 
 exports['Array::reduceRight()'] = function () {
-  return input.reduceRight(reducer, 0);
+  return input.reduceRight(fns(), 0);
 };
 
 exports['fast.reduceRight()'] = function () {
-  return fast.reduceRight(input, reducer, 0);
+  return fast.reduceRight(input, fns(), 0);
 };
 
 exports['underscore.reduceRight()'] = function () {
-  return underscore.reduceRight(input, reducer, 0);
+  return underscore.reduceRight(input, fns(), 0);
 };
 
 exports['lodash.reduceRight()'] = function () {
-  return lodash.reduceRight(input, reducer, 0);
+  return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],37:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],37:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [1,2,3];
-var reducer = function (last, item) { return last + item + Math.random(); };
-
 
 exports['Array::reduceRight()'] = function () {
-  return input.reduceRight(reducer, 0);
+  return input.reduceRight(fns(), 0);
 };
 
 exports['fast.reduceRight()'] = function () {
-  return fast.reduceRight(input, reducer, 0);
+  return fast.reduceRight(input, fns(), 0);
 };
 
 exports['underscore.reduceRight()'] = function () {
-  return underscore.reduceRight(input, reducer, 0);
+  return underscore.reduceRight(input, fns(), 0);
 };
 
 exports['lodash.reduceRight()'] = function () {
-  return lodash.reduceRight(input, reducer, 0);
+  return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],38:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],38:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item === 10');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var check = function (item) { return item === 10; };
 
 
 exports['Array::some()'] = function () {
-  return input.some(check);
+  return input.some(fns());
 };
 
 exports['fast.some()'] = function () {
-  return fast.some(input, check);
+  return fast.some(input, fns());
 };
 
 exports['underscore.some()'] = function () {
-  return underscore.some(input, check);
+  return underscore.some(input, fns());
 };
 
 exports['lodash.some()'] = function () {
-  return lodash.some(input, check);
+  return lodash.some(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],39:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],39:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item === 999');
 
 var input = [];
 
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var check = function (item) { return item === 999; };
 
 
 exports['Array::some()'] = function () {
-  return input.some(check);
+  return input.some(fns());
 };
 
 exports['fast.some()'] = function () {
-  return fast.some(input, check);
+  return fast.some(input, fns());
 };
 
 exports['underscore.some()'] = function () {
-  return underscore.some(input, check);
+  return underscore.some(input, fns());
 };
 
 exports['lodash.some()'] = function () {
-  return lodash.some(input, check);
+  return lodash.some(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],40:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],40:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item === 3');
 
 var input = [1,2,3];
-var check = function (item) { return item === 3; };
-
 
 exports['Array::some()'] = function () {
-  return input.some(check);
+  return input.some(fns());
 };
 
 exports['fast.some()'] = function () {
-  return fast.some(input, check);
+  return fast.some(input, fns());
 };
 
 exports['underscore.some()'] = function () {
-  return underscore.some(input, check);
+  return underscore.some(input, fns());
 };
 
 exports['lodash.some()'] = function () {
-  return lodash.some(input, check);
+  return lodash.some(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],41:[function(require,module,exports){
+},{"../lib":44,"../test/history":49,"./utils":43,"lodash":47,"underscore":48}],41:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1342,7 +1387,7 @@ function doSomeWork () {
   d += factorial(2 * Math.random());
   return d;
 }
-},{"../lib":43,"lodash":46,"underscore":47}],42:[function(require,module,exports){
+},{"../lib":44,"lodash":47,"underscore":48}],42:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1390,7 +1435,38 @@ exports['fast.try()'] = function () {
   });
 };
 
-},{"../lib":43,"lodash":46,"underscore":47}],43:[function(require,module,exports){
+},{"../lib":44,"lodash":47,"underscore":48}],43:[function(require,module,exports){
+/**
+ * Function factory.
+ * Accepts the same arguments as the Function constructor, creates 20 duplicate
+ * but unique instances of the function and returns a function which will infinitely
+ * return each function in a cycle.
+ *
+ * This is used to ensure that the benchmarks do not only measure monomorphic performance.
+ *
+ * @return {Function} A function which will keep on returning the defined functions.
+ */
+exports.fns = function () {
+  var length = arguments.length,
+      args = new Array(length),
+      fns = new Array(20),
+      i;
+  for (i = 0; i < length; i++) {
+    args[i] = arguments[i];
+  }
+  for (i = 0; i < 20; i++) {
+    fns[i] = Function.apply(null, args);
+  }
+
+  var pointer = -1;
+  return function () {
+    if (pointer++ > 20) {
+      pointer = 0;
+    }
+    return fns[pointer % 20];
+  };
+};
+},{}],44:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1419,22 +1495,45 @@ exports.bind = function fastBind (fn, thisContext) {
     for (var i = 0; i < boundLength; i++) {
       boundArgs[i] = arguments[i + 2];
     }
+    if (thisContext !== undefined) {
+      return function () {
+        var length = arguments.length,
+            args = new Array(boundLength + length),
+            i;
+        for (i = 0; i < boundLength; i++) {
+          args[i] = boundArgs[i];
+        }
+        for (i = 0; i < length; i++) {
+          args[boundLength + i] = arguments[i];
+        }
+        return applyWithContext(fn, thisContext, args);
+      };
+    }
+    else {
+      return function () {
+        var length = arguments.length,
+            args = new Array(boundLength + length),
+            i;
+        for (i = 0; i < boundLength; i++) {
+          args[i] = boundArgs[i];
+        }
+        for (i = 0; i < length; i++) {
+          args[boundLength + i] = arguments[i];
+        }
+        return applyNoContext(fn, args);
+      };
+    }
+  }
+  if (thisContext !== undefined) {
     return function () {
-      var length = arguments.length,
-          args = new Array(boundLength + length),
-          i;
-      for (i = 0; i < boundLength; i++) {
-        args[i] = boundArgs[i];
-      }
-      for (i = 0; i < length; i++) {
-        args[boundLength + i] = arguments[i];
-      }
-      return fn.apply(thisContext, args);
+      return applyWithContext(fn, thisContext, arguments);
     };
   }
-  return function () {
-    return fn.apply(thisContext, arguments);
-  };
+  else {
+    return function () {
+      return applyNoContext(fn, arguments);
+    };
+  }
 };
 
 /**
@@ -1472,7 +1571,7 @@ exports.partial = function fastPartial (fn) {
     for (i = 0; i < length; i++) {
       args[boundLength + i] = arguments[i];
     }
-    return fn.apply(this, args);
+    return applyWithContext(fn, this, args);
   };
 };
 
@@ -1507,7 +1606,7 @@ exports.partialConstructor = function fastPartialConstructor (fn) {
     }
 
     var thisContext = Object.create(fn.prototype),
-        result = fn.apply(thisContext, args);
+        result = applyWithContext(fn, thisContext, args);
 
     if (result != null && (typeof result === 'object' || typeof result === 'function')) {
       return result;
@@ -1780,8 +1879,8 @@ exports.indexOf = function fastIndexOf (subject, target, fromIndex) {
   var length = subject.length,
       i = 0;
 
-  if (fromIndex !== undefined) {
-    i = fromIndex >> 0;
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
     if (i < 0) {
       i += length;
       if (i < 0) {
@@ -1814,8 +1913,8 @@ exports.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
   var length = subject.length,
       i = length - 1;
 
-  if (fromIndex !== undefined) {
-    i = fromIndex >> 0;
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
     if (i < 0) {
       i += length;
     }
@@ -1877,7 +1976,7 @@ exports.attempt = exports['try'];
  * @return {mixed}              The result of the function invocation.
  */
 exports.apply = function fastApply (subject, thisContext, args) {
-  return thisContext != null ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
+  return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
 };
 
 
@@ -1957,7 +2056,7 @@ function bindInternal4 (func, thisContext) {
   };
 }
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 (function (process,global){
 /*!
  * Benchmark.js v1.0.0 <http://benchmarkjs.com/>
@@ -5879,7 +5978,7 @@ function bindInternal4 (func, thisContext) {
 }(this));
 
 }).call(this,require("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"FWaASH":45}],45:[function(require,module,exports){
+},{"FWaASH":46}],46:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -5944,7 +6043,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -12733,7 +12832,7 @@ process.chdir = function (dir) {
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 //     Underscore.js 1.6.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -14078,7 +14177,7 @@ process.chdir = function (dir) {
   }
 }).call(this);
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 exports.concat_0_0_0 = function fastConcat () {
   var length = arguments.length,
       arr = [],
@@ -14354,5 +14453,86 @@ exports.lastIndexOf_0_0_2 = function fastLastIndexOf (subject, target) {
     }
   }
   return -1;
+};
+
+
+exports.bind_0_0_2 = function fastBind (fn, thisContext) {
+  var boundLength = arguments.length - 2,
+      boundArgs;
+
+  if (boundLength > 0) {
+    boundArgs = new Array(boundLength);
+    for (var i = 0; i < boundLength; i++) {
+      boundArgs[i] = arguments[i + 2];
+    }
+    return function () {
+      var length = arguments.length,
+          args = new Array(boundLength + length),
+          i;
+      for (i = 0; i < boundLength; i++) {
+        args[i] = boundArgs[i];
+      }
+      for (i = 0; i < length; i++) {
+        args[boundLength + i] = arguments[i];
+      }
+      return fn.apply(thisContext, args);
+    };
+  }
+  return function () {
+    return fn.apply(thisContext, arguments);
+  };
+};
+
+exports.partial_0_0_2 = function fastPartial (fn) {
+  var boundLength = arguments.length - 1,
+      boundArgs;
+
+  boundArgs = new Array(boundLength);
+  for (var i = 0; i < boundLength; i++) {
+    boundArgs[i] = arguments[i + 1];
+  }
+  return function () {
+    var length = arguments.length,
+        args = new Array(boundLength + length),
+        i;
+    for (i = 0; i < boundLength; i++) {
+      args[i] = boundArgs[i];
+    }
+    for (i = 0; i < length; i++) {
+      args[boundLength + i] = arguments[i];
+    }
+    return fn.apply(this, args);
+  };
+};
+
+exports.partialConstructor_0_0_2 = function fastPartialConstructor (fn) {
+  var boundLength = arguments.length - 1,
+      boundArgs;
+
+  boundArgs = new Array(boundLength);
+  for (var i = 0; i < boundLength; i++) {
+    boundArgs[i] = arguments[i + 1];
+  }
+  return function partialed () {
+    var length = arguments.length,
+        args = new Array(boundLength + length),
+        i;
+    for (i = 0; i < boundLength; i++) {
+      args[i] = boundArgs[i];
+    }
+    for (i = 0; i < length; i++) {
+      args[boundLength + i] = arguments[i];
+    }
+
+    var thisContext = Object.create(fn.prototype),
+        result = fn.apply(thisContext, args);
+
+    if (result != null && (typeof result === 'object' || typeof result === 'function')) {
+      return result;
+    }
+    else {
+      return thisContext;
+    }
+  };
 };
 },{}]},{},[23])

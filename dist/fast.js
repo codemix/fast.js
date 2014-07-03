@@ -29,22 +29,45 @@ exports.bind = function fastBind (fn, thisContext) {
     for (var i = 0; i < boundLength; i++) {
       boundArgs[i] = arguments[i + 2];
     }
+    if (thisContext !== undefined) {
+      return function () {
+        var length = arguments.length,
+            args = new Array(boundLength + length),
+            i;
+        for (i = 0; i < boundLength; i++) {
+          args[i] = boundArgs[i];
+        }
+        for (i = 0; i < length; i++) {
+          args[boundLength + i] = arguments[i];
+        }
+        return applyWithContext(fn, thisContext, args);
+      };
+    }
+    else {
+      return function () {
+        var length = arguments.length,
+            args = new Array(boundLength + length),
+            i;
+        for (i = 0; i < boundLength; i++) {
+          args[i] = boundArgs[i];
+        }
+        for (i = 0; i < length; i++) {
+          args[boundLength + i] = arguments[i];
+        }
+        return applyNoContext(fn, args);
+      };
+    }
+  }
+  if (thisContext !== undefined) {
     return function () {
-      var length = arguments.length,
-          args = new Array(boundLength + length),
-          i;
-      for (i = 0; i < boundLength; i++) {
-        args[i] = boundArgs[i];
-      }
-      for (i = 0; i < length; i++) {
-        args[boundLength + i] = arguments[i];
-      }
-      return fn.apply(thisContext, args);
+      return applyWithContext(fn, thisContext, arguments);
     };
   }
-  return function () {
-    return fn.apply(thisContext, arguments);
-  };
+  else {
+    return function () {
+      return applyNoContext(fn, arguments);
+    };
+  }
 };
 
 /**
@@ -82,7 +105,7 @@ exports.partial = function fastPartial (fn) {
     for (i = 0; i < length; i++) {
       args[boundLength + i] = arguments[i];
     }
-    return fn.apply(this, args);
+    return applyWithContext(fn, this, args);
   };
 };
 
@@ -117,7 +140,7 @@ exports.partialConstructor = function fastPartialConstructor (fn) {
     }
 
     var thisContext = Object.create(fn.prototype),
-        result = fn.apply(thisContext, args);
+        result = applyWithContext(fn, thisContext, args);
 
     if (result != null && (typeof result === 'object' || typeof result === 'function')) {
       return result;
@@ -390,8 +413,8 @@ exports.indexOf = function fastIndexOf (subject, target, fromIndex) {
   var length = subject.length,
       i = 0;
 
-  if (fromIndex !== undefined) {
-    i = fromIndex >> 0;
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
     if (i < 0) {
       i += length;
       if (i < 0) {
@@ -424,8 +447,8 @@ exports.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
   var length = subject.length,
       i = length - 1;
 
-  if (fromIndex !== undefined) {
-    i = fromIndex >> 0;
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
     if (i < 0) {
       i += length;
     }
@@ -487,7 +510,7 @@ exports.attempt = exports['try'];
  * @return {mixed}              The result of the function invocation.
  */
 exports.apply = function fastApply (subject, thisContext, args) {
-  return thisContext != null ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
+  return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
 };
 
 
