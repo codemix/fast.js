@@ -1,0 +1,27 @@
+{
+  "name": "fast.js",
+  "version": "0.0.3",
+  "homepage": "https://github.com/codemix/fast.js",
+  "authors": [
+    "Charles Pick <charles@codemix.com>"
+  ],
+  "description": "Fast re-implementations of native JavaScript functions",
+  "main": "dist/fast.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "fast",
+    "performance",
+    "native",
+    "benchmarks"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

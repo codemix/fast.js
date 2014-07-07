@@ -1,62 +1,7 @@
+(function (module, exports) {
+
+
 'use strict';
-
-
-function Fast (value) {
-  if (!(this instanceof Fast)) {
-    return new Fast(value);
-  }
-  this.value = value || [];
-}
-
-module.exports = exports = Fast;
-
-
-Fast.prototype.map = function Fast$map (fn, thisContext) {
-  return new Fast(Fast.map(this.value, fn, thisContext));
-};
-
-Fast.prototype.filter = function Fast$filter (fn, thisContext) {
-  return new Fast(Fast.filter(this.value, fn, thisContext));
-};
-
-Fast.prototype.reduce = function Fast$reduce (fn, initialValue, thisContext) {
-  return Fast.reduce(this.value, fn, initialValue, thisContext);
-};
-
-Fast.prototype.reduceRight = function Fast$reduceRight (fn, initialValue, thisContext) {
-  return Fast.reduceRight(this.value, fn, initialValue, thisContext);
-};
-
-Fast.prototype.forEach = function Fast$forEach (fn, thisContext) {
-  Fast.forEach(this.value, fn, thisContext);
-  return this;
-};
-
-Fast.prototype.some = function Fast$some (fn, thisContext) {
-  return Fast.some(this.value, fn, thisContext);
-};
-
-Fast.prototype.indexOf = function Fast$indexOf (target) {
-  return Fast.indexOf(this.value, target);
-};
-
-Fast.prototype.lastIndexOf = function Fast$lastIndexOf (target) {
-  return Fast.lastIndexOf(this.value, target);
-};
-
-Fast.prototype.valueOf = function Fast$valueOf () {
-  return this.value;
-};
-
-Fast.prototype.toJSON = function Fast$toJSON () {
-  return this.value;
-};
-
-Object.defineProperty(Fast.prototype, 'length', {
-  get: function () {
-    return this.value.length;
-  }
-});
 
 /**
  * # Bind
@@ -75,7 +20,7 @@ Object.defineProperty(Fast.prototype, 'length', {
  * @param  {mixed}    args, ...   Additional arguments to pre-bind.
  * @return {Function}             The bound function.
  */
-Fast.bind = function fastBind (fn, thisContext) {
+exports.bind = function fastBind (fn, thisContext) {
   var boundLength = arguments.length - 2,
       boundArgs;
 
@@ -84,45 +29,22 @@ Fast.bind = function fastBind (fn, thisContext) {
     for (var i = 0; i < boundLength; i++) {
       boundArgs[i] = arguments[i + 2];
     }
-    if (thisContext !== undefined) {
-      return function () {
-        var length = arguments.length,
-            args = new Array(boundLength + length),
-            i;
-        for (i = 0; i < boundLength; i++) {
-          args[i] = boundArgs[i];
-        }
-        for (i = 0; i < length; i++) {
-          args[boundLength + i] = arguments[i];
-        }
-        return applyWithContext(fn, thisContext, args);
-      };
-    }
-    else {
-      return function () {
-        var length = arguments.length,
-            args = new Array(boundLength + length),
-            i;
-        for (i = 0; i < boundLength; i++) {
-          args[i] = boundArgs[i];
-        }
-        for (i = 0; i < length; i++) {
-          args[boundLength + i] = arguments[i];
-        }
-        return applyNoContext(fn, args);
-      };
-    }
-  }
-  if (thisContext !== undefined) {
     return function () {
-      return applyWithContext(fn, thisContext, arguments);
+      var length = arguments.length,
+          args = new Array(boundLength + length),
+          i;
+      for (i = 0; i < boundLength; i++) {
+        args[i] = boundArgs[i];
+      }
+      for (i = 0; i < length; i++) {
+        args[boundLength + i] = arguments[i];
+      }
+      return fn.apply(thisContext, args);
     };
   }
-  else {
-    return function () {
-      return applyNoContext(fn, arguments);
-    };
-  }
+  return function () {
+    return fn.apply(thisContext, arguments);
+  };
 };
 
 /**
@@ -142,7 +64,7 @@ Fast.bind = function fastBind (fn, thisContext) {
  * @param  {mixed}    args, ...   Arguments to pre-bind.
  * @return {Function}             The partially applied function.
  */
-Fast.partial = function fastPartial (fn) {
+exports.partial = function fastPartial (fn) {
   var boundLength = arguments.length - 1,
       boundArgs;
 
@@ -160,7 +82,7 @@ Fast.partial = function fastPartial (fn) {
     for (i = 0; i < length; i++) {
       args[boundLength + i] = arguments[i];
     }
-    return applyWithContext(fn, this, args);
+    return fn.apply(this, args);
   };
 };
 
@@ -175,7 +97,7 @@ Fast.partial = function fastPartial (fn) {
  * @param  {mixed}    args, ...   Arguments to pre-bind.
  * @return {Function}             The partially applied constructor.
  */
-Fast.partialConstructor = function fastPartialConstructor (fn) {
+exports.partialConstructor = function fastPartialConstructor (fn) {
   var boundLength = arguments.length - 1,
       boundArgs;
 
@@ -195,7 +117,7 @@ Fast.partialConstructor = function fastPartialConstructor (fn) {
     }
 
     var thisContext = Object.create(fn.prototype),
-        result = applyWithContext(fn, thisContext, args);
+        result = fn.apply(thisContext, args);
 
     if (result != null && (typeof result === 'object' || typeof result === 'function')) {
       return result;
@@ -217,15 +139,15 @@ Fast.partialConstructor = function fastPartialConstructor (fn) {
  * @param  {mixed} input The input to clone.
  * @return {mixed}       The cloned input.
  */
-Fast.clone = function clone (input) {
+exports.clone = function clone (input) {
   if (!input || typeof input !== 'object') {
     return input;
   }
   else if (Array.isArray(input)) {
-    return Fast.cloneArray(input);
+    return exports.cloneArray(input);
   }
   else {
-    return Fast.cloneObject(input);
+    return exports.cloneObject(input);
   }
 };
 
@@ -239,7 +161,7 @@ Fast.clone = function clone (input) {
  * @param  {Array} input The array or array-like object to clone.
  * @return {Array}       The cloned array.
  */
-Fast.cloneArray = function fastCloneArray (input) {
+exports.cloneArray = function fastCloneArray (input) {
   var length = input.length,
       sliced = new Array(length),
       i;
@@ -259,7 +181,7 @@ Fast.cloneArray = function fastCloneArray (input) {
  * @param  {Object} input The object to clone.
  * @return {Object}       The cloned object.
  */
-Fast.cloneObject = function fastCloneObject (input) {
+exports.cloneObject = function fastCloneObject (input) {
   var keys = Object.keys(input),
       total = keys.length,
       cloned = {},
@@ -285,7 +207,7 @@ Fast.cloneObject = function fastCloneObject (input) {
  * @param  {Array|mixed} item, ... The item(s) to concatenate.
  * @return {Array}                 The array containing the concatenated items.
  */
-Fast.concat = function fastConcat () {
+exports.concat = function fastConcat () {
   var length = arguments.length,
       arr = [],
       i, item, childLength, j;
@@ -315,7 +237,7 @@ Fast.concat = function fastConcat () {
  * @param  {Object}   thisContext The context for the mapper.
  * @return {Array}                The array containing the results.
  */
-Fast.map = function fastMap (subject, fn, thisContext) {
+exports.map = function fastMap (subject, fn, thisContext) {
   var length = subject.length,
       result = new Array(length),
       iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
@@ -336,7 +258,7 @@ Fast.map = function fastMap (subject, fn, thisContext) {
  * @param  {Object}   thisContext The context for the filter.
  * @return {Array}                The array containing the results.
  */
-Fast.filter = function fastFilter (subject, fn, thisContext) {
+exports.filter = function fastFilter (subject, fn, thisContext) {
   var length = subject.length,
       result = [],
       iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
@@ -360,7 +282,7 @@ Fast.filter = function fastFilter (subject, fn, thisContext) {
  * @param  {Object}   thisContext  The context for the reducer.
  * @return {mixed}                 The final result.
  */
-Fast.reduce = function fastReduce (subject, fn, initialValue, thisContext) {
+exports.reduce = function fastReduce (subject, fn, initialValue, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
       i, result;
@@ -392,7 +314,7 @@ Fast.reduce = function fastReduce (subject, fn, initialValue, thisContext) {
  * @param  {Object}   thisContext  The context for the reducer.
  * @return {mixed}                 The final result.
  */
-Fast.reduceRight = function fastReduce (subject, fn, initialValue, thisContext) {
+exports.reduceRight = function fastReduce (subject, fn, initialValue, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
       i, result;
@@ -423,7 +345,7 @@ Fast.reduceRight = function fastReduce (subject, fn, initialValue, thisContext) 
  * @param  {Function} fn          The visitor function.
  * @param  {Object}   thisContext The context for the visitor.
  */
-Fast.forEach = function fastForEach (subject, fn, thisContext) {
+exports.forEach = function fastForEach (subject, fn, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
       i;
@@ -442,7 +364,7 @@ Fast.forEach = function fastForEach (subject, fn, thisContext) {
  * @param  {Object}   thisContext The context for the visitor.
  * @return {Boolean}              true if at least one item in the array passes the truth test.
  */
-Fast.some = function fastSome (subject, fn, thisContext) {
+exports.some = function fastSome (subject, fn, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
       i;
@@ -464,12 +386,12 @@ Fast.some = function fastSome (subject, fn, thisContext) {
  * @param  {Number} fromIndex The position to start searching from, if known.
  * @return {Number}           The position of the target in the subject, or -1 if it does not exist.
  */
-Fast.indexOf = function fastIndexOf (subject, target, fromIndex) {
+exports.indexOf = function fastIndexOf (subject, target, fromIndex) {
   var length = subject.length,
       i = 0;
 
-  if (typeof fromIndex === 'number') {
-    i = fromIndex;
+  if (fromIndex !== undefined) {
+    i = fromIndex >> 0;
     if (i < 0) {
       i += length;
       if (i < 0) {
@@ -498,12 +420,12 @@ Fast.indexOf = function fastIndexOf (subject, target, fromIndex) {
  * @param  {Number} fromIndex The position to start searching backwards from, if known.
  * @return {Number}         The last position of the target in the subject, or -1 if it does not exist.
  */
-Fast.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
+exports.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
   var length = subject.length,
       i = length - 1;
 
-  if (typeof fromIndex === 'number') {
-    i = fromIndex;
+  if (fromIndex !== undefined) {
+    i = fromIndex >> 0;
     if (i < 0) {
       i += length;
     }
@@ -536,7 +458,7 @@ Fast.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
  * @param  {Function} fn The function to invoke.
  * @return {mixed}       The result of the function, or an `Error` object.
  */
-Fast['try'] = function fastTry (fn) {
+exports['try'] = function fastTry (fn) {
   try {
     return fn();
   }
@@ -551,7 +473,7 @@ Fast['try'] = function fastTry (fn) {
 };
 
 // alias of `.try()` for older JS engines.
-Fast.attempt = Fast['try'];
+exports.attempt = exports['try'];
 
 /**
  * # Apply
@@ -564,8 +486,8 @@ Fast.attempt = Fast['try'];
  * @param  {Array} args         The arguments for the function.
  * @return {mixed}              The result of the function invocation.
  */
-Fast.apply = function fastApply (subject, thisContext, args) {
-  return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
+exports.apply = function fastApply (subject, thisContext, args) {
+  return thisContext != null ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
 };
 
 
@@ -644,3 +566,9 @@ function bindInternal4 (func, thisContext) {
     return func.call(thisContext, a, b, c, d);
   };
 }
+
+})(
+  typeof module === 'undefined' ? { exports: window.fast = {} } : module,
+  typeof exports === 'undefined' ? window.fast : exports
+
+);

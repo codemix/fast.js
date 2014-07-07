@@ -1,24 +1,26 @@
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return (item + Math.random()) % 2;');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var filter = function (item) { return (item + Math.random()) % 2; };
 
 
 exports['Array::filter()'] = function () {
-  return input.filter(filter);
+  return input.filter(fns());
 };
 
 exports['fast.filter()'] = function () {
-  return fast.filter(input, filter);
+  return fast.filter(input, fns());
 };
 
 exports['underscore.filter()'] = function () {
-  return underscore.filter(input, filter);
+  return underscore.filter(input, fns());
 };
 
 exports['lodash.filter()'] = function () {
-  return lodash.filter(input, filter);
+  return lodash.filter(input, fns());
 };

@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Fast.js Benchmarks</title>
+  </head>
+  <body>
+    <h1>Please open your JavaScript console, then <button id="starter" onclick="startAll()">Click to Start</button></h1>
+    <script>
+    function startAll () {
+      var old = console.log;
+      console.log = function (message) {
+        old.call(console, ('' + message).replace(/\u001b\[(?:[0-9]{1,3}(?:;[0-9]{1,3})*)?[m|K]/g, ''));
+      };
+      document.getElementById('starter').remove();
+      var node = document.createElement('script');
+      node.src = './bench.js';
+      document.body.appendChild(node);
+
+    }
+    </script>
+  </body>
+</html>
