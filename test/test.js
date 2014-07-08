@@ -639,4 +639,27 @@ describe('Fast', function () {
     });
     result.should.equal(21);
   });
+
+  describe('integration', function () {
+    var result;
+    beforeEach(function () {
+      result = input
+      .map(function (item) {
+        return item * 2;
+      })
+      .reverse()
+      .filter(function (item) {
+        return item % 3 === 0;
+      })
+      .map(function (item) {
+        return item / 2;
+      });
+    });
+    it('should perform functions in a chain', function () {
+      result.should.be.an.instanceOf(fast);
+    });
+    it('reduce to a final value', function () {
+      result.reduce(function (a, b) { return a + b; }).should.equal(9);
+    });
+  });
 });
