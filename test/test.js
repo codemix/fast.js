@@ -653,13 +653,14 @@ describe('Fast', function () {
       })
       .map(function (item) {
         return item / 2;
-      });
+      })
+      .concat(1, [2, 3]);
     });
     it('should perform functions in a chain', function () {
       result.should.be.an.instanceOf(fast);
     });
     it('reduce to a final value', function () {
-      result.reduce(function (a, b) { return a + b; }).should.equal(9);
+      result.reduce(function (a, b) { return a + b; }).should.equal(15);
     });
   });
 });
