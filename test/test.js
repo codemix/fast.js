@@ -583,3 +583,84 @@ describe('fast.apply()', function () {
     });
   });
 });
+
+describe('Fast', function () {
+  var input = fast([1,2,3,4,5,6]);
+
+  describe('constructor', function () {
+    it('should return a Fast instance', function () {
+      input.should.be.an.instanceOf(fast);
+    });
+    it('should wrap the value', function () {
+      input.value.should.eql([1,2,3,4,5,6]);
+    });
+    it('should assign an empty array if none given', function () {
+      fast().length.should.equal(0);
+      fast().value.should.eql([]);
+    });
+  });
+
+  describe('length', function () {
+    it('should give the correct length', function () {
+      input.length.should.equal(6);
+    });
+  })
+  it('should map over the list', function () {
+    var result = input.map(function (item) {
+      return item * 2;
+    });
+    result.should.be.an.instanceOf(fast);
+    result.length.should.equal(6);
+    result.value.should.eql([2,4,6,8,10,12]);
+  });
+  it('should filter the list', function () {
+    var result = input.filter(function (item) {
+      return item % 2;
+    });
+    result.should.be.an.instanceOf(fast);
+    result.value.should.eql([1,3,5]);
+  });
+  it('should reduce over the list', function () {
+    var result = input.reduce(function (last, item) {
+      return last + item
+    });
+    result.should.equal(21);
+  });
+  it('should iterate over the list', function () {
+    var result = 0;
+    input.forEach(function (item) {
+      result += item;
+    });
+    result.should.equal(21);
+  });
+  it('should return true for ', function () {
+    var result = input.reduce(function (last, item) {
+      return last + item
+    });
+    result.should.equal(21);
+  });
+
+  describe('integration', function () {
+    var result;
+    beforeEach(function () {
+      result = input
+      .map(function (item) {
+        return item * 2;
+      })
+      .reverse()
+      .filter(function (item) {
+        return item % 3 === 0;
+      })
+      .map(function (item) {
+        return item / 2;
+      })
+      .concat(1, [2, 3]);
+    });
+    it('should perform functions in a chain', function () {
+      result.should.be.an.instanceOf(fast);
+    });
+    it('reduce to a final value', function () {
+      result.reduce(function (a, b) { return a + b; }).should.equal(15);
+    });
+  });
+});
