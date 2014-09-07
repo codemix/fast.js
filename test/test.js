@@ -99,7 +99,7 @@ describe('fast.cloneArray()', function () {
     // don't actually do this, it leaks the arguments object
     (function () { return fast.cloneArray(arguments); }).apply(this, input).should.eql(input);
   });
-  it.only('should clone an array starting at specified index', function () {
+  it('should clone an array starting at specified index', function () {
     fast.cloneArray(input, 2).should.eql(input.slice(2));
   });
 });
