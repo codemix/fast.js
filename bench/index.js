@@ -54,6 +54,10 @@ run([
   bench('Native .some() vs fast.some() (10 items)', require('./some-10')),
   bench('Native .some() vs fast.some() (1000 items)', require('./some-1000')),
 
+  bench('Native .every() vs fast.every() (3 items)', require('./every-3')),
+  bench('Native .every() vs fast.every() (10 items)', require('./every-10')),
+  bench('Native .every() vs fast.every() (1000 items)', require('./every-1000')),
+
   bench('Native .concat() vs fast.concat() (3 items)', require('./concat-3')),
   bench('Native .concat() vs fast.concat() (10 items)', require('./concat-10')),
   bench('Native .concat() vs fast.concat() (1000 items)', require('./concat-1000')),

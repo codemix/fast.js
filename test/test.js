@@ -242,6 +242,27 @@ describe('fast.some()', function () {
   });
 });
 
+describe('fast.every()', function () {
+  var input = [1,2,3,4,5];
+
+  it('should return true if the check passes', function () {
+    var result = fast.every(input, function (item) {
+      return item < 6;
+    });
+    result.should.be.true;
+  });
+  it('should return false if the check fails', function () {
+    var result = fast.every(input, function (item) {
+      return item < 5;
+    });
+    result.should.be.false;
+  });
+  it('should take context', function () {
+    fast.every([1], function () {
+      this.should.equal(fast);
+    }, fast);
+  });
+});
 
 describe('fast.indexOf()', function () {
   var input = [1,2,3,4,5];
