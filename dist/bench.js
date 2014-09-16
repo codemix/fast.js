@@ -1,102 +1,98 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var fast = require('../lib');
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
 
-var fn = function (a, b, c) {
-  return a + b + c * Math.random();
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();')
 
 exports['Function::apply()'] = function () {
-  return fn.apply(null, input);
+  return fns().apply(null, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, null, input);
+  return fast.apply(fns(), null, input);
 };
 
-},{"../lib":43}],2:[function(require,module,exports){
-var fast = require('../lib');
+},{"../lib":47,"./utils":46}],2:[function(require,module,exports){
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3];
 
-var fn = function (a, b, c) {
-  return a + b + c * Math.random();
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();')
 
 exports['Function::apply()'] = function () {
-  return fn.apply(null, input);
+  return fns().apply(null, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, null, input);
+  return fast.apply(fns(), null, input);
 };
 
-},{"../lib":43}],3:[function(require,module,exports){
+},{"../lib":47,"./utils":46}],3:[function(require,module,exports){
 module.exports=require(2)
-},{"../lib":43}],4:[function(require,module,exports){
-var fast = require('../lib');
+},{"../lib":47,"./utils":46}],4:[function(require,module,exports){
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
 
-var fn = function (a, b, c) {
-  return a + b + c * Math.random() + this.foo;
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random() + this.foo;')
 
 exports['Function::apply()'] = function () {
-  return fn.apply({foo: 1}, input);
+  return fns().apply({foo: 1}, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, {foo: 1}, input);
+  return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../lib":43}],5:[function(require,module,exports){
-var fast = require('../lib');
+},{"../lib":47,"./utils":46}],5:[function(require,module,exports){
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3];
 
-var fn = function (a, b, c) {
-  return a + b + c * Math.random() + this.foo;
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();');
 
 exports['Function::apply()'] = function () {
-  return fn.apply({foo: 1}, input);
+  return fns().apply({foo: 1}, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, {foo: 1}, input);
+  return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../lib":43}],6:[function(require,module,exports){
-var fast = require('../lib');
+},{"../lib":47,"./utils":46}],6:[function(require,module,exports){
+var fast = require('../lib'),
+    utils = require('./utils');
 
 var input = [1,2,3,4,5,6];
-
-var fn = function (a, b, c) {
-  return a + b + c * Math.random() + this.foo;
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();')
 
 exports['Function::apply()'] = function () {
-  return fn.apply({foo: 1}, input);
+  return fns().apply({foo: 1}, input);
 };
 
 exports['fast.apply()'] = function () {
-  return fast.apply(fn, {foo: 1}, input);
+  return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../lib":43}],7:[function(require,module,exports){
+},{"../lib":47,"./utils":46}],7:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
-    lodash = require('lodash');
+    lodash = require('lodash'),
+    history = require('../test/history');
 
 var input = function (a, b, c) {
-  return a + b + c;
+  return a + b + c * Math.random();
 };
 
 // Prebindings
 var nativeBound = input.bind(this, 1, 2);
 var fastBound = fast.bind(input, this, 1, 2);
+var fastBound_0_0_2 = history.bind_0_0_2(input, this, 1, 2);
 var underBound = underscore.bind(input, this, 1, 2);
 var loBound = lodash.bind(input, this, 1, 2);
 
@@ -108,6 +104,10 @@ exports['fast.bind()'] = function () {
   return fastBound(3);
 };
 
+exports['fast.bind() v0.0.2'] = function () {
+  return fastBound_0_0_2(3);
+};
+
 exports['underscore.bind()'] = function () {
   return underBound(3);
 };
@@ -117,37 +117,42 @@ exports['lodash.bind()'] = function () {
 };
 
 
-},{"../lib":43,"lodash":46,"underscore":47}],8:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"lodash":50,"underscore":51}],8:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
-    lodash = require('lodash');
+    lodash = require('lodash'),
+    utils = require('./utils'),
+    history = require('../test/history');
 
-var input = function (a, b, c) {
-  return a + b + c;
-};
+var fns = utils.fns('a', 'b', 'c', 'return a + b + c * Math.random();')
 
 exports['Function::bind()'] = function () {
-  var fn = input.bind(this, 1, 2);
+  var fn = fns().bind(this, 1, 2);
   return fn(3);
 };
 
 exports['fast.bind()'] = function () {
-  var fn = fast.bind(input, this, 1, 2);
+  var fn = fast.bind(fns(), this, 1, 2);
+  return fn(3);
+};
+
+exports['fast.bind() v0.0.2'] = function () {
+  var fn = history.bind_0_0_2(fns(), this, 1, 2);
   return fn(3);
 };
 
 exports['underscore.bind()'] = function () {
-  var fn = underscore.bind(input, this, 1, 2);
+  var fn = underscore.bind(fns(), this, 1, 2);
   return fn(3);
 };
 
 exports['lodash.bind()'] = function () {
-  var fn = lodash.bind(input, this, 1, 2);
+  var fn = lodash.bind(fns(), this, 1, 2);
   return fn(3);
 };
 
 
-},{"../lib":43,"lodash":46,"underscore":47}],9:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],9:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -185,7 +190,7 @@ exports['lodash.clone()'] = function () {
 };
 
 
-},{"../lib":43,"lodash":46,"underscore":47}],10:[function(require,module,exports){
+},{"../lib":47,"lodash":50,"underscore":51}],10:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history');
 
@@ -199,7 +204,7 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, 11, 12, [13, 14, 15], 16, 17, [18, 19], 20);
 };
 
-},{"../lib":43,"../test/history":48}],11:[function(require,module,exports){
+},{"../lib":47,"../test/history":52}],11:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history');
 
@@ -217,7 +222,7 @@ exports['fast.concat()'] = function () {
   return fast.concat.apply(fast, input);
 };
 
-},{"../lib":43,"../test/history":48}],12:[function(require,module,exports){
+},{"../lib":47,"../test/history":52}],12:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history');
 
@@ -245,7 +250,7 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, chunks[0], chunks[1], chunks[2], chunks[3]);
 };
 
-},{"../lib":43,"../test/history":48}],13:[function(require,module,exports){
+},{"../lib":47,"../test/history":52}],13:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history');
 
@@ -259,139 +264,42 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, 11, 12, [13]);
 };
 
-},{"../lib":43,"../test/history":48}],14:[function(require,module,exports){
+},{"../lib":47,"../test/history":52}],14:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item < 11');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var filter = function (item) { return (item + Math.random()) % 2; };
 
 
-exports['Array::filter()'] = function () {
-  return input.filter(filter);
+exports['Array::every()'] = function () {
+  return input.every(fns());
 };
 
-exports['fast.filter()'] = function () {
-  return fast.filter(input, filter);
+exports['fast.every()'] = function () {
+  return fast.every(input, fns());
 };
 
-exports['underscore.filter()'] = function () {
-  return underscore.filter(input, filter);
+exports['underscore.every()'] = function () {
+  return underscore.every(input, fns());
 };
 
-exports['lodash.filter()'] = function () {
-  return lodash.filter(input, filter);
+exports['lodash.every()'] = function () {
+  return lodash.every(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],15:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],15:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
 
-var input = [];
-
-for (var i = 0; i < 1000; i++) {
-  input.push(i);
-}
-var filter = function (item) { return (item + Math.random()) % 2; };
-
-
-exports['Array::filter()'] = function () {
-  return input.filter(filter);
-};
-
-exports['fast.filter()'] = function () {
-  return fast.filter(input, filter);
-};
-
-exports['underscore.filter()'] = function () {
-  return underscore.filter(input, filter);
-};
-
-exports['lodash.filter()'] = function () {
-  return lodash.filter(input, filter);
-};
-
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],16:[function(require,module,exports){
-var fast = require('../lib'),
-    underscore = require('underscore'),
-    lodash = require('lodash'),
-    history = require('../test/history');
-
-var input = [1,2,3];
-var filter = function (item) { return (item + Math.random()) % 2; };
-
-
-exports['Array::filter()'] = function () {
-  return input.filter(filter);
-};
-
-exports['fast.filter()'] = function () {
-  return fast.filter(input, filter);
-};
-
-exports['underscore.filter()'] = function () {
-  return underscore.filter(input, filter);
-};
-
-exports['lodash.filter()'] = function () {
-  return lodash.filter(input, filter);
-};
-
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],17:[function(require,module,exports){
-var fast = require('../lib'),
-    underscore = require('underscore'),
-    lodash = require('lodash'),
-    history = require('../test/history');
-
-var input = [1,2,3,4,5,6,7,8,9,10];
-var acc = 0;
-var iterator = function (item) { acc += item; };
-
-exports['Array::forEach()'] = function () {
-  acc = 0;
-  input.forEach(iterator);
-};
-
-exports['fast.forEach()'] = function () {
-  acc = 0;
-  fast.forEach(input, iterator);
-};
-
-exports['fast.forEach() v0.0.2a'] = function () {
-  acc = 0;
-  history.forEach_0_0_2a(input, iterator);
-};
-
-exports['fast.forEach() v0.0.1'] = function () {
-  acc = 0;
-  history.forEach_0_0_1(input, iterator);
-};
-
-exports['fast.forEach() v0.0.0'] = function () {
-  acc = 0;
-  history.forEach_0_0_0(input, iterator);
-};
-
-
-exports['underscore.forEach()'] = function () {
-  acc = 0;
-  underscore.forEach(input, iterator);
-};
-
-exports['lodash.forEach()'] = function () {
-  acc = 0;
-  lodash.forEach(input, iterator);
-};
-
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],18:[function(require,module,exports){
-var fast = require('../lib'),
-    underscore = require('underscore'),
-    lodash = require('lodash'),
-    history = require('../test/history');
+var fns = utils.fns('item', 'return item < 1000');
 
 var input = [];
 
@@ -399,92 +307,290 @@ for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
 
-var acc = 0;
-var iterator = function (item) { acc += item; };
 
-
-exports['Array::forEach()'] = function () {
-  acc = 0;
-  input.forEach(iterator);
+exports['Array::every()'] = function () {
+  return input.every(fns());
 };
 
-exports['fast.forEach()'] = function () {
-  acc = 0;
-  fast.forEach(input, iterator);
+exports['fast.every()'] = function () {
+  return fast.every(input, fns());
 };
 
-exports['fast.forEach() v0.0.2a'] = function () {
-  acc = 0;
-  history.forEach_0_0_2a(input, iterator);
+exports['underscore.every()'] = function () {
+  return underscore.every(input, fns());
 };
 
-exports['fast.forEach() v0.0.1'] = function () {
-  acc = 0;
-  history.forEach_0_0_1(input, iterator);
+exports['lodash.every()'] = function () {
+  return lodash.every(input, fns());
 };
 
-exports['fast.forEach() v0.0.0'] = function () {
-  acc = 0;
-  history.forEach_0_0_0(input, iterator);
-};
-
-exports['underscore.forEach()'] = function () {
-  acc = 0;
-  underscore.forEach(input, iterator);
-};
-
-exports['lodash.forEach()'] = function () {
-  acc = 0;
-  lodash.forEach(input, iterator);
-};
-
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],19:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],16:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item < 4');
 
 var input = [1,2,3];
-var acc = 0;
-var iterator = function (item) { acc += item; };
+
+exports['Array::every()'] = function () {
+  return input.every(fns());
+};
+
+exports['fast.every()'] = function () {
+  return fast.every(input, fns());
+};
+
+exports['underscore.every()'] = function () {
+  return underscore.every(input, fns());
+};
+
+exports['lodash.every()'] = function () {
+  return lodash.every(input, fns());
+};
+
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],17:[function(require,module,exports){
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return (item + Math.random()) % 2;');
+
+var input = [1,2,3,4,5,6,7,8,9,10];
+
+
+exports['Array::filter()'] = function () {
+  return input.filter(fns());
+};
+
+exports['fast.filter()'] = function () {
+  return fast.filter(input, fns());
+};
+
+exports['underscore.filter()'] = function () {
+  return underscore.filter(input, fns());
+};
+
+exports['lodash.filter()'] = function () {
+  return lodash.filter(input, fns());
+};
+
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],18:[function(require,module,exports){
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return (item + Math.random()) % 2;');
+
+var input = [];
+
+for (var i = 0; i < 1000; i++) {
+  input.push(i);
+}
+
+exports['Array::filter()'] = function () {
+  return input.filter(fns());
+};
+
+exports['fast.filter()'] = function () {
+  return fast.filter(input, fns());
+};
+
+exports['underscore.filter()'] = function () {
+  return underscore.filter(input, fns());
+};
+
+exports['lodash.filter()'] = function () {
+  return lodash.filter(input, fns());
+};
+
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],19:[function(require,module,exports){
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return (item + Math.random()) % 2;');
+var input = [1,2,3];
+
+
+exports['Array::filter()'] = function () {
+  return input.filter(fns());
+};
+
+exports['fast.filter()'] = function () {
+  return fast.filter(input, fns());
+};
+
+exports['underscore.filter()'] = function () {
+  return underscore.filter(input, fns());
+};
+
+exports['lodash.filter()'] = function () {
+  return lodash.filter(input, fns());
+};
+
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],20:[function(require,module,exports){
+(function (global){
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    history = require('../test/history'),
+    utils = require('./utils');
+
+global.BENCH_ACC = 0;
+var fns = utils.fns('item', 'global.BENCH_ACC += item');
+
+var input = [1,2,3,4,5,6,7,8,9,10];
 
 exports['Array::forEach()'] = function () {
-  acc = 0;
-  input.forEach(iterator);
+  global.BENCH_ACC = 0;
+  input.forEach(fns());
 };
 
 exports['fast.forEach()'] = function () {
-  acc = 0;
-  fast.forEach(input, iterator);
+  global.BENCH_ACC = 0;
+  fast.forEach(input, fns());
 };
 
 exports['fast.forEach() v0.0.2a'] = function () {
-  acc = 0;
-  history.forEach_0_0_2a(input, iterator);
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_2a(input, fns());
 };
 
 exports['fast.forEach() v0.0.1'] = function () {
-  acc = 0;
-  history.forEach_0_0_1(input, iterator);
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_1(input, fns());
+};
+
+exports['fast.forEach() v0.0.0'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_0(input, fns());
+};
+
+
+exports['underscore.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  underscore.forEach(input, fns());
+};
+
+exports['lodash.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  lodash.forEach(input, fns());
+};
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],21:[function(require,module,exports){
+(function (global){
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    history = require('../test/history'),
+    utils = require('./utils');
+
+global.BENCH_ACC = 0;
+var fns = utils.fns('item', 'global.BENCH_ACC += item');
+
+var input = [];
+
+for (var i = 0; i < 1000; i++) {
+  input.push(i);
+}
+
+exports['Array::forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  input.forEach(fns());
+};
+
+exports['fast.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  fast.forEach(input, fns());
+};
+
+exports['fast.forEach() v0.0.2a'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_2a(input, fns());
+};
+
+exports['fast.forEach() v0.0.1'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_1(input, fns());
+};
+
+exports['fast.forEach() v0.0.0'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_0(input, fns());
+};
+
+exports['underscore.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  underscore.forEach(input, fns());
+};
+
+exports['lodash.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  lodash.forEach(input, fns());
+};
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],22:[function(require,module,exports){
+(function (global){
+var fast = require('../lib'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    history = require('../test/history'),
+    utils = require('./utils');
+
+global.BENCH_ACC = 0;
+var fns = utils.fns('item', 'global.BENCH_ACC += item');
+
+var input = [1,2,3];
+
+exports['Array::forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  input.forEach(fns());
+};
+
+exports['fast.forEach()'] = function () {
+  global.BENCH_ACC = 0;
+  fast.forEach(input, fns());
+};
+
+exports['fast.forEach() v0.0.2a'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_2a(input, fns());
+};
+
+exports['fast.forEach() v0.0.1'] = function () {
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_1(input, fns());
 };
 
 
 exports['fast.forEach() v0.0.0'] = function () {
-  acc = 0;
-  history.forEach_0_0_0(input, iterator);
+  global.BENCH_ACC = 0;
+  history.forEach_0_0_0(input, fns());
 };
 
 exports['underscore.forEach()'] = function () {
-  acc = 0;
-  underscore.forEach(input, iterator);
+  global.BENCH_ACC = 0;
+  underscore.forEach(input, fns());
 };
 
 exports['lodash.forEach()'] = function () {
-  acc = 0;
-  lodash.forEach(input, iterator);
+  global.BENCH_ACC = 0;
+  lodash.forEach(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],20:[function(require,module,exports){
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],23:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -513,7 +619,7 @@ exports['lodash.indexOf()'] = function () {
   return lodash.indexOf(input, 9) + lodash.indexOf(input, Math.random());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],21:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"lodash":50,"underscore":51}],24:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -546,7 +652,7 @@ exports['lodash.indexOf()'] = function () {
 };
 
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],22:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"lodash":50,"underscore":51}],25:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -574,7 +680,7 @@ exports['lodash.indexOf()'] = function () {
   return lodash.indexOf(input, 3) + lodash.indexOf(input, Math.random());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],23:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"lodash":50,"underscore":51}],26:[function(require,module,exports){
 var Benchmark = require('benchmark');
 
 run([
@@ -600,6 +706,7 @@ run([
   bench('Native .lastIndexOf() vs fast.lastIndexOf() (3 items)', require('./last-index-of-3')),
   bench('Native .lastIndexOf() vs fast.lastIndexOf() (10 items)', require('./last-index-of-10')),
   bench('Native .lastIndexOf() vs fast.lastIndexOf() (1000 items)', require('./last-index-of-1000')),
+
   bench('Native .bind() vs fast.bind()', require('./bind')),
   bench('Native .bind() vs fast.bind() with prebound functions', require('./bind-prebound')),
 
@@ -629,6 +736,10 @@ run([
   bench('Native .some() vs fast.some() (3 items)', require('./some-3')),
   bench('Native .some() vs fast.some() (10 items)', require('./some-10')),
   bench('Native .some() vs fast.some() (1000 items)', require('./some-1000')),
+
+  bench('Native .every() vs fast.every() (3 items)', require('./every-3')),
+  bench('Native .every() vs fast.every() (10 items)', require('./every-10')),
+  bench('Native .every() vs fast.every() (1000 items)', require('./every-1000')),
 
   bench('Native .concat() vs fast.concat() (3 items)', require('./concat-3')),
   bench('Native .concat() vs fast.concat() (10 items)', require('./concat-10')),
@@ -708,7 +819,7 @@ function run (benchmarks) {
   continuation();
 }
 
-},{"./apply-10":1,"./apply-3":2,"./apply-6":3,"./apply-context-10":4,"./apply-context-3":5,"./apply-context-6":6,"./bind":8,"./bind-prebound":7,"./clone":9,"./concat-10":10,"./concat-1000":12,"./concat-1000-apply":11,"./concat-3":13,"./filter-10":14,"./filter-1000":15,"./filter-3":16,"./for-each-10":17,"./for-each-1000":18,"./for-each-3":19,"./index-of-10":20,"./index-of-1000":21,"./index-of-3":22,"./last-index-of-10":24,"./last-index-of-1000":25,"./last-index-of-3":26,"./map-10":27,"./map-1000":28,"./map-3":29,"./partial":31,"./partial-prebound":30,"./reduce-10":32,"./reduce-1000":33,"./reduce-3":34,"./reduce-right-10":35,"./reduce-right-1000":36,"./reduce-right-3":37,"./some-10":38,"./some-1000":39,"./some-3":40,"./try":42,"./try-fn":41,"benchmark":44}],24:[function(require,module,exports){
+},{"./apply-10":1,"./apply-3":2,"./apply-6":3,"./apply-context-10":4,"./apply-context-3":5,"./apply-context-6":6,"./bind":8,"./bind-prebound":7,"./clone":9,"./concat-10":10,"./concat-1000":12,"./concat-1000-apply":11,"./concat-3":13,"./every-10":14,"./every-1000":15,"./every-3":16,"./filter-10":17,"./filter-1000":18,"./filter-3":19,"./for-each-10":20,"./for-each-1000":21,"./for-each-3":22,"./index-of-10":23,"./index-of-1000":24,"./index-of-3":25,"./last-index-of-10":27,"./last-index-of-1000":28,"./last-index-of-3":29,"./map-10":30,"./map-1000":31,"./map-3":32,"./partial":34,"./partial-prebound":33,"./reduce-10":35,"./reduce-1000":36,"./reduce-3":37,"./reduce-right-10":38,"./reduce-right-1000":39,"./reduce-right-3":40,"./some-10":41,"./some-1000":42,"./some-3":43,"./try":45,"./try-fn":44,"benchmark":48}],27:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -736,7 +847,7 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 9) + lodash.lastIndexOf(input, 1);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],25:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"lodash":50,"underscore":51}],28:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -768,7 +879,7 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 999) + lodash.lastIndexOf(input, 1);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],26:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"lodash":50,"underscore":51}],29:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -796,138 +907,142 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 1);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],27:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"lodash":50,"underscore":51}],30:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item * item + Math.random()');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var mapper = function (item) { return item * item; };
 
 exports['Array::map()'] = function () {
-  input.map(mapper);
+  return input.map(fns());
 };
 
 exports['fast.map()'] = function () {
-  fast.map(input, mapper);
+  return fast.map(input, fns());
 };
 
 exports['fast.map() v0.0.2a'] = function () {
-  history.map_0_0_2a(input, mapper);
+  return history.map_0_0_2a(input, fns());
 };
 
 exports['fast.map() v0.0.1'] = function () {
-  history.map_0_0_1(input, mapper);
+  return history.map_0_0_1(input, fns());
 };
 
 exports['fast.map() v0.0.0'] = function () {
-  history.map_0_0_0(input, mapper);
+  return history.map_0_0_0(input, fns());
 };
 
 
 exports['underscore.map()'] = function () {
-  underscore.map(input, mapper);
+  return underscore.map(input, fns());
 };
 
 exports['lodash.map()'] = function () {
-  lodash.map(input, mapper);
+  return lodash.map(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],28:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],31:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item * item + Math.random()');
 
 var input = [];
 
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var mapper = function (item) { return item * item; };
-
 
 exports['Array::map()'] = function () {
-  input.map(mapper);
+  return input.map(fns());
 };
 
 exports['fast.map()'] = function () {
-  fast.map(input, mapper);
+  return fast.map(input, fns());
 };
 
 exports['fast.map() v0.0.2a'] = function () {
-  history.map_0_0_2a(input, mapper);
+  return history.map_0_0_2a(input, fns());
 };
 
 exports['fast.map() v0.0.1'] = function () {
-  history.map_0_0_1(input, mapper);
+  return history.map_0_0_1(input, fns());
 };
 
 exports['fast.map() v0.0.0'] = function () {
-  history.map_0_0_0(input, mapper);
+  return history.map_0_0_0(input, fns());
 };
 
 exports['underscore.map()'] = function () {
-  underscore.map(input, mapper);
+  return underscore.map(input, fns());
 };
 
 exports['lodash.map()'] = function () {
-  lodash.map(input, mapper);
+  return lodash.map(input, fns());
 };
 
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],29:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],32:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
 
+var fns = utils.fns('item', 'return item * item + Math.random()');
 var input = [1,2,3];
-var mapper = function (item) { return item * item; };
-
 
 exports['Array::map()'] = function () {
-  input.map(mapper);
+  return input.map(fns());
 };
 
 exports['fast.map()'] = function () {
-  fast.map(input, mapper);
+  return fast.map(input, fns());
 };
 
 exports['fast.map() v0.0.2a'] = function () {
-  history.map_0_0_2a(input, mapper);
+  return history.map_0_0_2a(input, fns());
 };
 
 exports['fast.map() v0.0.1'] = function () {
-  history.map_0_0_1(input, mapper);
+  return history.map_0_0_1(input, fns());
 };
 
 exports['fast.map() v0.0.0'] = function () {
-  history.map_0_0_0(input, mapper);
+  return history.map_0_0_0(input, fns());
 };
 
 exports['underscore.map()'] = function () {
-  underscore.map(input, mapper);
+  return underscore.map(input, fns());
 };
 
 exports['lodash.map()'] = function () {
-  lodash.map(input, mapper);
+  return lodash.map(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],30:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],33:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
 
 var input = function (a, b, c) {
-  return a + b + c;
+  return a + b + c * Math.random();
 };
 
 var nativeBound = input.bind(undefined, 1, 2);
 var fastPartial = fast.partial(input, 1, 2);
 var fastPartial_0_0_0 = history.partial_0_0_0(input, 1, 2);
+var fastPartial_0_0_2 = history.partial_0_0_2(input, 1, 2);
 var underPartial = underscore.partial(input, 1, 2);
 var loPartial = lodash.partial(input, 1, 2);
 
@@ -937,6 +1052,10 @@ exports['Function::bind()'] = function () {
 
 exports['fast.partial()'] = function () {
   return fastPartial(3);
+};
+
+exports['fast.partial() v0.0.2'] = function () {
+  return fastPartial_0_0_2(3);
 };
 
 exports['fast.partial() v0.0.0'] = function () {
@@ -951,14 +1070,14 @@ exports['lodash.partial()'] = function () {
   return loPartial(3);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],31:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"lodash":50,"underscore":51}],34:[function(require,module,exports){
 var fast = require('../lib'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
 
 var input = function (a, b, c) {
-  return a + b + c;
+  return a + b + c * Math.random();
 };
 
 exports['Function::bind()'] = function () {
@@ -971,6 +1090,10 @@ exports['fast.partial()'] = function () {
   return fn(3);
 };
 
+exports['fast.partial() v0.0.2'] = function () {
+  var fn = history.partial_0_0_2(input, 1, 2);
+  return fn(3);
+};
 
 exports['fast.partial() v0.0.0'] = function () {
   var fn = history.partial_0_0_0(input, 1, 2);
@@ -988,314 +1111,327 @@ exports['lodash.partial()'] = function () {
 };
 
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],32:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"lodash":50,"underscore":51}],35:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var reducer = function (last, item) { return last + item; };
 
 exports['Array::reduce()'] = function () {
-  input.reduce(reducer, 0);
+  return input.reduce(fns(), 0);
 };
 
 exports['fast.reduce()'] = function () {
-  fast.reduce(input, reducer, 0);
+  return fast.reduce(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2c'] = function () {
-  history.reduce_0_0_2c(input, reducer, 0);
+  return history.reduce_0_0_2c(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2b'] = function () {
-  history.reduce_0_0_2b(input, reducer, 0);
+  return history.reduce_0_0_2b(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2a'] = function () {
-  history.reduce_0_0_2a(input, reducer, 0);
+  return history.reduce_0_0_2a(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.1'] = function () {
-  history.reduce_0_0_1(input, reducer, 0);
+  return history.reduce_0_0_1(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.0'] = function () {
-  history.reduce_0_0_0(input, reducer, 0);
+  return history.reduce_0_0_0(input, fns(), 0);
 };
 
 
 exports['underscore.reduce()'] = function () {
-  underscore.reduce(input, reducer, 0)
+  return underscore.reduce(input, fns(), 0)
 };
 
 exports['lodash.reduce()'] = function () {
-  lodash.reduce(input, reducer, 0)
+  return lodash.reduce(input, fns(), 0)
 };
 
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],33:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],36:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [];
 
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var reducer = function (last, item) { return last + item; };
-
 
 exports['Array::reduce()'] = function () {
-  input.reduce(reducer, 0);
+  return input.reduce(fns(), 0);
 };
 
 exports['fast.reduce()'] = function () {
-  fast.reduce(input, reducer, 0);
+  return fast.reduce(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2c'] = function () {
-  history.reduce_0_0_2c(input, reducer, 0);
+  return history.reduce_0_0_2c(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2b'] = function () {
-  history.reduce_0_0_2b(input, reducer, 0);
+  return history.reduce_0_0_2b(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2a'] = function () {
-  history.reduce_0_0_2a(input, reducer, 0);
+  return history.reduce_0_0_2a(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.1'] = function () {
-  history.reduce_0_0_1(input, reducer, 0);
+  return history.reduce_0_0_1(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.0'] = function () {
-  history.reduce_0_0_0(input, reducer, 0);
+  return history.reduce_0_0_0(input, fns(), 0);
 };
 
 exports['underscore.reduce()'] = function () {
-  underscore.reduce(input, reducer, 0);
+  return underscore.reduce(input, fns(), 0);
 };
 
 exports['lodash.reduce()'] = function () {
-  lodash.reduce(input, reducer, 0);
+  return lodash.reduce(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],34:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],37:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [1,2,3];
-var reducer = function (last, item) { return last + item; };
 
 
 exports['Array::reduce()'] = function () {
-  input.reduce(reducer, 0);
+  return input.reduce(fns(), 0);
 };
 
 exports['fast.reduce()'] = function () {
-  fast.reduce(input, reducer, 0);
+  return fast.reduce(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2c'] = function () {
-  history.reduce_0_0_2c(input, reducer, 0);
+  return history.reduce_0_0_2c(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2b'] = function () {
-  history.reduce_0_0_2b(input, reducer, 0);
+  return history.reduce_0_0_2b(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.2a'] = function () {
-  history.reduce_0_0_2a(input, reducer, 0);
+  return history.reduce_0_0_2a(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.1'] = function () {
-  history.reduce_0_0_1(input, reducer, 0);
+  return history.reduce_0_0_1(input, fns(), 0);
 };
 
 exports['fast.reduce() v0.0.0'] = function () {
-  history.reduce_0_0_0(input, reducer, 0);
+  return history.reduce_0_0_0(input, fns(), 0);
 };
 
 exports['underscore.reduce()'] = function () {
-  underscore.reduce(input, reducer, 0);
+  return underscore.reduce(input, fns(), 0);
 };
 
 exports['lodash.reduce()'] = function () {
-  lodash.reduce(input, reducer, 0);
+  return lodash.reduce(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],35:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],38:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var reducer = function (last, item) { return last + item + Math.random(); };
-
 
 exports['Array::reduceRight()'] = function () {
-  return input.reduceRight(reducer, 0);
+  return input.reduceRight(fns(), 0);
 };
 
 exports['fast.reduceRight()'] = function () {
-  return fast.reduceRight(input, reducer, 0);
+  return fast.reduceRight(input, fns(), 0);
 };
 
 exports['underscore.reduceRight()'] = function () {
-  return underscore.reduceRight(input, reducer, 0);
+  return underscore.reduceRight(input, fns(), 0);
 };
 
 exports['lodash.reduceRight()'] = function () {
-  return lodash.reduceRight(input, reducer, 0);
+  return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],36:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],39:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [];
 
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var reducer = function (last, item) { return last + item + Math.random(); };
-
 
 exports['Array::reduceRight()'] = function () {
-  return input.reduceRight(reducer, 0);
+  return input.reduceRight(fns(), 0);
 };
 
 exports['fast.reduceRight()'] = function () {
-  return fast.reduceRight(input, reducer, 0);
+  return fast.reduceRight(input, fns(), 0);
 };
 
 exports['underscore.reduceRight()'] = function () {
-  return underscore.reduceRight(input, reducer, 0);
+  return underscore.reduceRight(input, fns(), 0);
 };
 
 exports['lodash.reduceRight()'] = function () {
-  return lodash.reduceRight(input, reducer, 0);
+  return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],37:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],40:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('last', 'item', 'return last * item + Math.random()');
 
 var input = [1,2,3];
-var reducer = function (last, item) { return last + item + Math.random(); };
-
 
 exports['Array::reduceRight()'] = function () {
-  return input.reduceRight(reducer, 0);
+  return input.reduceRight(fns(), 0);
 };
 
 exports['fast.reduceRight()'] = function () {
-  return fast.reduceRight(input, reducer, 0);
+  return fast.reduceRight(input, fns(), 0);
 };
 
 exports['underscore.reduceRight()'] = function () {
-  return underscore.reduceRight(input, reducer, 0);
+  return underscore.reduceRight(input, fns(), 0);
 };
 
 exports['lodash.reduceRight()'] = function () {
-  return lodash.reduceRight(input, reducer, 0);
+  return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],38:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],41:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item === 10');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
-var check = function (item) { return item === 10; };
 
 
 exports['Array::some()'] = function () {
-  return input.some(check);
+  return input.some(fns());
 };
 
 exports['fast.some()'] = function () {
-  return fast.some(input, check);
+  return fast.some(input, fns());
 };
 
 exports['underscore.some()'] = function () {
-  return underscore.some(input, check);
+  return underscore.some(input, fns());
 };
 
 exports['lodash.some()'] = function () {
-  return lodash.some(input, check);
+  return lodash.some(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],39:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],42:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item === 999');
 
 var input = [];
 
 for (var i = 0; i < 1000; i++) {
   input.push(i);
 }
-var check = function (item) { return item === 999; };
 
 
 exports['Array::some()'] = function () {
-  return input.some(check);
+  return input.some(fns());
 };
 
 exports['fast.some()'] = function () {
-  return fast.some(input, check);
+  return fast.some(input, fns());
 };
 
 exports['underscore.some()'] = function () {
-  return underscore.some(input, check);
+  return underscore.some(input, fns());
 };
 
 exports['lodash.some()'] = function () {
-  return lodash.some(input, check);
+  return lodash.some(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],40:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],43:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash'),
-    history = require('../test/history');
+    history = require('../test/history'),
+    utils = require('./utils');
+
+var fns = utils.fns('item', 'return item === 3');
 
 var input = [1,2,3];
-var check = function (item) { return item === 3; };
-
 
 exports['Array::some()'] = function () {
-  return input.some(check);
+  return input.some(fns());
 };
 
 exports['fast.some()'] = function () {
-  return fast.some(input, check);
+  return fast.some(input, fns());
 };
 
 exports['underscore.some()'] = function () {
-  return underscore.some(input, check);
+  return underscore.some(input, fns());
 };
 
 exports['lodash.some()'] = function () {
-  return lodash.some(input, check);
+  return lodash.some(input, fns());
 };
 
-},{"../lib":43,"../test/history":48,"lodash":46,"underscore":47}],41:[function(require,module,exports){
+},{"../lib":47,"../test/history":52,"./utils":46,"lodash":50,"underscore":51}],44:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1342,7 +1478,7 @@ function doSomeWork () {
   d += factorial(2 * Math.random());
   return d;
 }
-},{"../lib":43,"lodash":46,"underscore":47}],42:[function(require,module,exports){
+},{"../lib":47,"lodash":50,"underscore":51}],45:[function(require,module,exports){
 var fast = require('../lib'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1390,8 +1526,241 @@ exports['fast.try()'] = function () {
   });
 };
 
-},{"../lib":43,"lodash":46,"underscore":47}],43:[function(require,module,exports){
+},{"../lib":47,"lodash":50,"underscore":51}],46:[function(require,module,exports){
+/**
+ * Function factory.
+ * Accepts the same arguments as the Function constructor, creates 20 duplicate
+ * but unique instances of the function and returns a function which will infinitely
+ * return each function in a cycle.
+ *
+ * This is used to ensure that the benchmarks do not only measure monomorphic performance.
+ *
+ * @return {Function} A function which will keep on returning the defined functions.
+ */
+exports.fns = function () {
+  var length = arguments.length,
+      args = new Array(length),
+      fns = new Array(20),
+      i;
+  for (i = 0; i < length; i++) {
+    args[i] = arguments[i];
+  }
+  for (i = 0; i < 20; i++) {
+    fns[i] = Function.apply(null, args);
+  }
+
+  var pointer = -1;
+  return function () {
+    if (pointer++ > 20) {
+      pointer = 0;
+    }
+    return fns[pointer % 20];
+  };
+};
+},{}],47:[function(require,module,exports){
 'use strict';
+
+/**
+ * # Constructor
+ *
+ * Provided as a convenient wrapper around Fast functions.
+ *
+ * ```js
+ * var arr = fast([1,2,3,4,5,6]);
+ *
+ * var result = arr.filter(function (item) {
+ *   return item % 2 === 0;
+ * });
+ *
+ * result instanceof Fast; // true
+ * result.length; // 3
+ * ```
+ *
+ *
+ * @param {Array} value The value to wrap.
+ */
+function Fast (value) {
+  if (!(this instanceof Fast)) {
+    return new Fast(value);
+  }
+  this.value = value || [];
+}
+
+module.exports = exports = Fast;
+
+
+/**
+ * # Concat
+ *
+ * Concatenate multiple arrays.
+ *
+ * @param  {Array|mixed} item, ... The item(s) to concatenate.
+ * @return {Fast}                  A new Fast object, containing the results.
+ */
+Fast.prototype.concat = function Fast$concat () {
+  var length = this.value.length,
+      arr = new Array(length),
+      i, item, childLength, j;
+
+  for (i = 0; i < length; i++) {
+    arr[i] = this.value[i];
+  }
+
+  length = arguments.length;
+  for (i = 0; i < length; i++) {
+    item = arguments[i];
+    if (Array.isArray(item)) {
+      childLength = item.length;
+      for (j = 0; j < childLength; j++) {
+        arr.push(item[j]);
+      }
+    }
+    else {
+      arr.push(item);
+    }
+  }
+  return new Fast(arr);
+};
+
+/**
+ * Fast Map
+ *
+ * @param  {Function} fn          The visitor function.
+ * @param  {Object}   thisContext The context for the visitor, if any.
+ * @return {Fast}                 A new Fast object, containing the results.
+ */
+Fast.prototype.map = function Fast$map (fn, thisContext) {
+  return new Fast(Fast.map(this.value, fn, thisContext));
+};
+
+/**
+ * Fast Filter
+ *
+ * @param  {Function} fn          The filter function.
+ * @param  {Object}   thisContext The context for the filter function, if any.
+ * @return {Fast}                 A new Fast object, containing the results.
+ */
+Fast.prototype.filter = function Fast$filter (fn, thisContext) {
+  return new Fast(Fast.filter(this.value, fn, thisContext));
+};
+
+/**
+ * Fast Reduce
+ *
+ * @param  {Function} fn           The reducer function.
+ * @param  {mixed}    initialValue The initial value, if any.
+ * @param  {Object}   thisContext  The context for the reducer, if any.
+ * @return {mixed}                 The final result.
+ */
+Fast.prototype.reduce = function Fast$reduce (fn, initialValue, thisContext) {
+  return Fast.reduce(this.value, fn, initialValue, thisContext);
+};
+
+
+/**
+ * Fast Reduce Right
+ *
+ * @param  {Function} fn           The reducer function.
+ * @param  {mixed}    initialValue The initial value, if any.
+ * @param  {Object}   thisContext  The context for the reducer, if any.
+ * @return {mixed}                 The final result.
+ */
+Fast.prototype.reduceRight = function Fast$reduceRight (fn, initialValue, thisContext) {
+  return Fast.reduceRight(this.value, fn, initialValue, thisContext);
+};
+
+/**
+ * Fast For Each
+ *
+ * @param  {Function} fn          The visitor function.
+ * @param  {Object}   thisContext The context for the visitor, if any.
+ * @return {Fast}                 The Fast instance.
+ */
+Fast.prototype.forEach = function Fast$forEach (fn, thisContext) {
+  Fast.forEach(this.value, fn, thisContext);
+  return this;
+};
+
+/**
+ * Fast Some
+ *
+ * @param  {Function} fn          The matcher predicate.
+ * @param  {Object}   thisContext The context for the matcher, if any.
+ * @return {Boolean}              True if at least one element matches.
+ */
+Fast.prototype.some = function Fast$some (fn, thisContext) {
+  return Fast.some(this.value, fn, thisContext);
+};
+
+/**
+ * Fast Every
+ *
+ * @param  {Function} fn          The matcher predicate.
+ * @param  {Object}   thisContext The context for the matcher, if any.
+ * @return {Boolean}              True if at all elements match.
+ */
+Fast.prototype.every = function Fast$every (fn, thisContext) {
+  return Fast.some(this.value, fn, thisContext);
+};
+
+/**
+ * Fast Index Of
+ *
+ * @param  {mixed}  target    The target to lookup.
+ * @param  {Number} fromIndex The index to start searching from, if known.
+ * @return {Number}           The index of the item, or -1 if no match found.
+ */
+Fast.prototype.indexOf = function Fast$indexOf (target, fromIndex) {
+  return Fast.indexOf(this.value, target, fromIndex);
+};
+
+
+/**
+ * Fast Last Index Of
+ *
+ * @param  {mixed}  target    The target to lookup.
+ * @param  {Number} fromIndex The index to start searching from, if known.
+ * @return {Number}           The last index of the item, or -1 if no match found.
+ */
+Fast.prototype.lastIndexOf = function Fast$lastIndexOf (target, fromIndex) {
+  return Fast.lastIndexOf(this.value, target, fromIndex);
+};
+
+/**
+ * Reverse
+ *
+ * @return {Fast} A new Fast instance, with the contents reversed.
+ */
+Fast.prototype.reverse = function Fast$reverse () {
+  return new Fast(this.value.reverse());
+};
+
+/**
+ * Value Of
+ *
+ * @return {Array} The wrapped value.
+ */
+Fast.prototype.valueOf = function Fast$valueOf () {
+  return this.value;
+};
+
+/**
+ * To JSON
+ *
+ * @return {Array} The wrapped value.
+ */
+Fast.prototype.toJSON = function Fast$toJSON () {
+  return this.value;
+};
+
+/**
+ * Item Length
+ */
+Object.defineProperty(Fast.prototype, 'length', {
+  get: function () {
+    return this.value.length;
+  }
+});
 
 /**
  * # Bind
@@ -1410,7 +1779,7 @@ exports['fast.try()'] = function () {
  * @param  {mixed}    args, ...   Additional arguments to pre-bind.
  * @return {Function}             The bound function.
  */
-exports.bind = function fastBind (fn, thisContext) {
+Fast.bind = function fastBind (fn, thisContext) {
   var boundLength = arguments.length - 2,
       boundArgs;
 
@@ -1419,22 +1788,45 @@ exports.bind = function fastBind (fn, thisContext) {
     for (var i = 0; i < boundLength; i++) {
       boundArgs[i] = arguments[i + 2];
     }
+    if (thisContext !== undefined) {
+      return function () {
+        var length = arguments.length,
+            args = new Array(boundLength + length),
+            i;
+        for (i = 0; i < boundLength; i++) {
+          args[i] = boundArgs[i];
+        }
+        for (i = 0; i < length; i++) {
+          args[boundLength + i] = arguments[i];
+        }
+        return applyWithContext(fn, thisContext, args);
+      };
+    }
+    else {
+      return function () {
+        var length = arguments.length,
+            args = new Array(boundLength + length),
+            i;
+        for (i = 0; i < boundLength; i++) {
+          args[i] = boundArgs[i];
+        }
+        for (i = 0; i < length; i++) {
+          args[boundLength + i] = arguments[i];
+        }
+        return applyNoContext(fn, args);
+      };
+    }
+  }
+  if (thisContext !== undefined) {
     return function () {
-      var length = arguments.length,
-          args = new Array(boundLength + length),
-          i;
-      for (i = 0; i < boundLength; i++) {
-        args[i] = boundArgs[i];
-      }
-      for (i = 0; i < length; i++) {
-        args[boundLength + i] = arguments[i];
-      }
-      return fn.apply(thisContext, args);
+      return applyWithContext(fn, thisContext, arguments);
     };
   }
-  return function () {
-    return fn.apply(thisContext, arguments);
-  };
+  else {
+    return function () {
+      return applyNoContext(fn, arguments);
+    };
+  }
 };
 
 /**
@@ -1454,7 +1846,7 @@ exports.bind = function fastBind (fn, thisContext) {
  * @param  {mixed}    args, ...   Arguments to pre-bind.
  * @return {Function}             The partially applied function.
  */
-exports.partial = function fastPartial (fn) {
+Fast.partial = function fastPartial (fn) {
   var boundLength = arguments.length - 1,
       boundArgs;
 
@@ -1472,7 +1864,7 @@ exports.partial = function fastPartial (fn) {
     for (i = 0; i < length; i++) {
       args[boundLength + i] = arguments[i];
     }
-    return fn.apply(this, args);
+    return applyWithContext(fn, this, args);
   };
 };
 
@@ -1487,7 +1879,7 @@ exports.partial = function fastPartial (fn) {
  * @param  {mixed}    args, ...   Arguments to pre-bind.
  * @return {Function}             The partially applied constructor.
  */
-exports.partialConstructor = function fastPartialConstructor (fn) {
+Fast.partialConstructor = function fastPartialConstructor (fn) {
   var boundLength = arguments.length - 1,
       boundArgs;
 
@@ -1507,7 +1899,7 @@ exports.partialConstructor = function fastPartialConstructor (fn) {
     }
 
     var thisContext = Object.create(fn.prototype),
-        result = fn.apply(thisContext, args);
+        result = applyWithContext(fn, thisContext, args);
 
     if (result != null && (typeof result === 'object' || typeof result === 'function')) {
       return result;
@@ -1529,15 +1921,15 @@ exports.partialConstructor = function fastPartialConstructor (fn) {
  * @param  {mixed} input The input to clone.
  * @return {mixed}       The cloned input.
  */
-exports.clone = function clone (input) {
+Fast.clone = function clone (input) {
   if (!input || typeof input !== 'object') {
     return input;
   }
   else if (Array.isArray(input)) {
-    return exports.cloneArray(input);
+    return Fast.cloneArray(input);
   }
   else {
-    return exports.cloneObject(input);
+    return Fast.cloneObject(input);
   }
 };
 
@@ -1551,7 +1943,7 @@ exports.clone = function clone (input) {
  * @param  {Array} input The array or array-like object to clone.
  * @return {Array}       The cloned array.
  */
-exports.cloneArray = function fastCloneArray (input) {
+Fast.cloneArray = function fastCloneArray (input) {
   var length = input.length,
       sliced = new Array(length),
       i;
@@ -1571,7 +1963,7 @@ exports.cloneArray = function fastCloneArray (input) {
  * @param  {Object} input The object to clone.
  * @return {Object}       The cloned object.
  */
-exports.cloneObject = function fastCloneObject (input) {
+Fast.cloneObject = function fastCloneObject (input) {
   var keys = Object.keys(input),
       total = keys.length,
       cloned = {},
@@ -1597,7 +1989,7 @@ exports.cloneObject = function fastCloneObject (input) {
  * @param  {Array|mixed} item, ... The item(s) to concatenate.
  * @return {Array}                 The array containing the concatenated items.
  */
-exports.concat = function fastConcat () {
+Fast.concat = function fastConcat () {
   var length = arguments.length,
       arr = [],
       i, item, childLength, j;
@@ -1627,7 +2019,7 @@ exports.concat = function fastConcat () {
  * @param  {Object}   thisContext The context for the mapper.
  * @return {Array}                The array containing the results.
  */
-exports.map = function fastMap (subject, fn, thisContext) {
+Fast.map = function fastMap (subject, fn, thisContext) {
   var length = subject.length,
       result = new Array(length),
       iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
@@ -1648,7 +2040,7 @@ exports.map = function fastMap (subject, fn, thisContext) {
  * @param  {Object}   thisContext The context for the filter.
  * @return {Array}                The array containing the results.
  */
-exports.filter = function fastFilter (subject, fn, thisContext) {
+Fast.filter = function fastFilter (subject, fn, thisContext) {
   var length = subject.length,
       result = [],
       iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
@@ -1672,7 +2064,7 @@ exports.filter = function fastFilter (subject, fn, thisContext) {
  * @param  {Object}   thisContext  The context for the reducer.
  * @return {mixed}                 The final result.
  */
-exports.reduce = function fastReduce (subject, fn, initialValue, thisContext) {
+Fast.reduce = function fastReduce (subject, fn, initialValue, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
       i, result;
@@ -1704,7 +2096,7 @@ exports.reduce = function fastReduce (subject, fn, initialValue, thisContext) {
  * @param  {Object}   thisContext  The context for the reducer.
  * @return {mixed}                 The final result.
  */
-exports.reduceRight = function fastReduce (subject, fn, initialValue, thisContext) {
+Fast.reduceRight = function fastReduce (subject, fn, initialValue, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
       i, result;
@@ -1735,7 +2127,7 @@ exports.reduceRight = function fastReduce (subject, fn, initialValue, thisContex
  * @param  {Function} fn          The visitor function.
  * @param  {Object}   thisContext The context for the visitor.
  */
-exports.forEach = function fastForEach (subject, fn, thisContext) {
+Fast.forEach = function fastForEach (subject, fn, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
       i;
@@ -1754,7 +2146,7 @@ exports.forEach = function fastForEach (subject, fn, thisContext) {
  * @param  {Object}   thisContext The context for the visitor.
  * @return {Boolean}              true if at least one item in the array passes the truth test.
  */
-exports.some = function fastSome (subject, fn, thisContext) {
+Fast.some = function fastSome (subject, fn, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
       i;
@@ -1767,6 +2159,28 @@ exports.some = function fastSome (subject, fn, thisContext) {
 };
 
 /**
+ * # Every
+ *
+ * A fast `.some()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to iterate over.
+ * @param  {Function} fn          The visitor function.
+ * @param  {Object}   thisContext The context for the visitor.
+ * @return {Boolean}              true if all items in the array passes the truth test.
+ */
+Fast.every = function fastEvery (subject, fn, thisContext) {
+  var length = subject.length,
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    if (!iterator(subject[i], i, subject)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/**
  * # Index Of
  *
  * A faster `Array.prototype.indexOf()` implementation.
@@ -1776,12 +2190,12 @@ exports.some = function fastSome (subject, fn, thisContext) {
  * @param  {Number} fromIndex The position to start searching from, if known.
  * @return {Number}           The position of the target in the subject, or -1 if it does not exist.
  */
-exports.indexOf = function fastIndexOf (subject, target, fromIndex) {
+Fast.indexOf = function fastIndexOf (subject, target, fromIndex) {
   var length = subject.length,
       i = 0;
 
-  if (fromIndex !== undefined) {
-    i = fromIndex >> 0;
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
     if (i < 0) {
       i += length;
       if (i < 0) {
@@ -1810,12 +2224,12 @@ exports.indexOf = function fastIndexOf (subject, target, fromIndex) {
  * @param  {Number} fromIndex The position to start searching backwards from, if known.
  * @return {Number}         The last position of the target in the subject, or -1 if it does not exist.
  */
-exports.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
+Fast.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
   var length = subject.length,
       i = length - 1;
 
-  if (fromIndex !== undefined) {
-    i = fromIndex >> 0;
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
     if (i < 0) {
       i += length;
     }
@@ -1848,7 +2262,7 @@ exports.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
  * @param  {Function} fn The function to invoke.
  * @return {mixed}       The result of the function, or an `Error` object.
  */
-exports['try'] = function fastTry (fn) {
+Fast['try'] = function fastTry (fn) {
   try {
     return fn();
   }
@@ -1863,7 +2277,7 @@ exports['try'] = function fastTry (fn) {
 };
 
 // alias of `.try()` for older JS engines.
-exports.attempt = exports['try'];
+Fast.attempt = Fast['try'];
 
 /**
  * # Apply
@@ -1876,8 +2290,8 @@ exports.attempt = exports['try'];
  * @param  {Array} args         The arguments for the function.
  * @return {mixed}              The result of the function invocation.
  */
-exports.apply = function fastApply (subject, thisContext, args) {
-  return thisContext != null ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
+Fast.apply = function fastApply (subject, thisContext, args) {
+  return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
 };
 
 
@@ -1957,7 +2371,7 @@ function bindInternal4 (func, thisContext) {
   };
 }
 
-},{}],44:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 (function (process,global){
 /*!
  * Benchmark.js v1.0.0 <http://benchmarkjs.com/>
@@ -5879,7 +6293,7 @@ function bindInternal4 (func, thisContext) {
 }(this));
 
 }).call(this,require("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"FWaASH":45}],45:[function(require,module,exports){
+},{"FWaASH":49}],49:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -5944,7 +6358,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],46:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -12733,8 +13147,8 @@ process.chdir = function (dir) {
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],47:[function(require,module,exports){
-//     Underscore.js 1.6.0
+},{}],51:[function(require,module,exports){
+//     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
@@ -12750,9 +13164,6 @@ process.chdir = function (dir) {
   // Save the previous value of the `_` variable.
   var previousUnderscore = root._;
 
-  // Establish the object that gets returned to break out of a loop iteration.
-  var breaker = {};
-
   // Save bytes in the minified (but not gzipped) version:
   var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
 
@@ -12767,15 +13178,6 @@ process.chdir = function (dir) {
   // All **ECMAScript 5** native function implementations that we hope to use
   // are declared here.
   var
-    nativeForEach      = ArrayProto.forEach,
-    nativeMap          = ArrayProto.map,
-    nativeReduce       = ArrayProto.reduce,
-    nativeReduceRight  = ArrayProto.reduceRight,
-    nativeFilter       = ArrayProto.filter,
-    nativeEvery        = ArrayProto.every,
-    nativeSome         = ArrayProto.some,
-    nativeIndexOf      = ArrayProto.indexOf,
-    nativeLastIndexOf  = ArrayProto.lastIndexOf,
     nativeIsArray      = Array.isArray,
     nativeKeys         = Object.keys,
     nativeBind         = FuncProto.bind;
@@ -12789,8 +13191,7 @@ process.chdir = function (dir) {
 
   // Export the Underscore object for **Node.js**, with
   // backwards-compatibility for the old `require()` API. If we're in
-  // the browser, add `_` as a global object via a string identifier,
-  // for Closure Compiler "advanced" mode.
+  // the browser, add `_` as a global object.
   if (typeof exports !== 'undefined') {
     if (typeof module !== 'undefined' && module.exports) {
       exports = module.exports = _;
@@ -12801,98 +13202,125 @@ process.chdir = function (dir) {
   }
 
   // Current version.
-  _.VERSION = '1.6.0';
+  _.VERSION = '1.7.0';
+
+  // Internal function that returns an efficient (for current engines) version
+  // of the passed-in callback, to be repeatedly applied in other Underscore
+  // functions.
+  var createCallback = function(func, context, argCount) {
+    if (context === void 0) return func;
+    switch (argCount == null ? 3 : argCount) {
+      case 1: return function(value) {
+        return func.call(context, value);
+      };
+      case 2: return function(value, other) {
+        return func.call(context, value, other);
+      };
+      case 3: return function(value, index, collection) {
+        return func.call(context, value, index, collection);
+      };
+      case 4: return function(accumulator, value, index, collection) {
+        return func.call(context, accumulator, value, index, collection);
+      };
+    }
+    return function() {
+      return func.apply(context, arguments);
+    };
+  };
+
+  // A mostly-internal function to generate callbacks that can be applied
+  // to each element in a collection, returning the desired result — either
+  // identity, an arbitrary callback, a property matcher, or a property accessor.
+  _.iteratee = function(value, context, argCount) {
+    if (value == null) return _.identity;
+    if (_.isFunction(value)) return createCallback(value, context, argCount);
+    if (_.isObject(value)) return _.matches(value);
+    return _.property(value);
+  };
 
   // Collection Functions
   // --------------------
 
   // The cornerstone, an `each` implementation, aka `forEach`.
-  // Handles objects with the built-in `forEach`, arrays, and raw objects.
-  // Delegates to **ECMAScript 5**'s native `forEach` if available.
-  var each = _.each = _.forEach = function(obj, iterator, context) {
+  // Handles raw objects in addition to array-likes. Treats all
+  // sparse array-likes as if they were dense.
+  _.each = _.forEach = function(obj, iteratee, context) {
     if (obj == null) return obj;
-    if (nativeForEach && obj.forEach === nativeForEach) {
-      obj.forEach(iterator, context);
-    } else if (obj.length === +obj.length) {
-      for (var i = 0, length = obj.length; i < length; i++) {
-        if (iterator.call(context, obj[i], i, obj) === breaker) return;
+    iteratee = createCallback(iteratee, context);
+    var i, length = obj.length;
+    if (length === +length) {
+      for (i = 0; i < length; i++) {
+        iteratee(obj[i], i, obj);
       }
     } else {
       var keys = _.keys(obj);
-      for (var i = 0, length = keys.length; i < length; i++) {
-        if (iterator.call(context, obj[keys[i]], keys[i], obj) === breaker) return;
+      for (i = 0, length = keys.length; i < length; i++) {
+        iteratee(obj[keys[i]], keys[i], obj);
       }
     }
     return obj;
   };
 
-  // Return the results of applying the iterator to each element.
-  // Delegates to **ECMAScript 5**'s native `map` if available.
-  _.map = _.collect = function(obj, iterator, context) {
-    var results = [];
-    if (obj == null) return results;
-    if (nativeMap && obj.map === nativeMap) return obj.map(iterator, context);
-    each(obj, function(value, index, list) {
-      results.push(iterator.call(context, value, index, list));
-    });
+  // Return the results of applying the iteratee to each element.
+  _.map = _.collect = function(obj, iteratee, context) {
+    if (obj == null) return [];
+    iteratee = _.iteratee(iteratee, context);
+    var keys = obj.length !== +obj.length && _.keys(obj),
+        length = (keys || obj).length,
+        results = Array(length),
+        currentKey;
+    for (var index = 0; index < length; index++) {
+      currentKey = keys ? keys[index] : index;
+      results[index] = iteratee(obj[currentKey], currentKey, obj);
+    }
     return results;
   };
 
   var reduceError = 'Reduce of empty array with no initial value';
 
   // **Reduce** builds up a single result from a list of values, aka `inject`,
-  // or `foldl`. Delegates to **ECMAScript 5**'s native `reduce` if available.
-  _.reduce = _.foldl = _.inject = function(obj, iterator, memo, context) {
-    var initial = arguments.length > 2;
+  // or `foldl`.
+  _.reduce = _.foldl = _.inject = function(obj, iteratee, memo, context) {
     if (obj == null) obj = [];
-    if (nativeReduce && obj.reduce === nativeReduce) {
-      if (context) iterator = _.bind(iterator, context);
-      return initial ? obj.reduce(iterator, memo) : obj.reduce(iterator);
+    iteratee = createCallback(iteratee, context, 4);
+    var keys = obj.length !== +obj.length && _.keys(obj),
+        length = (keys || obj).length,
+        index = 0, currentKey;
+    if (arguments.length < 3) {
+      if (!length) throw new TypeError(reduceError);
+      memo = obj[keys ? keys[index++] : index++];
     }
-    each(obj, function(value, index, list) {
-      if (!initial) {
-        memo = value;
-        initial = true;
-      } else {
-        memo = iterator.call(context, memo, value, index, list);
-      }
-    });
-    if (!initial) throw new TypeError(reduceError);
+    for (; index < length; index++) {
+      currentKey = keys ? keys[index] : index;
+      memo = iteratee(memo, obj[currentKey], currentKey, obj);
+    }
     return memo;
   };
 
   // The right-associative version of reduce, also known as `foldr`.
-  // Delegates to **ECMAScript 5**'s native `reduceRight` if available.
-  _.reduceRight = _.foldr = function(obj, iterator, memo, context) {
-    var initial = arguments.length > 2;
+  _.reduceRight = _.foldr = function(obj, iteratee, memo, context) {
     if (obj == null) obj = [];
-    if (nativeReduceRight && obj.reduceRight === nativeReduceRight) {
-      if (context) iterator = _.bind(iterator, context);
-      return initial ? obj.reduceRight(iterator, memo) : obj.reduceRight(iterator);
+    iteratee = createCallback(iteratee, context, 4);
+    var keys = obj.length !== + obj.length && _.keys(obj),
+        index = (keys || obj).length,
+        currentKey;
+    if (arguments.length < 3) {
+      if (!index) throw new TypeError(reduceError);
+      memo = obj[keys ? keys[--index] : --index];
     }
-    var length = obj.length;
-    if (length !== +length) {
-      var keys = _.keys(obj);
-      length = keys.length;
+    while (index--) {
+      currentKey = keys ? keys[index] : index;
+      memo = iteratee(memo, obj[currentKey], currentKey, obj);
     }
-    each(obj, function(value, index, list) {
-      index = keys ? keys[--length] : --length;
-      if (!initial) {
-        memo = obj[index];
-        initial = true;
-      } else {
-        memo = iterator.call(context, memo, obj[index], index, list);
-      }
-    });
-    if (!initial) throw new TypeError(reduceError);
     return memo;
   };
 
   // Return the first value which passes a truth test. Aliased as `detect`.
   _.find = _.detect = function(obj, predicate, context) {
     var result;
-    any(obj, function(value, index, list) {
-      if (predicate.call(context, value, index, list)) {
+    predicate = _.iteratee(predicate, context);
+    _.some(obj, function(value, index, list) {
+      if (predicate(value, index, list)) {
         result = value;
         return true;
       }
@@ -12901,61 +13329,58 @@ process.chdir = function (dir) {
   };
 
   // Return all the elements that pass a truth test.
-  // Delegates to **ECMAScript 5**'s native `filter` if available.
   // Aliased as `select`.
   _.filter = _.select = function(obj, predicate, context) {
     var results = [];
     if (obj == null) return results;
-    if (nativeFilter && obj.filter === nativeFilter) return obj.filter(predicate, context);
-    each(obj, function(value, index, list) {
-      if (predicate.call(context, value, index, list)) results.push(value);
+    predicate = _.iteratee(predicate, context);
+    _.each(obj, function(value, index, list) {
+      if (predicate(value, index, list)) results.push(value);
     });
     return results;
   };
 
   // Return all the elements for which a truth test fails.
   _.reject = function(obj, predicate, context) {
-    return _.filter(obj, function(value, index, list) {
-      return !predicate.call(context, value, index, list);
-    }, context);
+    return _.filter(obj, _.negate(_.iteratee(predicate)), context);
   };
 
   // Determine whether all of the elements match a truth test.
-  // Delegates to **ECMAScript 5**'s native `every` if available.
   // Aliased as `all`.
   _.every = _.all = function(obj, predicate, context) {
-    predicate || (predicate = _.identity);
-    var result = true;
-    if (obj == null) return result;
-    if (nativeEvery && obj.every === nativeEvery) return obj.every(predicate, context);
-    each(obj, function(value, index, list) {
-      if (!(result = result && predicate.call(context, value, index, list))) return breaker;
-    });
-    return !!result;
+    if (obj == null) return true;
+    predicate = _.iteratee(predicate, context);
+    var keys = obj.length !== +obj.length && _.keys(obj),
+        length = (keys || obj).length,
+        index, currentKey;
+    for (index = 0; index < length; index++) {
+      currentKey = keys ? keys[index] : index;
+      if (!predicate(obj[currentKey], currentKey, obj)) return false;
+    }
+    return true;
   };
 
   // Determine if at least one element in the object matches a truth test.
-  // Delegates to **ECMAScript 5**'s native `some` if available.
   // Aliased as `any`.
-  var any = _.some = _.any = function(obj, predicate, context) {
-    predicate || (predicate = _.identity);
-    var result = false;
-    if (obj == null) return result;
-    if (nativeSome && obj.some === nativeSome) return obj.some(predicate, context);
-    each(obj, function(value, index, list) {
-      if (result || (result = predicate.call(context, value, index, list))) return breaker;
-    });
-    return !!result;
+  _.some = _.any = function(obj, predicate, context) {
+    if (obj == null) return false;
+    predicate = _.iteratee(predicate, context);
+    var keys = obj.length !== +obj.length && _.keys(obj),
+        length = (keys || obj).length,
+        index, currentKey;
+    for (index = 0; index < length; index++) {
+      currentKey = keys ? keys[index] : index;
+      if (predicate(obj[currentKey], currentKey, obj)) return true;
+    }
+    return false;
   };
 
   // Determine if the array or object contains a given value (using `===`).
   // Aliased as `include`.
   _.contains = _.include = function(obj, target) {
     if (obj == null) return false;
-    if (nativeIndexOf && obj.indexOf === nativeIndexOf) return obj.indexOf(target) != -1;
-    return any(obj, function(value) {
-      return value === target;
-    });
+    if (obj.length !== +obj.length) obj = _.values(obj);
+    return _.indexOf(obj, target) >= 0;
   };
 
   // Invoke a method (with arguments) on every item in a collection.
@@ -12984,51 +13409,67 @@ process.chdir = function (dir) {
     return _.find(obj, _.matches(attrs));
   };
 
-  // Return the maximum element or (element-based computation).
-  // Can't optimize arrays of integers longer than 65,535 elements.
-  // See [WebKit Bug 80797](https://bugs.webkit.org/show_bug.cgi?id=80797)
-  _.max = function(obj, iterator, context) {
-    if (!iterator && _.isArray(obj) && obj[0] === +obj[0] && obj.length < 65535) {
-      return Math.max.apply(Math, obj);
-    }
-    var result = -Infinity, lastComputed = -Infinity;
-    each(obj, function(value, index, list) {
-      var computed = iterator ? iterator.call(context, value, index, list) : value;
-      if (computed > lastComputed) {
-        result = value;
-        lastComputed = computed;
+  // Return the maximum element (or element-based computation).
+  _.max = function(obj, iteratee, context) {
+    var result = -Infinity, lastComputed = -Infinity,
+        value, computed;
+    if (iteratee == null && obj != null) {
+      obj = obj.length === +obj.length ? obj : _.values(obj);
+      for (var i = 0, length = obj.length; i < length; i++) {
+        value = obj[i];
+        if (value > result) {
+          result = value;
+        }
       }
-    });
+    } else {
+      iteratee = _.iteratee(iteratee, context);
+      _.each(obj, function(value, index, list) {
+        computed = iteratee(value, index, list);
+        if (computed > lastComputed || computed === -Infinity && result === -Infinity) {
+          result = value;
+          lastComputed = computed;
+        }
+      });
+    }
     return result;
   };
 
   // Return the minimum element (or element-based computation).
-  _.min = function(obj, iterator, context) {
-    if (!iterator && _.isArray(obj) && obj[0] === +obj[0] && obj.length < 65535) {
-      return Math.min.apply(Math, obj);
-    }
-    var result = Infinity, lastComputed = Infinity;
-    each(obj, function(value, index, list) {
-      var computed = iterator ? iterator.call(context, value, index, list) : value;
-      if (computed < lastComputed) {
-        result = value;
-        lastComputed = computed;
+  _.min = function(obj, iteratee, context) {
+    var result = Infinity, lastComputed = Infinity,
+        value, computed;
+    if (iteratee == null && obj != null) {
+      obj = obj.length === +obj.length ? obj : _.values(obj);
+      for (var i = 0, length = obj.length; i < length; i++) {
+        value = obj[i];
+        if (value < result) {
+          result = value;
+        }
       }
-    });
+    } else {
+      iteratee = _.iteratee(iteratee, context);
+      _.each(obj, function(value, index, list) {
+        computed = iteratee(value, index, list);
+        if (computed < lastComputed || computed === Infinity && result === Infinity) {
+          result = value;
+          lastComputed = computed;
+        }
+      });
+    }
     return result;
   };
 
-  // Shuffle an array, using the modern version of the
+  // Shuffle a collection, using the modern version of the
   // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
   _.shuffle = function(obj) {
-    var rand;
-    var index = 0;
-    var shuffled = [];
-    each(obj, function(value) {
-      rand = _.random(index++);
-      shuffled[index - 1] = shuffled[rand];
-      shuffled[rand] = value;
-    });
+    var set = obj && obj.length === +obj.length ? obj : _.values(obj);
+    var length = set.length;
+    var shuffled = Array(length);
+    for (var index = 0, rand; index < length; index++) {
+      rand = _.random(0, index);
+      if (rand !== index) shuffled[index] = shuffled[rand];
+      shuffled[rand] = set[index];
+    }
     return shuffled;
   };
 
@@ -13043,21 +13484,14 @@ process.chdir = function (dir) {
     return _.shuffle(obj).slice(0, Math.max(0, n));
   };
 
-  // An internal function to generate lookup iterators.
-  var lookupIterator = function(value) {
-    if (value == null) return _.identity;
-    if (_.isFunction(value)) return value;
-    return _.property(value);
-  };
-
-  // Sort the object's values by a criterion produced by an iterator.
-  _.sortBy = function(obj, iterator, context) {
-    iterator = lookupIterator(iterator);
+  // Sort the object's values by a criterion produced by an iteratee.
+  _.sortBy = function(obj, iteratee, context) {
+    iteratee = _.iteratee(iteratee, context);
     return _.pluck(_.map(obj, function(value, index, list) {
       return {
         value: value,
         index: index,
-        criteria: iterator.call(context, value, index, list)
+        criteria: iteratee(value, index, list)
       };
     }).sort(function(left, right) {
       var a = left.criteria;
@@ -13072,12 +13506,12 @@ process.chdir = function (dir) {
 
   // An internal function used for aggregate "group by" operations.
   var group = function(behavior) {
-    return function(obj, iterator, context) {
+    return function(obj, iteratee, context) {
       var result = {};
-      iterator = lookupIterator(iterator);
-      each(obj, function(value, index) {
-        var key = iterator.call(context, value, index, obj);
-        behavior(result, key, value);
+      iteratee = _.iteratee(iteratee, context);
+      _.each(obj, function(value, index) {
+        var key = iteratee(value, index, obj);
+        behavior(result, value, key);
       });
       return result;
     };
@@ -13085,32 +13519,32 @@ process.chdir = function (dir) {
 
   // Groups the object's values by a criterion. Pass either a string attribute
   // to group by, or a function that returns the criterion.
-  _.groupBy = group(function(result, key, value) {
-    _.has(result, key) ? result[key].push(value) : result[key] = [value];
+  _.groupBy = group(function(result, value, key) {
+    if (_.has(result, key)) result[key].push(value); else result[key] = [value];
   });
 
   // Indexes the object's values by a criterion, similar to `groupBy`, but for
   // when you know that your index values will be unique.
-  _.indexBy = group(function(result, key, value) {
+  _.indexBy = group(function(result, value, key) {
     result[key] = value;
   });
 
   // Counts instances of an object that group by a certain criterion. Pass
   // either a string attribute to count by, or a function that returns the
   // criterion.
-  _.countBy = group(function(result, key) {
-    _.has(result, key) ? result[key]++ : result[key] = 1;
+  _.countBy = group(function(result, value, key) {
+    if (_.has(result, key)) result[key]++; else result[key] = 1;
   });
 
   // Use a comparator function to figure out the smallest index at which
   // an object should be inserted so as to maintain order. Uses binary search.
-  _.sortedIndex = function(array, obj, iterator, context) {
-    iterator = lookupIterator(iterator);
-    var value = iterator.call(context, obj);
+  _.sortedIndex = function(array, obj, iteratee, context) {
+    iteratee = _.iteratee(iteratee, context, 1);
+    var value = iteratee(obj);
     var low = 0, high = array.length;
     while (low < high) {
-      var mid = (low + high) >>> 1;
-      iterator.call(context, array[mid]) < value ? low = mid + 1 : high = mid;
+      var mid = low + high >>> 1;
+      if (iteratee(array[mid]) < value) low = mid + 1; else high = mid;
     }
     return low;
   };
@@ -13126,7 +13560,18 @@ process.chdir = function (dir) {
   // Return the number of elements in an object.
   _.size = function(obj) {
     if (obj == null) return 0;
-    return (obj.length === +obj.length) ? obj.length : _.keys(obj).length;
+    return obj.length === +obj.length ? obj.length : _.keys(obj).length;
+  };
+
+  // Split a collection into two arrays: one whose elements all satisfy the given
+  // predicate, and one whose elements all do not satisfy the predicate.
+  _.partition = function(obj, predicate, context) {
+    predicate = _.iteratee(predicate, context);
+    var pass = [], fail = [];
+    _.each(obj, function(value, key, obj) {
+      (predicate(value, key, obj) ? pass : fail).push(value);
+    });
+    return [pass, fail];
   };
 
   // Array Functions
@@ -13137,7 +13582,7 @@ process.chdir = function (dir) {
   // allows it to work with `_.map`.
   _.first = _.head = _.take = function(array, n, guard) {
     if (array == null) return void 0;
-    if ((n == null) || guard) return array[0];
+    if (n == null || guard) return array[0];
     if (n < 0) return [];
     return slice.call(array, 0, n);
   };
@@ -13147,14 +13592,14 @@ process.chdir = function (dir) {
   // the array, excluding the last N. The **guard** check allows it to work with
   // `_.map`.
   _.initial = function(array, n, guard) {
-    return slice.call(array, 0, array.length - ((n == null) || guard ? 1 : n));
+    return slice.call(array, 0, Math.max(0, array.length - (n == null || guard ? 1 : n)));
   };
 
   // Get the last element of an array. Passing **n** will return the last N
   // values in the array. The **guard** check allows it to work with `_.map`.
   _.last = function(array, n, guard) {
     if (array == null) return void 0;
-    if ((n == null) || guard) return array[array.length - 1];
+    if (n == null || guard) return array[array.length - 1];
     return slice.call(array, Math.max(array.length - n, 0));
   };
 
@@ -13163,7 +13608,7 @@ process.chdir = function (dir) {
   // the rest N values in the array. The **guard**
   // check allows it to work with `_.map`.
   _.rest = _.tail = _.drop = function(array, n, guard) {
-    return slice.call(array, (n == null) || guard ? 1 : n);
+    return slice.call(array, n == null || guard ? 1 : n);
   };
 
   // Trim out all falsy values from an array.
@@ -13172,23 +13617,26 @@ process.chdir = function (dir) {
   };
 
   // Internal implementation of a recursive `flatten` function.
-  var flatten = function(input, shallow, output) {
+  var flatten = function(input, shallow, strict, output) {
     if (shallow && _.every(input, _.isArray)) {
       return concat.apply(output, input);
     }
-    each(input, function(value) {
-      if (_.isArray(value) || _.isArguments(value)) {
-        shallow ? push.apply(output, value) : flatten(value, shallow, output);
+    for (var i = 0, length = input.length; i < length; i++) {
+      var value = input[i];
+      if (!_.isArray(value) && !_.isArguments(value)) {
+        if (!strict) output.push(value);
+      } else if (shallow) {
+        push.apply(output, value);
       } else {
-        output.push(value);
+        flatten(value, shallow, strict, output);
       }
-    });
+    }
     return output;
   };
 
   // Flatten out an array, either recursively (by default), or just one level.
   _.flatten = function(array, shallow) {
-    return flatten(array, shallow, []);
+    return flatten(array, shallow, false, []);
   };
 
   // Return a version of the array that does not contain the specified value(s).
@@ -13196,68 +13644,77 @@ process.chdir = function (dir) {
     return _.difference(array, slice.call(arguments, 1));
   };
 
-  // Split an array into two arrays: one whose elements all satisfy the given
-  // predicate, and one whose elements all do not satisfy the predicate.
-  _.partition = function(array, predicate) {
-    var pass = [], fail = [];
-    each(array, function(elem) {
-      (predicate(elem) ? pass : fail).push(elem);
-    });
-    return [pass, fail];
-  };
-
   // Produce a duplicate-free version of the array. If the array has already
   // been sorted, you have the option of using a faster algorithm.
   // Aliased as `unique`.
-  _.uniq = _.unique = function(array, isSorted, iterator, context) {
-    if (_.isFunction(isSorted)) {
-      context = iterator;
-      iterator = isSorted;
+  _.uniq = _.unique = function(array, isSorted, iteratee, context) {
+    if (array == null) return [];
+    if (!_.isBoolean(isSorted)) {
+      context = iteratee;
+      iteratee = isSorted;
       isSorted = false;
     }
-    var initial = iterator ? _.map(array, iterator, context) : array;
-    var results = [];
+    if (iteratee != null) iteratee = _.iteratee(iteratee, context);
+    var result = [];
     var seen = [];
-    each(initial, function(value, index) {
-      if (isSorted ? (!index || seen[seen.length - 1] !== value) : !_.contains(seen, value)) {
-        seen.push(value);
-        results.push(array[index]);
+    for (var i = 0, length = array.length; i < length; i++) {
+      var value = array[i];
+      if (isSorted) {
+        if (!i || seen !== value) result.push(value);
+        seen = value;
+      } else if (iteratee) {
+        var computed = iteratee(value, i, array);
+        if (_.indexOf(seen, computed) < 0) {
+          seen.push(computed);
+          result.push(value);
+        }
+      } else if (_.indexOf(result, value) < 0) {
+        result.push(value);
       }
-    });
-    return results;
+    }
+    return result;
   };
 
   // Produce an array that contains the union: each distinct element from all of
   // the passed-in arrays.
   _.union = function() {
-    return _.uniq(_.flatten(arguments, true));
+    return _.uniq(flatten(arguments, true, true, []));
   };
 
   // Produce an array that contains every item shared between all the
   // passed-in arrays.
   _.intersection = function(array) {
-    var rest = slice.call(arguments, 1);
-    return _.filter(_.uniq(array), function(item) {
-      return _.every(rest, function(other) {
-        return _.contains(other, item);
-      });
-    });
+    if (array == null) return [];
+    var result = [];
+    var argsLength = arguments.length;
+    for (var i = 0, length = array.length; i < length; i++) {
+      var item = array[i];
+      if (_.contains(result, item)) continue;
+      for (var j = 1; j < argsLength; j++) {
+        if (!_.contains(arguments[j], item)) break;
+      }
+      if (j === argsLength) result.push(item);
+    }
+    return result;
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
-    var rest = concat.apply(ArrayProto, slice.call(arguments, 1));
-    return _.filter(array, function(value){ return !_.contains(rest, value); });
+    var rest = flatten(slice.call(arguments, 1), true, true, []);
+    return _.filter(array, function(value){
+      return !_.contains(rest, value);
+    });
   };
 
   // Zip together multiple lists into a single array -- elements that share
   // an index go together.
-  _.zip = function() {
-    var length = _.max(_.pluck(arguments, 'length').concat(0));
-    var results = new Array(length);
+  _.zip = function(array) {
+    if (array == null) return [];
+    var length = _.max(arguments, 'length').length;
+    var results = Array(length);
     for (var i = 0; i < length; i++) {
-      results[i] = _.pluck(arguments, '' + i);
+      results[i] = _.pluck(arguments, i);
     }
     return results;
   };
@@ -13278,10 +13735,8 @@ process.chdir = function (dir) {
     return result;
   };
 
-  // If the browser doesn't supply us with indexOf (I'm looking at you, **MSIE**),
-  // we need this function. Return the position of the first occurrence of an
-  // item in an array, or -1 if the item is not included in the array.
-  // Delegates to **ECMAScript 5**'s native `indexOf` if available.
+  // Return the position of the first occurrence of an item in an array,
+  // or -1 if the item is not included in the array.
   // If the array is large and already in sort order, pass `true`
   // for **isSorted** to use binary search.
   _.indexOf = function(array, item, isSorted) {
@@ -13289,26 +13744,23 @@ process.chdir = function (dir) {
     var i = 0, length = array.length;
     if (isSorted) {
       if (typeof isSorted == 'number') {
-        i = (isSorted < 0 ? Math.max(0, length + isSorted) : isSorted);
+        i = isSorted < 0 ? Math.max(0, length + isSorted) : isSorted;
       } else {
         i = _.sortedIndex(array, item);
         return array[i] === item ? i : -1;
       }
     }
-    if (nativeIndexOf && array.indexOf === nativeIndexOf) return array.indexOf(item, isSorted);
     for (; i < length; i++) if (array[i] === item) return i;
     return -1;
   };
 
-  // Delegates to **ECMAScript 5**'s native `lastIndexOf` if available.
   _.lastIndexOf = function(array, item, from) {
     if (array == null) return -1;
-    var hasIndex = from != null;
-    if (nativeLastIndexOf && array.lastIndexOf === nativeLastIndexOf) {
-      return hasIndex ? array.lastIndexOf(item, from) : array.lastIndexOf(item);
+    var idx = array.length;
+    if (typeof from == 'number') {
+      idx = from < 0 ? idx + from + 1 : Math.min(idx, from + 1);
     }
-    var i = (hasIndex ? from : array.length);
-    while (i--) if (array[i] === item) return i;
+    while (--idx >= 0) if (array[idx] === item) return idx;
     return -1;
   };
 
@@ -13320,15 +13772,13 @@ process.chdir = function (dir) {
       stop = start || 0;
       start = 0;
     }
-    step = arguments[2] || 1;
+    step = step || 1;
 
     var length = Math.max(Math.ceil((stop - start) / step), 0);
-    var idx = 0;
-    var range = new Array(length);
+    var range = Array(length);
 
-    while(idx < length) {
-      range[idx++] = start;
-      start += step;
+    for (var idx = 0; idx < length; idx++, start += step) {
+      range[idx] = start;
     }
 
     return range;
@@ -13338,7 +13788,7 @@ process.chdir = function (dir) {
   // ------------------
 
   // Reusable constructor function for prototype setting.
-  var ctor = function(){};
+  var Ctor = function(){};
 
   // Create a function bound to a given object (assigning `this`, and arguments,
   // optionally). Delegates to **ECMAScript 5**'s native `Function.bind` if
@@ -13346,17 +13796,18 @@ process.chdir = function (dir) {
   _.bind = function(func, context) {
     var args, bound;
     if (nativeBind && func.bind === nativeBind) return nativeBind.apply(func, slice.call(arguments, 1));
-    if (!_.isFunction(func)) throw new TypeError;
+    if (!_.isFunction(func)) throw new TypeError('Bind must be called on a function');
     args = slice.call(arguments, 2);
-    return bound = function() {
+    bound = function() {
       if (!(this instanceof bound)) return func.apply(context, args.concat(slice.call(arguments)));
-      ctor.prototype = func.prototype;
-      var self = new ctor;
-      ctor.prototype = null;
+      Ctor.prototype = func.prototype;
+      var self = new Ctor;
+      Ctor.prototype = null;
       var result = func.apply(self, args.concat(slice.call(arguments)));
-      if (Object(result) === result) return result;
+      if (_.isObject(result)) return result;
       return self;
     };
+    return bound;
   };
 
   // Partially apply a function by creating a version that has had some of its
@@ -13379,27 +13830,34 @@ process.chdir = function (dir) {
   // are the method names to be bound. Useful for ensuring that all callbacks
   // defined on an object belong to it.
   _.bindAll = function(obj) {
-    var funcs = slice.call(arguments, 1);
-    if (funcs.length === 0) throw new Error('bindAll must be passed function names');
-    each(funcs, function(f) { obj[f] = _.bind(obj[f], obj); });
+    var i, length = arguments.length, key;
+    if (length <= 1) throw new Error('bindAll must be passed function names');
+    for (i = 1; i < length; i++) {
+      key = arguments[i];
+      obj[key] = _.bind(obj[key], obj);
+    }
     return obj;
   };
 
   // Memoize an expensive function by storing its results.
   _.memoize = function(func, hasher) {
-    var memo = {};
-    hasher || (hasher = _.identity);
-    return function() {
-      var key = hasher.apply(this, arguments);
-      return _.has(memo, key) ? memo[key] : (memo[key] = func.apply(this, arguments));
+    var memoize = function(key) {
+      var cache = memoize.cache;
+      var address = hasher ? hasher.apply(this, arguments) : key;
+      if (!_.has(cache, address)) cache[address] = func.apply(this, arguments);
+      return cache[address];
     };
+    memoize.cache = {};
+    return memoize;
   };
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
   _.delay = function(func, wait) {
     var args = slice.call(arguments, 2);
-    return setTimeout(function(){ return func.apply(null, args); }, wait);
+    return setTimeout(function(){
+      return func.apply(null, args);
+    }, wait);
   };
 
   // Defers a function, scheduling it to run after the current call stack has
@@ -13417,12 +13875,12 @@ process.chdir = function (dir) {
     var context, args, result;
     var timeout = null;
     var previous = 0;
-    options || (options = {});
+    if (!options) options = {};
     var later = function() {
       previous = options.leading === false ? 0 : _.now();
       timeout = null;
       result = func.apply(context, args);
-      context = args = null;
+      if (!timeout) context = args = null;
     };
     return function() {
       var now = _.now();
@@ -13430,12 +13888,12 @@ process.chdir = function (dir) {
       var remaining = wait - (now - previous);
       context = this;
       args = arguments;
-      if (remaining <= 0) {
+      if (remaining <= 0 || remaining > wait) {
         clearTimeout(timeout);
         timeout = null;
         previous = now;
         result = func.apply(context, args);
-        context = args = null;
+        if (!timeout) context = args = null;
       } else if (!timeout && options.trailing !== false) {
         timeout = setTimeout(later, remaining);
       }
@@ -13452,13 +13910,14 @@ process.chdir = function (dir) {
 
     var later = function() {
       var last = _.now() - timestamp;
-      if (last < wait) {
+
+      if (last < wait && last > 0) {
         timeout = setTimeout(later, wait - last);
       } else {
         timeout = null;
         if (!immediate) {
           result = func.apply(context, args);
-          context = args = null;
+          if (!timeout) context = args = null;
         }
       }
     };
@@ -13468,28 +13927,13 @@ process.chdir = function (dir) {
       args = arguments;
       timestamp = _.now();
       var callNow = immediate && !timeout;
-      if (!timeout) {
-        timeout = setTimeout(later, wait);
-      }
+      if (!timeout) timeout = setTimeout(later, wait);
       if (callNow) {
         result = func.apply(context, args);
         context = args = null;
       }
 
       return result;
-    };
-  };
-
-  // Returns a function that will be executed at most one time, no matter how
-  // often you call it. Useful for lazy initialization.
-  _.once = function(func) {
-    var ran = false, memo;
-    return function() {
-      if (ran) return memo;
-      ran = true;
-      memo = func.apply(this, arguments);
-      func = null;
-      return memo;
     };
   };
 
@@ -13500,16 +13944,23 @@ process.chdir = function (dir) {
     return _.partial(wrapper, func);
   };
 
+  // Returns a negated version of the passed-in predicate.
+  _.negate = function(predicate) {
+    return function() {
+      return !predicate.apply(this, arguments);
+    };
+  };
+
   // Returns a function that is the composition of a list of functions, each
   // consuming the return value of the function that follows.
   _.compose = function() {
-    var funcs = arguments;
+    var args = arguments;
+    var start = args.length - 1;
     return function() {
-      var args = arguments;
-      for (var i = funcs.length - 1; i >= 0; i--) {
-        args = [funcs[i].apply(this, args)];
-      }
-      return args[0];
+      var i = start;
+      var result = args[start].apply(this, arguments);
+      while (i--) result = args[i].call(this, result);
+      return result;
     };
   };
 
@@ -13521,6 +13972,23 @@ process.chdir = function (dir) {
       }
     };
   };
+
+  // Returns a function that will only be executed before being called N times.
+  _.before = function(times, func) {
+    var memo;
+    return function() {
+      if (--times > 0) {
+        memo = func.apply(this, arguments);
+      } else {
+        func = null;
+      }
+      return memo;
+    };
+  };
+
+  // Returns a function that will be executed at most one time, no matter how
+  // often you call it. Useful for lazy initialization.
+  _.once = _.partial(_.before, 2);
 
   // Object Functions
   // ----------------
@@ -13539,7 +14007,7 @@ process.chdir = function (dir) {
   _.values = function(obj) {
     var keys = _.keys(obj);
     var length = keys.length;
-    var values = new Array(length);
+    var values = Array(length);
     for (var i = 0; i < length; i++) {
       values[i] = obj[keys[i]];
     }
@@ -13550,7 +14018,7 @@ process.chdir = function (dir) {
   _.pairs = function(obj) {
     var keys = _.keys(obj);
     var length = keys.length;
-    var pairs = new Array(length);
+    var pairs = Array(length);
     for (var i = 0; i < length; i++) {
       pairs[i] = [keys[i], obj[keys[i]]];
     }
@@ -13579,45 +14047,62 @@ process.chdir = function (dir) {
 
   // Extend a given object with all the properties in passed-in object(s).
   _.extend = function(obj) {
-    each(slice.call(arguments, 1), function(source) {
-      if (source) {
-        for (var prop in source) {
-          obj[prop] = source[prop];
+    if (!_.isObject(obj)) return obj;
+    var source, prop;
+    for (var i = 1, length = arguments.length; i < length; i++) {
+      source = arguments[i];
+      for (prop in source) {
+        if (hasOwnProperty.call(source, prop)) {
+            obj[prop] = source[prop];
         }
       }
-    });
+    }
     return obj;
   };
 
   // Return a copy of the object only containing the whitelisted properties.
-  _.pick = function(obj) {
-    var copy = {};
-    var keys = concat.apply(ArrayProto, slice.call(arguments, 1));
-    each(keys, function(key) {
-      if (key in obj) copy[key] = obj[key];
-    });
-    return copy;
+  _.pick = function(obj, iteratee, context) {
+    var result = {}, key;
+    if (obj == null) return result;
+    if (_.isFunction(iteratee)) {
+      iteratee = createCallback(iteratee, context);
+      for (key in obj) {
+        var value = obj[key];
+        if (iteratee(value, key, obj)) result[key] = value;
+      }
+    } else {
+      var keys = concat.apply([], slice.call(arguments, 1));
+      obj = new Object(obj);
+      for (var i = 0, length = keys.length; i < length; i++) {
+        key = keys[i];
+        if (key in obj) result[key] = obj[key];
+      }
+    }
+    return result;
   };
 
    // Return a copy of the object without the blacklisted properties.
-  _.omit = function(obj) {
-    var copy = {};
-    var keys = concat.apply(ArrayProto, slice.call(arguments, 1));
-    for (var key in obj) {
-      if (!_.contains(keys, key)) copy[key] = obj[key];
+  _.omit = function(obj, iteratee, context) {
+    if (_.isFunction(iteratee)) {
+      iteratee = _.negate(iteratee);
+    } else {
+      var keys = _.map(concat.apply([], slice.call(arguments, 1)), String);
+      iteratee = function(value, key) {
+        return !_.contains(keys, key);
+      };
     }
-    return copy;
+    return _.pick(obj, iteratee, context);
   };
 
   // Fill in a given object with default properties.
   _.defaults = function(obj) {
-    each(slice.call(arguments, 1), function(source) {
-      if (source) {
-        for (var prop in source) {
-          if (obj[prop] === void 0) obj[prop] = source[prop];
-        }
+    if (!_.isObject(obj)) return obj;
+    for (var i = 1, length = arguments.length; i < length; i++) {
+      var source = arguments[i];
+      for (var prop in source) {
+        if (obj[prop] === void 0) obj[prop] = source[prop];
       }
-    });
+    }
     return obj;
   };
 
@@ -13639,7 +14124,7 @@ process.chdir = function (dir) {
   var eq = function(a, b, aStack, bStack) {
     // Identical objects are equal. `0 === -0`, but they aren't identical.
     // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
-    if (a === b) return a !== 0 || 1 / a == 1 / b;
+    if (a === b) return a !== 0 || 1 / a === 1 / b;
     // A strict comparison is necessary because `null == undefined`.
     if (a == null || b == null) return a === b;
     // Unwrap any wrapped objects.
@@ -13647,29 +14132,27 @@ process.chdir = function (dir) {
     if (b instanceof _) b = b._wrapped;
     // Compare `[[Class]]` names.
     var className = toString.call(a);
-    if (className != toString.call(b)) return false;
+    if (className !== toString.call(b)) return false;
     switch (className) {
-      // Strings, numbers, dates, and booleans are compared by value.
+      // Strings, numbers, regular expressions, dates, and booleans are compared by value.
+      case '[object RegExp]':
+      // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
       case '[object String]':
         // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
         // equivalent to `new String("5")`.
-        return a == String(b);
+        return '' + a === '' + b;
       case '[object Number]':
-        // `NaN`s are equivalent, but non-reflexive. An `egal` comparison is performed for
-        // other numeric values.
-        return a != +a ? b != +b : (a == 0 ? 1 / a == 1 / b : a == +b);
+        // `NaN`s are equivalent, but non-reflexive.
+        // Object(NaN) is equivalent to NaN
+        if (+a !== +a) return +b !== +b;
+        // An `egal` comparison is performed for other numeric values.
+        return +a === 0 ? 1 / +a === 1 / b : +a === +b;
       case '[object Date]':
       case '[object Boolean]':
         // Coerce dates and booleans to numeric primitive values. Dates are compared by their
         // millisecond representations. Note that invalid dates with millisecond representations
         // of `NaN` are not equivalent.
-        return +a == +b;
-      // RegExps are compared by their source patterns and flags.
-      case '[object RegExp]':
-        return a.source == b.source &&
-               a.global == b.global &&
-               a.multiline == b.multiline &&
-               a.ignoreCase == b.ignoreCase;
+        return +a === +b;
     }
     if (typeof a != 'object' || typeof b != 'object') return false;
     // Assume equality for cyclic structures. The algorithm for detecting cyclic
@@ -13678,25 +14161,29 @@ process.chdir = function (dir) {
     while (length--) {
       // Linear search. Performance is inversely proportional to the number of
       // unique nested structures.
-      if (aStack[length] == a) return bStack[length] == b;
+      if (aStack[length] === a) return bStack[length] === b;
     }
     // Objects with different constructors are not equivalent, but `Object`s
     // from different frames are.
     var aCtor = a.constructor, bCtor = b.constructor;
-    if (aCtor !== bCtor && !(_.isFunction(aCtor) && (aCtor instanceof aCtor) &&
-                             _.isFunction(bCtor) && (bCtor instanceof bCtor))
-                        && ('constructor' in a && 'constructor' in b)) {
+    if (
+      aCtor !== bCtor &&
+      // Handle Object.create(x) cases
+      'constructor' in a && 'constructor' in b &&
+      !(_.isFunction(aCtor) && aCtor instanceof aCtor &&
+        _.isFunction(bCtor) && bCtor instanceof bCtor)
+    ) {
       return false;
     }
     // Add the first object to the stack of traversed objects.
     aStack.push(a);
     bStack.push(b);
-    var size = 0, result = true;
+    var size, result;
     // Recursively compare objects and arrays.
-    if (className == '[object Array]') {
+    if (className === '[object Array]') {
       // Compare array lengths to determine if a deep comparison is necessary.
       size = a.length;
-      result = size == b.length;
+      result = size === b.length;
       if (result) {
         // Deep compare the contents, ignoring non-numeric properties.
         while (size--) {
@@ -13705,20 +14192,16 @@ process.chdir = function (dir) {
       }
     } else {
       // Deep compare objects.
-      for (var key in a) {
-        if (_.has(a, key)) {
-          // Count the expected number of properties.
-          size++;
-          // Deep compare each member.
+      var keys = _.keys(a), key;
+      size = keys.length;
+      // Ensure that both objects contain the same number of properties before comparing deep equality.
+      result = _.keys(b).length === size;
+      if (result) {
+        while (size--) {
+          // Deep compare each member
+          key = keys[size];
           if (!(result = _.has(b, key) && eq(a[key], b[key], aStack, bStack))) break;
         }
-      }
-      // Ensure that both objects contain the same number of properties.
-      if (result) {
-        for (key in b) {
-          if (_.has(b, key) && !(size--)) break;
-        }
-        result = !size;
       }
     }
     // Remove the first object from the stack of traversed objects.
@@ -13736,7 +14219,7 @@ process.chdir = function (dir) {
   // An "empty" object has no enumerable own-properties.
   _.isEmpty = function(obj) {
     if (obj == null) return true;
-    if (_.isArray(obj) || _.isString(obj)) return obj.length === 0;
+    if (_.isArray(obj) || _.isString(obj) || _.isArguments(obj)) return obj.length === 0;
     for (var key in obj) if (_.has(obj, key)) return false;
     return true;
   };
@@ -13749,18 +14232,19 @@ process.chdir = function (dir) {
   // Is a given value an array?
   // Delegates to ECMA5's native Array.isArray
   _.isArray = nativeIsArray || function(obj) {
-    return toString.call(obj) == '[object Array]';
+    return toString.call(obj) === '[object Array]';
   };
 
   // Is a given variable an object?
   _.isObject = function(obj) {
-    return obj === Object(obj);
+    var type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
   };
 
   // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp.
-  each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'], function(name) {
+  _.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'], function(name) {
     _['is' + name] = function(obj) {
-      return toString.call(obj) == '[object ' + name + ']';
+      return toString.call(obj) === '[object ' + name + ']';
     };
   });
 
@@ -13768,14 +14252,14 @@ process.chdir = function (dir) {
   // there isn't any inspectable "Arguments" type.
   if (!_.isArguments(arguments)) {
     _.isArguments = function(obj) {
-      return !!(obj && _.has(obj, 'callee'));
+      return _.has(obj, 'callee');
     };
   }
 
-  // Optimize `isFunction` if appropriate.
-  if (typeof (/./) !== 'function') {
+  // Optimize `isFunction` if appropriate. Work around an IE 11 bug.
+  if (typeof /./ !== 'function') {
     _.isFunction = function(obj) {
-      return typeof obj === 'function';
+      return typeof obj == 'function' || false;
     };
   }
 
@@ -13786,12 +14270,12 @@ process.chdir = function (dir) {
 
   // Is the given value `NaN`? (NaN is the only number which does not equal itself).
   _.isNaN = function(obj) {
-    return _.isNumber(obj) && obj != +obj;
+    return _.isNumber(obj) && obj !== +obj;
   };
 
   // Is a given value a boolean?
   _.isBoolean = function(obj) {
-    return obj === true || obj === false || toString.call(obj) == '[object Boolean]';
+    return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
   };
 
   // Is a given value equal to null?
@@ -13807,7 +14291,7 @@ process.chdir = function (dir) {
   // Shortcut function for checking if an object has a given property directly
   // on itself (in other words, not on a prototype).
   _.has = function(obj, key) {
-    return hasOwnProperty.call(obj, key);
+    return obj != null && hasOwnProperty.call(obj, key);
   };
 
   // Utility Functions
@@ -13820,16 +14304,18 @@ process.chdir = function (dir) {
     return this;
   };
 
-  // Keep the identity function around for default iterators.
+  // Keep the identity function around for default iteratees.
   _.identity = function(value) {
     return value;
   };
 
   _.constant = function(value) {
-    return function () {
+    return function() {
       return value;
     };
   };
+
+  _.noop = function(){};
 
   _.property = function(key) {
     return function(obj) {
@@ -13839,20 +14325,23 @@ process.chdir = function (dir) {
 
   // Returns a predicate for checking whether an object has a given set of `key:value` pairs.
   _.matches = function(attrs) {
+    var pairs = _.pairs(attrs), length = pairs.length;
     return function(obj) {
-      if (obj === attrs) return true; //avoid comparing an object to itself.
-      for (var key in attrs) {
-        if (attrs[key] !== obj[key])
-          return false;
+      if (obj == null) return !length;
+      obj = new Object(obj);
+      for (var i = 0; i < length; i++) {
+        var pair = pairs[i], key = pair[0];
+        if (pair[1] !== obj[key] || !(key in obj)) return false;
       }
       return true;
-    }
+    };
   };
 
   // Run a function **n** times.
-  _.times = function(n, iterator, context) {
+  _.times = function(n, iteratee, context) {
     var accum = Array(Math.max(0, n));
-    for (var i = 0; i < n; i++) accum[i] = iterator.call(context, i);
+    iteratee = createCallback(iteratee, context, 1);
+    for (var i = 0; i < n; i++) accum[i] = iteratee(i);
     return accum;
   };
 
@@ -13866,54 +14355,44 @@ process.chdir = function (dir) {
   };
 
   // A (possibly faster) way to get the current timestamp as an integer.
-  _.now = Date.now || function() { return new Date().getTime(); };
-
-  // List of HTML entities for escaping.
-  var entityMap = {
-    escape: {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#x27;'
-    }
+  _.now = Date.now || function() {
+    return new Date().getTime();
   };
-  entityMap.unescape = _.invert(entityMap.escape);
 
-  // Regexes containing the keys and values listed immediately above.
-  var entityRegexes = {
-    escape:   new RegExp('[' + _.keys(entityMap.escape).join('') + ']', 'g'),
-    unescape: new RegExp('(' + _.keys(entityMap.unescape).join('|') + ')', 'g')
+   // List of HTML entities for escaping.
+  var escapeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;'
   };
+  var unescapeMap = _.invert(escapeMap);
 
   // Functions for escaping and unescaping strings to/from HTML interpolation.
-  _.each(['escape', 'unescape'], function(method) {
-    _[method] = function(string) {
-      if (string == null) return '';
-      return ('' + string).replace(entityRegexes[method], function(match) {
-        return entityMap[method][match];
-      });
+  var createEscaper = function(map) {
+    var escaper = function(match) {
+      return map[match];
     };
-  });
+    // Regexes for identifying a key that needs to be escaped
+    var source = '(?:' + _.keys(map).join('|') + ')';
+    var testRegexp = RegExp(source);
+    var replaceRegexp = RegExp(source, 'g');
+    return function(string) {
+      string = string == null ? '' : '' + string;
+      return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+    };
+  };
+  _.escape = createEscaper(escapeMap);
+  _.unescape = createEscaper(unescapeMap);
 
   // If the value of the named `property` is a function then invoke it with the
   // `object` as context; otherwise, return it.
   _.result = function(object, property) {
     if (object == null) return void 0;
     var value = object[property];
-    return _.isFunction(value) ? value.call(object) : value;
-  };
-
-  // Add your own custom functions to the Underscore object.
-  _.mixin = function(obj) {
-    each(_.functions(obj), function(name) {
-      var func = _[name] = obj[name];
-      _.prototype[name] = function() {
-        var args = [this._wrapped];
-        push.apply(args, arguments);
-        return result.call(this, func.apply(_, args));
-      };
-    });
+    return _.isFunction(value) ? object[property]() : value;
   };
 
   // Generate a unique integer id (unique within the entire client session).
@@ -13944,22 +14423,26 @@ process.chdir = function (dir) {
     '\\':     '\\',
     '\r':     'r',
     '\n':     'n',
-    '\t':     't',
     '\u2028': 'u2028',
     '\u2029': 'u2029'
   };
 
-  var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g;
+  var escaper = /\\|'|\r|\n|\u2028|\u2029/g;
+
+  var escapeChar = function(match) {
+    return '\\' + escapes[match];
+  };
 
   // JavaScript micro-templating, similar to John Resig's implementation.
   // Underscore templating handles arbitrary delimiters, preserves whitespace,
   // and correctly escapes quotes within interpolated code.
-  _.template = function(text, data, settings) {
-    var render;
+  // NB: `oldSettings` only exists for backwards compatibility.
+  _.template = function(text, settings, oldSettings) {
+    if (!settings && oldSettings) settings = oldSettings;
     settings = _.defaults({}, settings, _.templateSettings);
 
     // Combine delimiters into one regular expression via alternation.
-    var matcher = new RegExp([
+    var matcher = RegExp([
       (settings.escape || noMatch).source,
       (settings.interpolate || noMatch).source,
       (settings.evaluate || noMatch).source
@@ -13969,19 +14452,18 @@ process.chdir = function (dir) {
     var index = 0;
     var source = "__p+='";
     text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
-      source += text.slice(index, offset)
-        .replace(escaper, function(match) { return '\\' + escapes[match]; });
+      source += text.slice(index, offset).replace(escaper, escapeChar);
+      index = offset + match.length;
 
       if (escape) {
         source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
-      }
-      if (interpolate) {
+      } else if (interpolate) {
         source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
-      }
-      if (evaluate) {
+      } else if (evaluate) {
         source += "';\n" + evaluate + "\n__p+='";
       }
-      index = offset + match.length;
+
+      // Adobe VMs need the match returned to produce the correct offest.
       return match;
     });
     source += "';\n";
@@ -13991,29 +14473,31 @@ process.chdir = function (dir) {
 
     source = "var __t,__p='',__j=Array.prototype.join," +
       "print=function(){__p+=__j.call(arguments,'');};\n" +
-      source + "return __p;\n";
+      source + 'return __p;\n';
 
     try {
-      render = new Function(settings.variable || 'obj', '_', source);
+      var render = new Function(settings.variable || 'obj', '_', source);
     } catch (e) {
       e.source = source;
       throw e;
     }
 
-    if (data) return render(data, _);
     var template = function(data) {
       return render.call(this, data, _);
     };
 
-    // Provide the compiled function source as a convenience for precompilation.
-    template.source = 'function(' + (settings.variable || 'obj') + '){\n' + source + '}';
+    // Provide the compiled source as a convenience for precompilation.
+    var argument = settings.variable || 'obj';
+    template.source = 'function(' + argument + '){\n' + source + '}';
 
     return template;
   };
 
-  // Add a "chain" function, which will delegate to the wrapper.
+  // Add a "chain" function. Start chaining a wrapped Underscore object.
   _.chain = function(obj) {
-    return _(obj).chain();
+    var instance = _(obj);
+    instance._chain = true;
+    return instance;
   };
 
   // OOP
@@ -14027,42 +14511,44 @@ process.chdir = function (dir) {
     return this._chain ? _(obj).chain() : obj;
   };
 
+  // Add your own custom functions to the Underscore object.
+  _.mixin = function(obj) {
+    _.each(_.functions(obj), function(name) {
+      var func = _[name] = obj[name];
+      _.prototype[name] = function() {
+        var args = [this._wrapped];
+        push.apply(args, arguments);
+        return result.call(this, func.apply(_, args));
+      };
+    });
+  };
+
   // Add all of the Underscore functions to the wrapper object.
   _.mixin(_);
 
   // Add all mutator Array functions to the wrapper.
-  each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
+  _.each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
     var method = ArrayProto[name];
     _.prototype[name] = function() {
       var obj = this._wrapped;
       method.apply(obj, arguments);
-      if ((name == 'shift' || name == 'splice') && obj.length === 0) delete obj[0];
+      if ((name === 'shift' || name === 'splice') && obj.length === 0) delete obj[0];
       return result.call(this, obj);
     };
   });
 
   // Add all accessor Array functions to the wrapper.
-  each(['concat', 'join', 'slice'], function(name) {
+  _.each(['concat', 'join', 'slice'], function(name) {
     var method = ArrayProto[name];
     _.prototype[name] = function() {
       return result.call(this, method.apply(this._wrapped, arguments));
     };
   });
 
-  _.extend(_.prototype, {
-
-    // Start chaining a wrapped Underscore object.
-    chain: function() {
-      this._chain = true;
-      return this;
-    },
-
-    // Extracts the result from a wrapped and chained object.
-    value: function() {
-      return this._wrapped;
-    }
-
-  });
+  // Extracts the result from a wrapped and chained object.
+  _.prototype.value = function() {
+    return this._wrapped;
+  };
 
   // AMD registration happens at the end for compatibility with AMD loaders
   // that may not enforce next-turn semantics on modules. Even though general
@@ -14076,9 +14562,9 @@ process.chdir = function (dir) {
       return _;
     });
   }
-}).call(this);
+}.call(this));
 
-},{}],48:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 exports.concat_0_0_0 = function fastConcat () {
   var length = arguments.length,
       arr = [],
@@ -14355,4 +14841,85 @@ exports.lastIndexOf_0_0_2 = function fastLastIndexOf (subject, target) {
   }
   return -1;
 };
-},{}]},{},[23])
+
+
+exports.bind_0_0_2 = function fastBind (fn, thisContext) {
+  var boundLength = arguments.length - 2,
+      boundArgs;
+
+  if (boundLength > 0) {
+    boundArgs = new Array(boundLength);
+    for (var i = 0; i < boundLength; i++) {
+      boundArgs[i] = arguments[i + 2];
+    }
+    return function () {
+      var length = arguments.length,
+          args = new Array(boundLength + length),
+          i;
+      for (i = 0; i < boundLength; i++) {
+        args[i] = boundArgs[i];
+      }
+      for (i = 0; i < length; i++) {
+        args[boundLength + i] = arguments[i];
+      }
+      return fn.apply(thisContext, args);
+    };
+  }
+  return function () {
+    return fn.apply(thisContext, arguments);
+  };
+};
+
+exports.partial_0_0_2 = function fastPartial (fn) {
+  var boundLength = arguments.length - 1,
+      boundArgs;
+
+  boundArgs = new Array(boundLength);
+  for (var i = 0; i < boundLength; i++) {
+    boundArgs[i] = arguments[i + 1];
+  }
+  return function () {
+    var length = arguments.length,
+        args = new Array(boundLength + length),
+        i;
+    for (i = 0; i < boundLength; i++) {
+      args[i] = boundArgs[i];
+    }
+    for (i = 0; i < length; i++) {
+      args[boundLength + i] = arguments[i];
+    }
+    return fn.apply(this, args);
+  };
+};
+
+exports.partialConstructor_0_0_2 = function fastPartialConstructor (fn) {
+  var boundLength = arguments.length - 1,
+      boundArgs;
+
+  boundArgs = new Array(boundLength);
+  for (var i = 0; i < boundLength; i++) {
+    boundArgs[i] = arguments[i + 1];
+  }
+  return function partialed () {
+    var length = arguments.length,
+        args = new Array(boundLength + length),
+        i;
+    for (i = 0; i < boundLength; i++) {
+      args[i] = boundArgs[i];
+    }
+    for (i = 0; i < length; i++) {
+      args[boundLength + i] = arguments[i];
+    }
+
+    var thisContext = Object.create(fn.prototype),
+        result = fn.apply(thisContext, args);
+
+    if (result != null && (typeof result === 'object' || typeof result === 'function')) {
+      return result;
+    }
+    else {
+      return thisContext;
+    }
+  };
+};
+},{}]},{},[26])
