@@ -10,6 +10,9 @@ describe('fast.bind()', function () {
   var object = {
     seed: 100
   };
+  var addNumsTo100 = function (a, b, c){
+    return a + b + c + 100;
+  }
   it('should bind to a context', function () {
     var bound = fast.bind(input, object);
     bound(1,2,3).should.equal(106);
@@ -18,6 +21,15 @@ describe('fast.bind()', function () {
     var bound = fast.bind(input, object, 1, 2);
     bound(3).should.equal(106);
   });
+  it('should partially apply a function when context isn\'t provided', function () {
+    var bound = fast.bind(addNumsTo100, undefined, 1, 2);
+    bound(3).should.equal(106);
+  });
+  it('should work when no arguments or this context are provided', function () {
+    var bound = fast.bind(addNumsTo100);
+    bound(1, 2, 3).should.equal(106);
+  });
+
 });
 
 describe('fast.partial()', function () {
@@ -44,11 +56,37 @@ describe('fast.partialConstructor()', function () {
     return this.bar + this.baz;
   };
 
+  var ConstructorReturningObj = function (baz, greeting) {
+    this.bar = 10;
+    this.baz = baz;
+    this.greeting = greeting;
+    return this;
+  };
+  ConstructorReturningObj.prototype.foo = function () {
+    return this.bar + this.baz;
+  };
+
+  var ConstructorReturningFn = function (baz, greeting) {
+    this.bar = 10;
+    this.baz = baz;
+    this.greeting = greeting;
+    var fn = function () {};
+    fn.instance = this;
+    return fn;
+  };
+  ConstructorReturningFn.prototype.foo = function () {
+    return this.bar + this.baz;
+  };
+
   var Partial = fast.partialConstructor(Constructor, 32),
-      instance;
+      PartialReturningObj = fast.partialConstructor(ConstructorReturningObj, 32),
+      PartialReturningFn = fast.partialConstructor(ConstructorReturningFn, 32),
+      instance, instanceReturningObj, instanceReturningFn;
 
   beforeEach(function () {
     instance = new Partial("hello world");
+    instanceReturningObj = new PartialReturningObj("hello world");
+    instanceReturningFn = new PartialReturningFn("hello world");
   });
 
   it('should be an instanceof the original constructor', function () {
@@ -72,6 +110,29 @@ describe('fast.partialConstructor()', function () {
     instance.should.be.an.instanceOf(Constructor);
     instance.foo().should.equal(42);
     instance.greeting.should.equal('hello world');
+  });
+
+  it('should work for constructors which explicitly return', function () {
+    instanceReturningObj.should.be.an.instanceOf(ConstructorReturningObj);
+    instanceReturningObj.baz.should.equal(32);
+    instanceReturningObj.greeting.should.equal("hello world");
+    instanceReturningObj.foo().should.equal(42);
+    instanceReturningObj = PartialReturningObj('hello world');
+    instanceReturningObj.should.be.an.instanceOf(ConstructorReturningObj);
+    instanceReturningObj.foo().should.equal(42);
+    instanceReturningObj.greeting.should.equal('hello world');
+  });
+
+  it('should work for constructors which return functions', function () {
+    instanceReturningFn.should.be.a.Function;
+    instanceReturningFn.instance.should.be.an.instanceOf(ConstructorReturningFn);
+    instanceReturningFn.instance.baz.should.equal(32);
+    instanceReturningFn.instance.greeting.should.equal("hello world");
+    instanceReturningFn.instance.foo().should.equal(42);
+    instanceReturningFn = PartialReturningFn('hello world');
+    instanceReturningFn.instance.should.be.an.instanceOf(ConstructorReturningFn);
+    instanceReturningFn.instance.foo().should.equal(42);
+    instanceReturningFn.instance.greeting.should.equal('hello world');
   });
 });
 
@@ -153,7 +214,7 @@ describe('fast.filter()', function () {
     result.should.eql([1, 3, 5]);
   });
   it('should take context', function () {
-    fast.map([1], function () {
+    fast.filter([1], function () {
       this.should.equal(fast);
     }, fast);
   });
@@ -643,7 +704,13 @@ describe('Fast', function () {
   });
   it('should reduce over the list', function () {
     var result = input.reduce(function (last, item) {
-      return last + item
+      return last + item;
+    });
+    result.should.equal(21);
+  });
+  it('should reduce right over the list', function () {
+    var result = input.reduceRight(function (last, item) {
+      return last + item;
     });
     result.should.equal(21);
   });
@@ -654,11 +721,33 @@ describe('Fast', function () {
     });
     result.should.equal(21);
   });
-  it('should return true for ', function () {
-    var result = input.reduce(function (last, item) {
-      return last + item
+  it('should some over the list', function () {
+    var result = input.some(function (item) {
+      return item > 5;
     });
-    result.should.equal(21);
+    result.should.equal(true);
+  });
+  it('should every over the list', function () {
+    var result = input.every(function (item) {
+      return item < 7;
+    });
+    result.should.equal(true);
+  });
+  it('should indexOf over the list', function () {
+    var result = input.indexOf(5);
+    result.should.equal(4);
+  });
+  it('should every over the list', function () {
+    var result = input.lastIndexOf(5);
+    result.should.equal(4);
+  });
+  it('should valueOf correctly', function () {
+    var result = input.valueOf();
+    result.should.eql([1, 2, 3, 4, 5, 6]);
+  });
+  it('should toJSON correctly', function () {
+    var result = input.toJSON();
+    result.should.eql([1, 2, 3, 4, 5, 6]);
   });
 
   describe('integration', function () {
