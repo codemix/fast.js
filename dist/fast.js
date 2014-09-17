@@ -1,6 +1,377 @@
-(function (module, exports) {
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.fast=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+'use strict';
 
+var applyWithContext = _dereq_('./applyWithContext');
+var applyNoContext = _dereq_('./applyNoContext');
 
+/**
+ * # Apply
+ *
+ * Faster version of `Function::apply()`, optimised for 8 arguments or fewer.
+ *
+ *
+ * @param  {Function} subject   The function to apply.
+ * @param  {Object} thisContext The context for the function, set to undefined or null if no context is required.
+ * @param  {Array} args         The arguments for the function.
+ * @return {mixed}              The result of the function invocation.
+ */
+module.exports = function fastApply (subject, thisContext, args) {
+  return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
+};
+
+},{"./applyNoContext":2,"./applyWithContext":3}],2:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * Internal helper for applying a function without a context.
+ */
+module.exports = function applyNoContext (subject, args) {
+  switch (args.length) {
+    case 0:
+      return subject();
+    case 1:
+      return subject(args[0]);
+    case 2:
+      return subject(args[0], args[1]);
+    case 3:
+      return subject(args[0], args[1], args[2]);
+    case 4:
+      return subject(args[0], args[1], args[2], args[3]);
+    case 5:
+      return subject(args[0], args[1], args[2], args[3], args[4]);
+    case 6:
+      return subject(args[0], args[1], args[2], args[3], args[4], args[5]);
+    case 7:
+      return subject(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+    case 8:
+      return subject(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+    default:
+      return subject.apply(undefined, args);
+  }
+};
+
+},{}],3:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * Internal helper for applying a function with a context.
+ */
+module.exports = function applyWithContext (subject, thisContext, args) {
+  switch (args.length) {
+    case 0:
+      return subject.call(thisContext);
+    case 1:
+      return subject.call(thisContext, args[0]);
+    case 2:
+      return subject.call(thisContext, args[0], args[1]);
+    case 3:
+      return subject.call(thisContext, args[0], args[1], args[2]);
+    case 4:
+      return subject.call(thisContext, args[0], args[1], args[2], args[3]);
+    case 5:
+      return subject.call(thisContext, args[0], args[1], args[2], args[3], args[4]);
+    case 6:
+      return subject.call(thisContext, args[0], args[1], args[2], args[3], args[4], args[5]);
+    case 7:
+      return subject.call(thisContext, args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+    case 8:
+      return subject.call(thisContext, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+    default:
+      return subject.apply(thisContext, args);
+  }
+};
+
+},{}],4:[function(_dereq_,module,exports){
+'use strict';
+
+var applyWithContext = _dereq_('./applyWithContext');
+var applyNoContext = _dereq_('./applyNoContext');
+
+/**
+ * # Bind
+ * Analogue of `Function::bind()`.
+ *
+ * ```js
+ * var bind = require('fast.js').bind;
+ * var bound = bind(myfunc, this, 1, 2, 3);
+ *
+ * bound(4);
+ * ```
+ *
+ *
+ * @param  {Function} fn          The function which should be bound.
+ * @param  {Object}   thisContext The context to bind the function to.
+ * @param  {mixed}    args, ...   Additional arguments to pre-bind.
+ * @return {Function}             The bound function.
+ */
+module.exports = function fastBind (fn, thisContext) {
+  var boundLength = arguments.length - 2,
+      boundArgs;
+
+  if (boundLength > 0) {
+    boundArgs = new Array(boundLength);
+    for (var i = 0; i < boundLength; i++) {
+      boundArgs[i] = arguments[i + 2];
+    }
+    if (thisContext !== undefined) {
+      return function () {
+        var length = arguments.length,
+            args = new Array(boundLength + length),
+            i;
+        for (i = 0; i < boundLength; i++) {
+          args[i] = boundArgs[i];
+        }
+        for (i = 0; i < length; i++) {
+          args[boundLength + i] = arguments[i];
+        }
+        return applyWithContext(fn, thisContext, args);
+      };
+    }
+    else {
+      return function () {
+        var length = arguments.length,
+            args = new Array(boundLength + length),
+            i;
+        for (i = 0; i < boundLength; i++) {
+          args[i] = boundArgs[i];
+        }
+        for (i = 0; i < length; i++) {
+          args[boundLength + i] = arguments[i];
+        }
+        return applyNoContext(fn, args);
+      };
+    }
+  }
+  if (thisContext !== undefined) {
+    return function () {
+      return applyWithContext(fn, thisContext, arguments);
+    };
+  }
+  else {
+    return function () {
+      return applyNoContext(fn, arguments);
+    };
+  }
+};
+
+},{"./applyNoContext":2,"./applyWithContext":3}],5:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * Internal helper to bind a function known to have 3 arguments
+ * to a given context.
+ */
+module.exports = function bindInternal3 (func, thisContext) {
+  return function (a, b, c) {
+    return func.call(thisContext, a, b, c);
+  };
+};
+
+},{}],6:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * Internal helper to bind a function known to have 4 arguments
+ * to a given context.
+ */
+module.exports = function bindInternal4 (func, thisContext) {
+  return function (a, b, c, d) {
+    return func.call(thisContext, a, b, c, d);
+  };
+};
+
+},{}],7:[function(_dereq_,module,exports){
+'use strict';
+
+var cloneArray = _dereq_('./cloneArray');
+var cloneObject = _dereq_('./cloneObject');
+
+/**
+ * # Clone
+ *
+ * Clone an item. Primitive values will be returned directly,
+ * arrays and objects will be shallow cloned. If you know the
+ * type of input you're dealing with, call `.cloneArray()` or `.cloneObject()`
+ * instead.
+ *
+ * @param  {mixed} input The input to clone.
+ * @return {mixed}       The cloned input.
+ */
+module.exports = function clone (input) {
+  if (!input || typeof input !== 'object') {
+    return input;
+  }
+  else if (Array.isArray(input)) {
+    return cloneArray(input);
+  }
+  else {
+    return cloneObject(input);
+  }
+};
+
+},{"./cloneArray":8,"./cloneObject":9}],8:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * # Clone Array
+ *
+ * Clone an array or array like object (e.g. `arguments`).
+ * This is the equivalent of calling `Array.prototype.slice.call(arguments)`, but
+ * significantly faster.
+ *
+ * @param  {Array} input The array or array-like object to clone.
+ * @return {Array}       The cloned array.
+ */
+module.exports = function fastCloneArray (input) {
+  var length = input.length,
+      sliced = new Array(length),
+      i;
+  for (i = 0; i < length; i++) {
+    sliced[i] = input[i];
+  }
+  return sliced;
+};
+
+},{}],9:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * # Clone Object
+ *
+ * Shallow clone a simple object.
+ *
+ * > Note: Prototypes and non-enumerable properties will not be copied!
+ *
+ * @param  {Object} input The object to clone.
+ * @return {Object}       The cloned object.
+ */
+module.exports = function fastCloneObject (input) {
+  var keys = Object.keys(input),
+      total = keys.length,
+      cloned = {},
+      i, key;
+
+  for (i = 0; i < total; i++) {
+    key = keys[i];
+    cloned[key] = input[key];
+  }
+
+  return cloned;
+};
+
+},{}],10:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * # Concat
+ *
+ * Concatenate multiple arrays.
+ *
+ * > Note: This function is effectively identical to `Array.prototype.concat()`.
+ *
+ *
+ * @param  {Array|mixed} item, ... The item(s) to concatenate.
+ * @return {Array}                 The array containing the concatenated items.
+ */
+module.exports = function fastConcat () {
+  var length = arguments.length,
+      arr = [],
+      i, item, childLength, j;
+
+  for (i = 0; i < length; i++) {
+    item = arguments[i];
+    if (Array.isArray(item)) {
+      childLength = item.length;
+      for (j = 0; j < childLength; j++) {
+        arr.push(item[j]);
+      }
+    }
+    else {
+      arr.push(item);
+    }
+  }
+  return arr;
+};
+
+},{}],11:[function(_dereq_,module,exports){
+'use strict';
+
+var bindInternal3 = _dereq_('./bindInternal3');
+
+/**
+ * # Every
+ *
+ * A fast `.some()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to iterate over.
+ * @param  {Function} fn          The visitor function.
+ * @param  {Object}   thisContext The context for the visitor.
+ * @return {Boolean}              true if all items in the array passes the truth test.
+ */
+module.exports = function fastEvery (subject, fn, thisContext) {
+  var length = subject.length,
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    if (!iterator(subject[i], i, subject)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+},{"./bindInternal3":5}],12:[function(_dereq_,module,exports){
+'use strict';
+
+var bindInternal3 = _dereq_('./bindInternal3');
+
+/**
+ * # Filter
+ *
+ * A fast `.filter()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to filter.
+ * @param  {Function} fn          The filter function.
+ * @param  {Object}   thisContext The context for the filter.
+ * @return {Array}                The array containing the results.
+ */
+module.exports = function fastFilter (subject, fn, thisContext) {
+  var length = subject.length,
+      result = [],
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    if (iterator(subject[i], i, subject)) {
+      result.push(subject[i]);
+    }
+  }
+  return result;
+};
+
+},{"./bindInternal3":5}],13:[function(_dereq_,module,exports){
+'use strict';
+
+var bindInternal3 = _dereq_('./bindInternal3');
+
+/**
+ * # For Each
+ *
+ * A fast `.forEach()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to iterate over.
+ * @param  {Function} fn          The visitor function.
+ * @param  {Object}   thisContext The context for the visitor.
+ */
+module.exports = function fastForEach (subject, fn, thisContext) {
+  var length = subject.length,
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    iterator(subject[i], i, subject);
+  }
+};
+
+},{"./bindInternal3":5}],14:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -31,6 +402,26 @@ function Fast (value) {
 
 module.exports = exports = Fast;
 
+Fast.apply = _dereq_('./apply');
+Fast.bind = _dereq_('./bind');
+Fast.partial = _dereq_('./partial');
+Fast.partialConstructor = _dereq_('./partialConstructor');
+Fast['try'] = Fast.attempt = _dereq_( './try' );
+
+Fast.clone = _dereq_('./clone');
+Fast.cloneObject = _dereq_('./cloneObject');
+Fast.cloneArray = _dereq_('./cloneArray');
+
+Fast.concat = _dereq_('./concat');
+Fast.map = _dereq_('./map');
+Fast.filter = _dereq_('./filter');
+Fast.forEach = _dereq_('./forEach');
+Fast.reduce = _dereq_('./reduce');
+Fast.reduceRight = _dereq_('./reduceRight');
+Fast.some = _dereq_('./some');
+Fast.every = _dereq_('./every');
+Fast.indexOf = _dereq_('./indexOf');
+Fast.lastIndexOf = _dereq_('./lastIndexOf');
 
 /**
  * # Concat
@@ -205,72 +596,102 @@ Object.defineProperty(Fast.prototype, 'length', {
   }
 });
 
-/**
- * # Bind
- * Analogue of `Function::bind()`.
- *
- * ```js
- * var bind = require('fast.js').bind;
- * var bound = bind(myfunc, this, 1, 2, 3);
- *
- * bound(4);
- * ```
- *
- *
- * @param  {Function} fn          The function which should be bound.
- * @param  {Object}   thisContext The context to bind the function to.
- * @param  {mixed}    args, ...   Additional arguments to pre-bind.
- * @return {Function}             The bound function.
- */
-Fast.bind = function fastBind (fn, thisContext) {
-  var boundLength = arguments.length - 2,
-      boundArgs;
+},{"./apply":1,"./bind":4,"./clone":7,"./cloneArray":8,"./cloneObject":9,"./concat":10,"./every":11,"./filter":12,"./forEach":13,"./indexOf":15,"./lastIndexOf":16,"./map":17,"./partial":18,"./partialConstructor":19,"./reduce":20,"./reduceRight":21,"./some":22,"./try":23}],15:[function(_dereq_,module,exports){
+'use strict';
 
-  if (boundLength > 0) {
-    boundArgs = new Array(boundLength);
-    for (var i = 0; i < boundLength; i++) {
-      boundArgs[i] = arguments[i + 2];
-    }
-    if (thisContext !== undefined) {
-      return function () {
-        var length = arguments.length,
-            args = new Array(boundLength + length),
-            i;
-        for (i = 0; i < boundLength; i++) {
-          args[i] = boundArgs[i];
-        }
-        for (i = 0; i < length; i++) {
-          args[boundLength + i] = arguments[i];
-        }
-        return applyWithContext(fn, thisContext, args);
-      };
-    }
-    else {
-      return function () {
-        var length = arguments.length,
-            args = new Array(boundLength + length),
-            i;
-        for (i = 0; i < boundLength; i++) {
-          args[i] = boundArgs[i];
-        }
-        for (i = 0; i < length; i++) {
-          args[boundLength + i] = arguments[i];
-        }
-        return applyNoContext(fn, args);
-      };
+/**
+ * # Index Of
+ *
+ * A faster `Array.prototype.indexOf()` implementation.
+ *
+ * @param  {Array}  subject   The array (or array-like) to search within.
+ * @param  {mixed}  target    The target item to search for.
+ * @param  {Number} fromIndex The position to start searching from, if known.
+ * @return {Number}           The position of the target in the subject, or -1 if it does not exist.
+ */
+module.exports = function fastIndexOf (subject, target, fromIndex) {
+  var length = subject.length,
+      i = 0;
+
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
+    if (i < 0) {
+      i += length;
+      if (i < 0) {
+        i = 0;
+      }
     }
   }
-  if (thisContext !== undefined) {
-    return function () {
-      return applyWithContext(fn, thisContext, arguments);
-    };
+
+  for (; i < length; i++) {
+    if (subject[i] === target) {
+      return i;
+    }
   }
-  else {
-    return function () {
-      return applyNoContext(fn, arguments);
-    };
-  }
+  return -1;
 };
+
+},{}],16:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * # Last Index Of
+ *
+ * A faster `Array.prototype.lastIndexOf()` implementation.
+ *
+ * @param  {Array}  subject The array (or array-like) to search within.
+ * @param  {mixed}  target  The target item to search for.
+ * @param  {Number} fromIndex The position to start searching backwards from, if known.
+ * @return {Number}         The last position of the target in the subject, or -1 if it does not exist.
+ */
+module.exports = function fastLastIndexOf (subject, target, fromIndex) {
+  var length = subject.length,
+      i = length - 1;
+
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
+    if (i < 0) {
+      i += length;
+    }
+  }
+  for (; i >= 0; i--) {
+    if (subject[i] === target) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+},{}],17:[function(_dereq_,module,exports){
+'use strict';
+
+var bindInternal3 = _dereq_('./bindInternal3');
+
+/**
+ * # Map
+ *
+ * A fast `.map()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to map over.
+ * @param  {Function} fn          The mapper function.
+ * @param  {Object}   thisContext The context for the mapper.
+ * @return {Array}                The array containing the results.
+ */
+module.exports = function fastMap (subject, fn, thisContext) {
+  var length = subject.length,
+      result = new Array(length),
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    result[i] = iterator(subject[i], i, subject);
+  }
+  return result;
+};
+
+},{"./bindInternal3":5}],18:[function(_dereq_,module,exports){
+'use strict';
+
+var applyWithContext = _dereq_('./applyWithContext');
 
 /**
  * # Partial Application
@@ -289,7 +710,7 @@ Fast.bind = function fastBind (fn, thisContext) {
  * @param  {mixed}    args, ...   Arguments to pre-bind.
  * @return {Function}             The partially applied function.
  */
-Fast.partial = function fastPartial (fn) {
+module.exports = function fastPartial (fn) {
   var boundLength = arguments.length - 1,
       boundArgs;
 
@@ -311,6 +732,11 @@ Fast.partial = function fastPartial (fn) {
   };
 };
 
+},{"./applyWithContext":3}],19:[function(_dereq_,module,exports){
+'use strict';
+
+var applyWithContext = _dereq_('./applyWithContext');
+
 /**
  * # Partial Constructor
  *
@@ -322,7 +748,7 @@ Fast.partial = function fastPartial (fn) {
  * @param  {mixed}    args, ...   Arguments to pre-bind.
  * @return {Function}             The partially applied constructor.
  */
-Fast.partialConstructor = function fastPartialConstructor (fn) {
+module.exports = function fastPartialConstructor (fn) {
   var boundLength = arguments.length - 1,
       boundArgs;
 
@@ -353,148 +779,10 @@ Fast.partialConstructor = function fastPartialConstructor (fn) {
   };
 };
 
-/**
- * # Clone
- *
- * Clone an item. Primitive values will be returned directly,
- * arrays and objects will be shallow cloned. If you know the
- * type of input you're dealing with, call `.cloneArray()` or `.cloneObject()`
- * instead.
- *
- * @param  {mixed} input The input to clone.
- * @return {mixed}       The cloned input.
- */
-Fast.clone = function clone (input) {
-  if (!input || typeof input !== 'object') {
-    return input;
-  }
-  else if (Array.isArray(input)) {
-    return Fast.cloneArray(input);
-  }
-  else {
-    return Fast.cloneObject(input);
-  }
-};
+},{"./applyWithContext":3}],20:[function(_dereq_,module,exports){
+'use strict';
 
-/**
- * # Clone Array
- *
- * Clone an array or array like object (e.g. `arguments`).
- * This is the equivalent of calling `Array.prototype.slice.call(arguments)`, but
- * significantly faster.
- *
- * @param  {Array} input The array or array-like object to clone.
- * @return {Array}       The cloned array.
- */
-Fast.cloneArray = function fastCloneArray (input) {
-  var length = input.length,
-      sliced = new Array(length),
-      i;
-  for (i = 0; i < length; i++) {
-    sliced[i] = input[i];
-  }
-  return sliced;
-};
-
-/**
- * # Clone Object
- *
- * Shallow clone a simple object.
- *
- * > Note: Prototypes and non-enumerable properties will not be copied!
- *
- * @param  {Object} input The object to clone.
- * @return {Object}       The cloned object.
- */
-Fast.cloneObject = function fastCloneObject (input) {
-  var keys = Object.keys(input),
-      total = keys.length,
-      cloned = {},
-      i, key;
-
-  for (i = 0; i < total; i++) {
-    key = keys[i];
-    cloned[key] = input[key];
-  }
-
-  return cloned;
-};
-
-
-/**
- * # Concat
- *
- * Concatenate multiple arrays.
- *
- * > Note: This function is effectively identical to `Array.prototype.concat()`.
- *
- *
- * @param  {Array|mixed} item, ... The item(s) to concatenate.
- * @return {Array}                 The array containing the concatenated items.
- */
-Fast.concat = function fastConcat () {
-  var length = arguments.length,
-      arr = [],
-      i, item, childLength, j;
-
-  for (i = 0; i < length; i++) {
-    item = arguments[i];
-    if (Array.isArray(item)) {
-      childLength = item.length;
-      for (j = 0; j < childLength; j++) {
-        arr.push(item[j]);
-      }
-    }
-    else {
-      arr.push(item);
-    }
-  }
-  return arr;
-};
-
-/**
- * # Map
- *
- * A fast `.map()` implementation.
- *
- * @param  {Array}    subject     The array (or array-like) to map over.
- * @param  {Function} fn          The mapper function.
- * @param  {Object}   thisContext The context for the mapper.
- * @return {Array}                The array containing the results.
- */
-Fast.map = function fastMap (subject, fn, thisContext) {
-  var length = subject.length,
-      result = new Array(length),
-      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
-      i;
-  for (i = 0; i < length; i++) {
-    result[i] = iterator(subject[i], i, subject);
-  }
-  return result;
-};
-
-/**
- * # Filter
- *
- * A fast `.filter()` implementation.
- *
- * @param  {Array}    subject     The array (or array-like) to filter.
- * @param  {Function} fn          The filter function.
- * @param  {Object}   thisContext The context for the filter.
- * @return {Array}                The array containing the results.
- */
-Fast.filter = function fastFilter (subject, fn, thisContext) {
-  var length = subject.length,
-      result = [],
-      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
-      i;
-  for (i = 0; i < length; i++) {
-    if (iterator(subject[i], i, subject)) {
-      result.push(subject[i]);
-    }
-  }
-  return result;
-};
+var bindInternal4 = _dereq_('./bindInternal4');
 
 /**
  * # Reduce
@@ -507,7 +795,7 @@ Fast.filter = function fastFilter (subject, fn, thisContext) {
  * @param  {Object}   thisContext  The context for the reducer.
  * @return {mixed}                 The final result.
  */
-Fast.reduce = function fastReduce (subject, fn, initialValue, thisContext) {
+module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
       i, result;
@@ -528,6 +816,11 @@ Fast.reduce = function fastReduce (subject, fn, initialValue, thisContext) {
   return result;
 };
 
+},{"./bindInternal4":6}],21:[function(_dereq_,module,exports){
+'use strict';
+
+var bindInternal4 = _dereq_('./bindInternal4');
+
 /**
  * # Reduce Right
  *
@@ -539,7 +832,7 @@ Fast.reduce = function fastReduce (subject, fn, initialValue, thisContext) {
  * @param  {Object}   thisContext  The context for the reducer.
  * @return {mixed}                 The final result.
  */
-Fast.reduceRight = function fastReduce (subject, fn, initialValue, thisContext) {
+module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
       i, result;
@@ -560,24 +853,10 @@ Fast.reduceRight = function fastReduce (subject, fn, initialValue, thisContext) 
   return result;
 };
 
+},{"./bindInternal4":6}],22:[function(_dereq_,module,exports){
+'use strict';
 
-/**
- * # For Each
- *
- * A fast `.forEach()` implementation.
- *
- * @param  {Array}    subject     The array (or array-like) to iterate over.
- * @param  {Function} fn          The visitor function.
- * @param  {Object}   thisContext The context for the visitor.
- */
-Fast.forEach = function fastForEach (subject, fn, thisContext) {
-  var length = subject.length,
-      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
-      i;
-  for (i = 0; i < length; i++) {
-    iterator(subject[i], i, subject);
-  }
-};
+var bindInternal3 = _dereq_('./bindInternal3');
 
 /**
  * # Some
@@ -589,7 +868,7 @@ Fast.forEach = function fastForEach (subject, fn, thisContext) {
  * @param  {Object}   thisContext The context for the visitor.
  * @return {Boolean}              true if at least one item in the array passes the truth test.
  */
-Fast.some = function fastSome (subject, fn, thisContext) {
+module.exports = function fastSome (subject, fn, thisContext) {
   var length = subject.length,
       iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
       i;
@@ -601,89 +880,8 @@ Fast.some = function fastSome (subject, fn, thisContext) {
   return false;
 };
 
-/**
- * # Every
- *
- * A fast `.some()` implementation.
- *
- * @param  {Array}    subject     The array (or array-like) to iterate over.
- * @param  {Function} fn          The visitor function.
- * @param  {Object}   thisContext The context for the visitor.
- * @return {Boolean}              true if all items in the array passes the truth test.
- */
-Fast.every = function fastEvery (subject, fn, thisContext) {
-  var length = subject.length,
-      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
-      i;
-  for (i = 0; i < length; i++) {
-    if (!iterator(subject[i], i, subject)) {
-      return false;
-    }
-  }
-  return true;
-};
-
-/**
- * # Index Of
- *
- * A faster `Array.prototype.indexOf()` implementation.
- *
- * @param  {Array}  subject   The array (or array-like) to search within.
- * @param  {mixed}  target    The target item to search for.
- * @param  {Number} fromIndex The position to start searching from, if known.
- * @return {Number}           The position of the target in the subject, or -1 if it does not exist.
- */
-Fast.indexOf = function fastIndexOf (subject, target, fromIndex) {
-  var length = subject.length,
-      i = 0;
-
-  if (typeof fromIndex === 'number') {
-    i = fromIndex;
-    if (i < 0) {
-      i += length;
-      if (i < 0) {
-        i = 0;
-      }
-    }
-  }
-
-  for (; i < length; i++) {
-    if (subject[i] === target) {
-      return i;
-    }
-  }
-  return -1;
-};
-
-
-
-/**
- * # Last Index Of
- *
- * A faster `Array.prototype.lastIndexOf()` implementation.
- *
- * @param  {Array}  subject The array (or array-like) to search within.
- * @param  {mixed}  target  The target item to search for.
- * @param  {Number} fromIndex The position to start searching backwards from, if known.
- * @return {Number}         The last position of the target in the subject, or -1 if it does not exist.
- */
-Fast.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
-  var length = subject.length,
-      i = length - 1;
-
-  if (typeof fromIndex === 'number') {
-    i = fromIndex;
-    if (i < 0) {
-      i += length;
-    }
-  }
-  for (; i >= 0; i--) {
-    if (subject[i] === target) {
-      return i;
-    }
-  }
-  return -1;
-};
+},{"./bindInternal3":5}],23:[function(_dereq_,module,exports){
+'use strict';
 
 /**
  * # Try
@@ -705,7 +903,7 @@ Fast.lastIndexOf = function fastLastIndexOf (subject, target, fromIndex) {
  * @param  {Function} fn The function to invoke.
  * @return {mixed}       The result of the function, or an `Error` object.
  */
-Fast['try'] = function fastTry (fn) {
+module.exports = function fastTry (fn) {
   try {
     return fn();
   }
@@ -719,103 +917,6 @@ Fast['try'] = function fastTry (fn) {
   }
 };
 
-// alias of `.try()` for older JS engines.
-Fast.attempt = Fast['try'];
-
-/**
- * # Apply
- *
- * Faster version of `Function::apply()`, optimised for 8 arguments or fewer.
- *
- *
- * @param  {Function} subject   The function to apply.
- * @param  {Object} thisContext The context for the function, set to undefined or null if no context is required.
- * @param  {Array} args         The arguments for the function.
- * @return {mixed}              The result of the function invocation.
- */
-Fast.apply = function fastApply (subject, thisContext, args) {
-  return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
-};
-
-
-/**
- * Internal helper for applying a function with a context.
- */
-function applyWithContext (subject, thisContext, args) {
-  switch (args.length) {
-    case 0:
-      return subject.call(thisContext);
-    case 1:
-      return subject.call(thisContext, args[0]);
-    case 2:
-      return subject.call(thisContext, args[0], args[1]);
-    case 3:
-      return subject.call(thisContext, args[0], args[1], args[2]);
-    case 4:
-      return subject.call(thisContext, args[0], args[1], args[2], args[3]);
-    case 5:
-      return subject.call(thisContext, args[0], args[1], args[2], args[3], args[4]);
-    case 6:
-      return subject.call(thisContext, args[0], args[1], args[2], args[3], args[4], args[5]);
-    case 7:
-      return subject.call(thisContext, args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-    case 8:
-      return subject.call(thisContext, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-    default:
-      return subject.apply(thisContext, args);
-  }
-}
-
-/**
- * Internal helper for applying a function without a context.
- */
-function applyNoContext (subject, args) {
-  switch (args.length) {
-    case 0:
-      return subject();
-    case 1:
-      return subject(args[0]);
-    case 2:
-      return subject(args[0], args[1]);
-    case 3:
-      return subject(args[0], args[1], args[2]);
-    case 4:
-      return subject(args[0], args[1], args[2], args[3]);
-    case 5:
-      return subject(args[0], args[1], args[2], args[3], args[4]);
-    case 6:
-      return subject(args[0], args[1], args[2], args[3], args[4], args[5]);
-    case 7:
-      return subject(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-    case 8:
-      return subject(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-    default:
-      return subject.apply(undefined, args);
-  }
-}
-
-/**
- * Internal helper to bind a function known to have 3 arguments
- * to a given context.
- */
-function bindInternal3 (func, thisContext) {
-  return function (a, b, c) {
-    return func.call(thisContext, a, b, c);
-  };
-}
-
-/**
- * Internal helper to bind a function known to have 4 arguments
- * to a given context.
- */
-function bindInternal4 (func, thisContext) {
-  return function (a, b, c, d) {
-    return func.call(thisContext, a, b, c, d);
-  };
-}
-
-})(
-  typeof module === 'undefined' ? { exports: window.fast = {} } : module,
-  typeof exports === 'undefined' ? window.fast : exports
-
-);
+},{}]},{},[14])
+(14)
+});
