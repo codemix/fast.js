@@ -1,3 +1,5 @@
 node_modules
 coverage
 npm-debug.log
+ci/environments/sm
+!ci/environments/sm/README.md

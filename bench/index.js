@@ -1,6 +1,11 @@
 var Benchmark = require('benchmark');
 
 run([
+
+  bench('Native string comparison vs fast.intern() (short)', require('./intern-short')),
+  bench('Native string comparison vs fast.intern() (medium)', require('./intern-medium')),
+  bench('Native string comparison vs fast.intern() (long)', require('./intern-long')),
+
   bench('Native try {} catch (e) {} vs fast.try()', require('./try')),
   bench('Native try {} catch (e) {} vs fast.try() (single function call)', require('./try-fn')),
 
