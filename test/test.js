@@ -136,6 +136,55 @@ describe('fast.partialConstructor()', function () {
   });
 });
 
+describe('fast.assign()', function () {
+  it('should assign properties from a source to a target', function () {
+    var input = {a: 1, b: 2, c: 3},
+        result = fast.assign({z: 0}, input);
+
+    result.should.eql({
+      z: 0,
+      a: 1,
+      b: 2,
+      c: 3
+    });
+  });
+
+  it('should assign properties from 2 sources to a target', function () {
+    var result = fast.assign({z: 0}, {a: 1, b: 2}, {c: 3});
+
+    result.should.eql({
+      z: 0,
+      a: 1,
+      b: 2,
+      c: 3
+    });
+  });
+
+  it('should assign properties from 3 sources to a target', function () {
+    var result = fast.assign({z: 0}, {a: 1}, {b: 2}, {c: 3});
+
+    result.should.eql({
+      z: 0,
+      a: 1,
+      b: 2,
+      c: 3
+    });
+  });
+
+  it('should assign properties from a number of sources to a target', function () {
+    var result = fast.assign({z: 0}, {a: 1}, {b: 2}, {c: 3}, {d: 4}, {e: 5});
+
+    result.should.eql({
+      z: 0,
+      a: 1,
+      b: 2,
+      c: 3,
+      d: 4,
+      e: 5
+    });
+  });
+});
+
 describe('fast.clone()', function () {
   it('should return primitives directly', function () {
     fast.clone(0).should.equal(0);
