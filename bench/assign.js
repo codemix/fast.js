@@ -32,6 +32,19 @@ exports['fast.assign()'] = function () {
 
 };
 
+exports['underscore.extend()'] = function () {
+  return underscore.extend(
+    {a: Math.random()},
+    {
+      b: Math.random(),
+      c: Math.random(),
+      d: Math.random(),
+      e: Math.random(),
+      f: Math.random()
+    }
+  );
+};
+
 exports['lodash.assign()'] = function () {
   return lodash.assign(
     {a: Math.random()},

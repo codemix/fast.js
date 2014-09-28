@@ -40,3 +40,21 @@ exports['fast.assign()'] = function () {
   );
 
 };
+
+exports['underscore.extend()'] = function () {
+  return underscore.extend(
+    {a: Math.random()},
+    {
+      b: Math.random()
+    },
+    {
+      c: Math.random(),
+      ca: Math.random(),
+      cb: Math.random()
+    },
+    {
+      d: Math.random()
+    }
+  );
+
+};

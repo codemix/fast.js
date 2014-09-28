@@ -90,3 +90,47 @@ exports['fast.assign()'] = function () {
   );
 
 };
+
+
+exports['underscore.extend()'] = function () {
+  return underscore.extend(
+    {a: Math.random()},
+    {
+      b: Math.random()
+    },
+    {
+      c: Math.random()
+    },
+    {
+      d: Math.random(),
+      da: Math.random(),
+      db: Math.random()
+    },
+    {
+      e: Math.random()
+    },
+    {
+      f: Math.random(),
+      fa: Math.random(),
+      fb: Math.random(),
+      fc: Math.random()
+    },
+    {
+      g: Math.random()
+    },
+    {
+      h: Math.random()
+    },
+    {
+      i: Math.random(),
+      ia: Math.random()
+    },
+    {
+      j: Math.random()
+    },
+    {
+      k: Math.random()
+    }
+  );
+
+};
