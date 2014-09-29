@@ -355,3 +355,35 @@ exports.partialConstructor_0_0_2 = function fastPartialConstructor (fn) {
     }
   };
 };
+
+
+exports.assign_0_0_4a = function fastAssign (target) {
+  var totalArgs = arguments.length,
+      source, i, totalKeys, keys, key, j;
+
+  for (i = 1; i < totalArgs; i++) {
+    source = arguments[i];
+    keys = Object.keys(source);
+    totalKeys = keys.length;
+    for (j = 0; j < totalKeys; j++) {
+      key = keys[j];
+      target[key] = source[key];
+    }
+  }
+  return target;
+};
+
+exports.assign_0_0_4b = function fastAssign (target) {
+  var totalArgs = arguments.length,
+      source, i, key;
+
+  for (i = 1; i < totalArgs; i++) {
+    source = arguments[i];
+    for (key in source) {
+      if (source.hasOwnProperty(key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+  return target;
+};
