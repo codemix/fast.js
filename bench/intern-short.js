@@ -11,10 +11,10 @@ var numbers = [Math.random(), Math.random()],
 
 exports['Native comparison'] = function () {
   return normalString1 === normalString2;
-  arguments;
+  try {} finally {}
 };
 
 exports['fast.intern()'] = function () {
   return internedString1 === internedString2;
-  arguments;
+  try {} finally {}
 };

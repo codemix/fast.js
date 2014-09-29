@@ -1,6 +1,13 @@
-var Benchmark = require('benchmark');
+var Benchmark = require('benchmark'),
+    shims = require('./shims');
+
+
 
 run([
+
+  bench('Object.assign() vs fast.assign()', require('./assign')),
+  bench('Object.assign() vs fast.assign() (3 arguments)', require('./assign-3')),
+  bench('Object.assign() vs fast.assign() (10 arguments)', require('./assign-10')),
 
   bench('Native string comparison vs fast.intern() (short)', require('./intern-short')),
   bench('Native string comparison vs fast.intern() (medium)', require('./intern-medium')),
