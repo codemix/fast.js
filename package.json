@@ -1,6 +1,6 @@
 {
   "name": "fast.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Faster user-land reimplementations of native functions with extra helpers.",
   "main": "lib/index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   "bugs": {
     "url": "https://github.com/codemix/fast.js/issues"
   },
-  "files": ["lib", "README.md", "LICENSE.md"],
+  "files": ["lib", "README.md", "LICENSE.md", "dist"],
   "homepage": "https://github.com/codemix/fast.js",
   "devDependencies": {
     "expect.js": "~0.3.1",

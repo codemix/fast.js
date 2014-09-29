@@ -84,6 +84,39 @@ module.exports = function applyWithContext (subject, thisContext, args) {
 },{}],4:[function(_dereq_,module,exports){
 'use strict';
 
+/**
+ * Analogue of Object.assign().
+ * Copies properties from one or more source objects to
+ * a target object. Existing keys on the target object will be overwritten.
+ *
+ * > Note: This differs from spec in some important ways:
+ * > 1. Will throw if passed non-objects, including `undefined` or `null` values.
+ * > 2. Does not support the curious Exception handling behavior, exceptions are thrown immediately.
+ * > For more details, see:
+ * > https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+ *
+ *
+ *
+ * @param  {Object} target      The target object to copy properties to.
+ * @param  {Object} source, ... The source(s) to copy properties from.
+ * @return {Object}             The updated target object.
+ */
+module.exports = function fastAssign (target) {
+  var length = arguments.length,
+      source, key, i;
+
+  for (i = 1; i < length; i++) {
+    source = arguments[i];
+    for (key in source) {
+      target[key] = source[key];
+    }
+  }
+  return target;
+};
+
+},{}],5:[function(_dereq_,module,exports){
+'use strict';
+
 var applyWithContext = _dereq_('./applyWithContext');
 var applyNoContext = _dereq_('./applyNoContext');
 
@@ -154,7 +187,7 @@ module.exports = function fastBind (fn, thisContext) {
   }
 };
 
-},{"./applyNoContext":2,"./applyWithContext":3}],5:[function(_dereq_,module,exports){
+},{"./applyNoContext":2,"./applyWithContext":3}],6:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -167,7 +200,7 @@ module.exports = function bindInternal3 (func, thisContext) {
   };
 };
 
-},{}],6:[function(_dereq_,module,exports){
+},{}],7:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -180,7 +213,7 @@ module.exports = function bindInternal4 (func, thisContext) {
   };
 };
 
-},{}],7:[function(_dereq_,module,exports){
+},{}],8:[function(_dereq_,module,exports){
 'use strict';
 
 var cloneArray = _dereq_('./cloneArray');
@@ -209,7 +242,7 @@ module.exports = function clone (input) {
   }
 };
 
-},{"./cloneArray":8,"./cloneObject":9}],8:[function(_dereq_,module,exports){
+},{"./cloneArray":9,"./cloneObject":10}],9:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -232,7 +265,7 @@ module.exports = function fastCloneArray (input) {
   return sliced;
 };
 
-},{}],9:[function(_dereq_,module,exports){
+},{}],10:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -259,7 +292,7 @@ module.exports = function fastCloneObject (input) {
   return cloned;
 };
 
-},{}],10:[function(_dereq_,module,exports){
+},{}],11:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -293,7 +326,7 @@ module.exports = function fastConcat () {
   return arr;
 };
 
-},{}],11:[function(_dereq_,module,exports){
+},{}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('./bindInternal3');
@@ -301,7 +334,7 @@ var bindInternal3 = _dereq_('./bindInternal3');
 /**
  * # Every
  *
- * A fast `.some()` implementation.
+ * A fast `.every()` implementation.
  *
  * @param  {Array}    subject     The array (or array-like) to iterate over.
  * @param  {Function} fn          The visitor function.
@@ -320,7 +353,7 @@ module.exports = function fastEvery (subject, fn, thisContext) {
   return true;
 };
 
-},{"./bindInternal3":5}],12:[function(_dereq_,module,exports){
+},{"./bindInternal3":6}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('./bindInternal3');
@@ -348,7 +381,7 @@ module.exports = function fastFilter (subject, fn, thisContext) {
   return result;
 };
 
-},{"./bindInternal3":5}],13:[function(_dereq_,module,exports){
+},{"./bindInternal3":6}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('./bindInternal3');
@@ -371,7 +404,7 @@ module.exports = function fastForEach (subject, fn, thisContext) {
   }
 };
 
-},{"./bindInternal3":5}],14:[function(_dereq_,module,exports){
+},{"./bindInternal3":6}],15:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -408,6 +441,7 @@ Fast.partial = _dereq_('./partial');
 Fast.partialConstructor = _dereq_('./partialConstructor');
 Fast['try'] = Fast.attempt = _dereq_( './try' );
 
+Fast.assign = _dereq_('./assign');
 Fast.clone = _dereq_('./clone');
 Fast.cloneObject = _dereq_('./cloneObject');
 Fast.cloneArray = _dereq_('./cloneArray');
@@ -422,6 +456,8 @@ Fast.some = _dereq_('./some');
 Fast.every = _dereq_('./every');
 Fast.indexOf = _dereq_('./indexOf');
 Fast.lastIndexOf = _dereq_('./lastIndexOf');
+
+Fast.intern = _dereq_('./intern');
 
 /**
  * # Concat
@@ -596,7 +632,7 @@ Object.defineProperty(Fast.prototype, 'length', {
   }
 });
 
-},{"./apply":1,"./bind":4,"./clone":7,"./cloneArray":8,"./cloneObject":9,"./concat":10,"./every":11,"./filter":12,"./forEach":13,"./indexOf":15,"./lastIndexOf":16,"./map":17,"./partial":18,"./partialConstructor":19,"./reduce":20,"./reduceRight":21,"./some":22,"./try":23}],15:[function(_dereq_,module,exports){
+},{"./apply":1,"./assign":4,"./bind":5,"./clone":8,"./cloneArray":9,"./cloneObject":10,"./concat":11,"./every":12,"./filter":13,"./forEach":14,"./indexOf":16,"./intern":17,"./lastIndexOf":18,"./map":19,"./partial":20,"./partialConstructor":21,"./reduce":22,"./reduceRight":23,"./some":24,"./try":25}],16:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -631,7 +667,64 @@ module.exports = function fastIndexOf (subject, target, fromIndex) {
   return -1;
 };
 
-},{}],16:[function(_dereq_,module,exports){
+},{}],17:[function(_dereq_,module,exports){
+'use strict';
+
+// Compilers such as V8 use string interning to make string comparison very fast and efficient,
+// as efficient as comparing two references to the same object.
+//
+//
+// V8 does its best to intern strings automatically where it can, for instance:
+// ```js
+//   var greeting = "hello world";
+// ```
+// With this, comparison will be very fast:
+// ```js
+//   if (greeting === "hello world") {}
+// ```
+// However, there are several cases where V8 cannot intern the string, and instead
+// must resort to byte-wise comparison. This can be signficantly slower for long strings.
+// The most common example is string concatenation:
+// ```js
+//   function subject () { return "world"; };
+//   var greeting = "hello " + subject();
+// ```
+// In this case, V8 cannot intern the string. So this comparison is *much* slower:
+// ```js
+//  if (greeting === "hello world") {}
+// ```
+
+
+
+// At the moment, the fastest, safe way of interning a string is to
+// use it as a key in an object, and then use that key.
+//
+// Note: This technique comes courtesy of Petka Antonov - http://jsperf.com/istrn/11
+//
+// We create a container object in hash mode.
+// Most strings being interned will not be valid fast property names,
+// so we ensure hash mode now to avoid transitioning the object mode at runtime.
+var container = {'- ': true};
+delete container['- '];
+
+
+/**
+ * Intern a string to make comparisons faster.
+ *
+ * > Note: This is a relatively expensive operation, you
+ * shouldn't usually do the actual interning at runtime, instead
+ * use this at compile time to make future work faster.
+ *
+ * @param  {String} string The string to intern.
+ * @return {String}        The interned string.
+ */
+module.exports = function fastIntern (string) {
+  container[string] = true;
+  var interned = Object.keys(container)[0];
+  delete container[interned];
+  return interned;
+};
+},{}],18:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -662,7 +755,7 @@ module.exports = function fastLastIndexOf (subject, target, fromIndex) {
   return -1;
 };
 
-},{}],17:[function(_dereq_,module,exports){
+},{}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('./bindInternal3');
@@ -688,7 +781,7 @@ module.exports = function fastMap (subject, fn, thisContext) {
   return result;
 };
 
-},{"./bindInternal3":5}],18:[function(_dereq_,module,exports){
+},{"./bindInternal3":6}],20:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -732,7 +825,7 @@ module.exports = function fastPartial (fn) {
   };
 };
 
-},{"./applyWithContext":3}],19:[function(_dereq_,module,exports){
+},{"./applyWithContext":3}],21:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -779,7 +872,7 @@ module.exports = function fastPartialConstructor (fn) {
   };
 };
 
-},{"./applyWithContext":3}],20:[function(_dereq_,module,exports){
+},{"./applyWithContext":3}],22:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('./bindInternal4');
@@ -816,7 +909,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   return result;
 };
 
-},{"./bindInternal4":6}],21:[function(_dereq_,module,exports){
+},{"./bindInternal4":7}],23:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('./bindInternal4');
@@ -853,7 +946,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   return result;
 };
 
-},{"./bindInternal4":6}],22:[function(_dereq_,module,exports){
+},{"./bindInternal4":7}],24:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('./bindInternal3');
@@ -880,7 +973,7 @@ module.exports = function fastSome (subject, fn, thisContext) {
   return false;
 };
 
-},{"./bindInternal3":5}],23:[function(_dereq_,module,exports){
+},{"./bindInternal3":6}],25:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -917,6 +1010,6 @@ module.exports = function fastTry (fn) {
   }
 };
 
-},{}]},{},[14])
-(14)
+},{}]},{},[15])
+(15)
 });

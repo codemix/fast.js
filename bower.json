@@ -1,6 +1,6 @@
 {
   "name": "fast.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage": "https://github.com/codemix/fast.js",
   "authors": [
     "Charles Pick <charles@codemix.com>"
@@ -22,6 +22,7 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "coverage"
   ]
 }
