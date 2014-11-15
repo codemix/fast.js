@@ -387,3 +387,16 @@ exports.assign_0_0_4b = function fastAssign (target) {
   }
   return target;
 };
+
+exports.assign_0_0_4c = function fastAssign (target) {
+  var totalArgs = arguments.length,
+      source, i;
+
+  for (i = 1; i < totalArgs; i++) {
+    source = arguments[i];
+    for (var key in source) {
+      target[key] = source[key];
+    }
+  }
+  return target;
+};
