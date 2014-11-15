@@ -183,6 +183,31 @@ describe('fast.assign()', function () {
       e: 5
     });
   });
+
+  it('should not assign enumerable properties from further up the prototype chain', function () {
+    var a = {a: 1};
+    var b = Object.create(a);
+    b.b = 2;
+
+    var result = fast.assign({c: 3}, b);
+    result.should.eql({
+      b: 2,
+      c: 3
+    });
+  });
+  it('should not assign non-enumerable properties', function () {
+    var a = {a: 1};
+    Object.defineProperty(a, 'b', {
+      value: 2
+    });
+
+    var result = fast.assign({c: 3}, a);
+    result.should.eql({
+      a: 1,
+      c: 3
+    });
+  });
+
 });
 
 describe('fast.clone()', function () {
