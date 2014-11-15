@@ -7,7 +7,7 @@ var bindInternal3 = require('../function/bindInternal3');
  *
  * A fast object `.map()` implementation.
  *
- * @param  {Object}    subject    The object to map over.
+ * @param  {Object}   subject     The object to map over.
  * @param  {Function} fn          The mapper function.
  * @param  {Object}   thisContext The context for the mapper.
  * @return {Object}               The new object containing the results.

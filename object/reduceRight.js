@@ -13,22 +13,22 @@ var bindInternal4 = require('../function/bindInternal4');
  * @param  {Object}   thisContext  The context for the reducer.
  * @return {mixed}                 The final result.
  */
-module.exports = function fastReduceObject (subject, fn, initialValue, thisContext) {
+module.exports = function fastReduceRightObject (subject, fn, initialValue, thisContext) {
   var keys = Object.keys(subject),
       length = keys.length,
       iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
       i, key, result;
 
   if (initialValue === undefined) {
-    i = 1;
-    result = subject[keys[0]];
+    i = length - 2;
+    result = subject[keys[length - 1]];
   }
   else {
-    i = 0;
+    i = length - 1;
     result = initialValue;
   }
 
-  for (; i < length; i++) {
+  for (; i >= 0; i--) {
     key = keys[i];
     result = iterator(result, subject[key], key, subject);
   }

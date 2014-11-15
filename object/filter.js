@@ -7,7 +7,7 @@ var bindInternal3 = require('../function/bindInternal3');
  *
  * A fast object `.filter()` implementation.
  *
- * @param  {Object}    subject    The object to filter.
+ * @param  {Object}   subject     The object to filter.
  * @param  {Function} fn          The filter function.
  * @param  {Object}   thisContext The context for the filter.
  * @return {Object}               The new object containing the filtered results.
