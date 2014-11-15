@@ -726,6 +726,85 @@ describe('fast.intern()', function () {
   });
 });
 
+describe('fast.mapObject', function () {
+  it('should map over the keys / values in an object', function () {
+    var result = fast.mapObject({a: 1, b: 2, c: 3}, function (value, key) {
+      return [key, value];
+    });
+    result.should.eql({
+      a: ["a", 1],
+      b: ["b", 2],
+      c: ["c", 3]
+    });
+  });
+  it('should map over the keys / values in an object, with a context', function () {
+    var context = {val: 1};
+    var result = fast.mapObject({a: 1, b: 2, c: 3}, function (value, key) {
+      return [key, value + this.val];
+    }, context);
+    result.should.eql({
+      a: ["a", 2],
+      b: ["b", 3],
+      c: ["c", 4]
+    });
+  });
+});
+
+describe('fast.filterObject', function () {
+  it('should filter keys / values from an object', function () {
+    var result = fast.filterObject({a: 1, b: 2, c: 3, d: 4}, function (value) {
+      return (value % 2) === 0;
+    });
+    result.should.eql({
+      b: 2,
+      d: 4
+    });
+  });
+  it('should filter keys / values from an object, with a context', function () {
+    var context = {val: 1};
+    var result = fast.filterObject({a: 1, b: 2, c: 3, d: 4}, function (value) {
+      return ((value + this.val) % 2) === 0;
+    }, context);
+    result.should.eql({
+      a: 1,
+      c: 3
+    });
+  });
+});
+
+describe('fast.reduceObject', function () {
+  it('should apply a reducer to an object', function () {
+    var result = fast.reduceObject({a: 1, b: 2, c: 3, d: 4}, function (total, value, key) {
+      return total + value;
+    },0);
+
+    result.should.equal(10);
+  });
+
+  it('should apply a reducer to an object, with a context', function () {
+    var context = {val:1};
+    var result = fast.reduceObject({a: 1, b: 2, c: 3, d: 4}, function (total, value, key) {
+      return total + value + this.val;
+    },0, context);
+
+    result.should.equal(14);
+  });
+
+  it('should apply a reducer to an object, with no initial value', function () {
+    var result = fast.reduceObject({a: 1, b: 2, c: 3, d: 4}, function (acc, value, key) {
+      return acc + value + 1;
+    });
+    result.should.equal(13);
+  });
+  it('should apply a reducer to an object, with no initial value, with a context', function () {
+    var context = {val: 1};
+    var result = fast.reduceObject({a: 1, b: 2, c: 3, d: 4}, function (acc, value, key) {
+      return acc + value + this.val;
+    }, undefined, context);
+    result.should.equal(13);
+  });
+});
+
 describe('Fast', function () {
   var input = fast([1,2,3,4,5,6]);
 

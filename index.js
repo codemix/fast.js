@@ -38,6 +38,9 @@ Fast['try'] = Fast.attempt = require( './function/try' );
 
 Fast.assign = require('./object/assign');
 Fast.cloneObject = require('./object/clone');
+Fast.mapObject = require('./object/map');
+Fast.filterObject = require('./object/filter');
+Fast.reduceObject = require('./object/reduce');
 
 Fast.cloneArray = require('./array/clone');
 Fast.concat = require('./array/concat');
