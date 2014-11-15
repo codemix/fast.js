@@ -2,9 +2,9 @@
   "name": "fast.js",
   "version": "0.0.5",
   "description": "Faster user-land reimplementations of native functions with extra helpers.",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
-    "jshint": "jshint ./lib",
+    "jshint": "jshint ./",
     "pretest": "npm run jshint",
     "test": "mocha",
     "bench": "node ./bench/index.js",
@@ -12,7 +12,7 @@
     "install-sm": "wget http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-trunk/jsshell-linux-x86_64.zip -O ./ci/environments/sm/sm.zip; unzip -o -d ./ci/environments/sm ./ci/environments/sm/sm.zip",
     "bench-sm": "browserify ./bench/index.js | cat ./ci/sm-shim.js - > ./ci/environments/sm/bench.js; ./ci/environments/sm/js -f ./ci/environments/sm/bench.js",
     "dist": "npm run dist-browser; npm run dist-minify; npm run dist-bench",
-    "dist-browser": "browserify -o dist/fast.js -s fast ./lib/index.js",
+    "dist-browser": "browserify -o dist/fast.js -s fast ./index.js",
     "dist-minify": "uglifyjs -o ./dist/fast.min.js ./dist/fast.js --mangle --compress warnings=false",
     "dist-bench": "browserify -o ./dist/bench.js ./bench/index.js"
   },

@@ -1,6 +1,6 @@
 'use strict';
 
-var bindInternal3 = require('./bindInternal3');
+var bindInternal3 = require('../function/bindInternal3');
 
 /**
  * # Map

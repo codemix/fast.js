@@ -1,6 +1,6 @@
 'use strict';
 
-var bindInternal4 = require('./bindInternal4');
+var bindInternal4 = require('../function/bindInternal4');
 
 /**
  * # Reduce

@@ -1,6 +1,6 @@
 'use strict';
 
-var fast = require('../lib'),
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     shimmed = !/\[native code\]/.test(Object.assign),
