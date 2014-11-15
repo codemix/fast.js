@@ -42,7 +42,7 @@ Fast.partialConstructor = require('./function/partialConstructor');
 Fast['try'] = Fast.attempt = require( './function/try' );
 
 Fast.assign = require('./object/assign');
-Fast.cloneObject = require('./object/clone');
+Fast.cloneObject = require('./object/clone'); // @deprecated use fast.object.clone()
 
 Fast.map = require('./map');
 Fast.filter = require('./filter');
@@ -51,7 +51,7 @@ Fast.reduce = require('./reduce');
 Fast.reduceRight = require('./reduceRight');
 
 
-Fast.cloneArray = require('./array/clone');
+Fast.cloneArray = require('./array/clone'); // @deprecated use fast.array.clone()
 
 Fast.concat = require('./array/concat');
 Fast.some = require('./array/some');
