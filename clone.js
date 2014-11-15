@@ -1,7 +1,7 @@
 'use strict';
 
-var cloneArray = require('./cloneArray');
-var cloneObject = require('./cloneObject');
+var cloneArray = require('./array/clone');
+var cloneObject = require('./object/clone');
 
 /**
  * # Clone

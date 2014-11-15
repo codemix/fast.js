@@ -28,29 +28,30 @@ function Fast (value) {
 
 module.exports = exports = Fast;
 
-Fast.apply = require('./apply');
-Fast.bind = require('./bind');
-Fast.partial = require('./partial');
-Fast.partialConstructor = require('./partialConstructor');
-Fast['try'] = Fast.attempt = require( './try' );
-
-Fast.assign = require('./assign');
 Fast.clone = require('./clone');
-Fast.cloneObject = require('./cloneObject');
-Fast.cloneArray = require('./cloneArray');
 
-Fast.concat = require('./concat');
-Fast.map = require('./map');
-Fast.filter = require('./filter');
-Fast.forEach = require('./forEach');
-Fast.reduce = require('./reduce');
-Fast.reduceRight = require('./reduceRight');
-Fast.some = require('./some');
-Fast.every = require('./every');
-Fast.indexOf = require('./indexOf');
-Fast.lastIndexOf = require('./lastIndexOf');
+Fast.apply = require('./function/apply');
+Fast.bind = require('./function/bind');
+Fast.partial = require('./function/partial');
+Fast.partialConstructor = require('./function/partialConstructor');
+Fast['try'] = Fast.attempt = require( './function/try' );
 
-Fast.intern = require('./intern');
+Fast.assign = require('./object/assign');
+Fast.cloneObject = require('./object/clone');
+
+Fast.cloneArray = require('./array/clone');
+Fast.concat = require('./array/concat');
+Fast.map = require('./array/map');
+Fast.filter = require('./array/filter');
+Fast.forEach = require('./array/forEach');
+Fast.reduce = require('./array/reduce');
+Fast.reduceRight = require('./array/reduceRight');
+Fast.some = require('./array/some');
+Fast.every = require('./array/every');
+Fast.indexOf = require('./array/indexOf');
+Fast.lastIndexOf = require('./array/lastIndexOf');
+
+Fast.intern = require('./string/intern');
 
 /**
  * # Concat

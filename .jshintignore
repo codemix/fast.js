@@ -1,0 +1,7 @@
+test
+bench
+coverage
+node_modules
+tools
+dist
+ci

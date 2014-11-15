@@ -1,4 +1,4 @@
-var fast = require('../lib'),
+var fast = require('../'),
     utils = require('./utils');
 
 var numbers = [Math.random(), Math.random()],
