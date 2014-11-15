@@ -1,5 +1,347 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var fast = require('../lib'),
+'use strict';
+
+/**
+ * # Clone Array
+ *
+ * Clone an array or array like object (e.g. `arguments`).
+ * This is the equivalent of calling `Array.prototype.slice.call(arguments)`, but
+ * significantly faster.
+ *
+ * @param  {Array} input The array or array-like object to clone.
+ * @return {Array}       The cloned array.
+ */
+module.exports = function fastCloneArray (input) {
+  var length = input.length,
+      sliced = new Array(length),
+      i;
+  for (i = 0; i < length; i++) {
+    sliced[i] = input[i];
+  }
+  return sliced;
+};
+
+},{}],2:[function(require,module,exports){
+'use strict';
+
+/**
+ * # Concat
+ *
+ * Concatenate multiple arrays.
+ *
+ * > Note: This function is effectively identical to `Array.prototype.concat()`.
+ *
+ *
+ * @param  {Array|mixed} item, ... The item(s) to concatenate.
+ * @return {Array}                 The array containing the concatenated items.
+ */
+module.exports = function fastConcat () {
+  var length = arguments.length,
+      arr = [],
+      i, item, childLength, j;
+
+  for (i = 0; i < length; i++) {
+    item = arguments[i];
+    if (Array.isArray(item)) {
+      childLength = item.length;
+      for (j = 0; j < childLength; j++) {
+        arr.push(item[j]);
+      }
+    }
+    else {
+      arr.push(item);
+    }
+  }
+  return arr;
+};
+
+},{}],3:[function(require,module,exports){
+'use strict';
+
+var bindInternal3 = require('../function/bindInternal3');
+
+/**
+ * # Every
+ *
+ * A fast `.every()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to iterate over.
+ * @param  {Function} fn          The visitor function.
+ * @param  {Object}   thisContext The context for the visitor.
+ * @return {Boolean}              true if all items in the array passes the truth test.
+ */
+module.exports = function fastEvery (subject, fn, thisContext) {
+  var length = subject.length,
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    if (!iterator(subject[i], i, subject)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+},{"../function/bindInternal3":73}],4:[function(require,module,exports){
+'use strict';
+
+var bindInternal3 = require('../function/bindInternal3');
+
+/**
+ * # Filter
+ *
+ * A fast `.filter()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to filter.
+ * @param  {Function} fn          The filter function.
+ * @param  {Object}   thisContext The context for the filter.
+ * @return {Array}                The array containing the results.
+ */
+module.exports = function fastFilter (subject, fn, thisContext) {
+  var length = subject.length,
+      result = [],
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    if (iterator(subject[i], i, subject)) {
+      result.push(subject[i]);
+    }
+  }
+  return result;
+};
+
+},{"../function/bindInternal3":73}],5:[function(require,module,exports){
+'use strict';
+
+var bindInternal3 = require('../function/bindInternal3');
+
+/**
+ * # For Each
+ *
+ * A fast `.forEach()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to iterate over.
+ * @param  {Function} fn          The visitor function.
+ * @param  {Object}   thisContext The context for the visitor.
+ */
+module.exports = function fastForEach (subject, fn, thisContext) {
+  var length = subject.length,
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    iterator(subject[i], i, subject);
+  }
+};
+
+},{"../function/bindInternal3":73}],6:[function(require,module,exports){
+'use strict';
+
+exports.clone = require('./clone');
+exports.concat = require('./concat');
+exports.every = require('./every');
+exports.filter = require('./filter');
+exports.forEach = require('./forEach');
+exports.indexOf = require('./indexOf');
+exports.lastIndexOf = require('./lastIndexOf');
+exports.map = require('./map');
+exports.reduce = require('./reduce');
+exports.reduceRight = require('./reduceRight');
+exports.some = require('./some');
+},{"./clone":1,"./concat":2,"./every":3,"./filter":4,"./forEach":5,"./indexOf":7,"./lastIndexOf":8,"./map":9,"./reduce":10,"./reduceRight":11,"./some":12}],7:[function(require,module,exports){
+'use strict';
+
+/**
+ * # Index Of
+ *
+ * A faster `Array.prototype.indexOf()` implementation.
+ *
+ * @param  {Array}  subject   The array (or array-like) to search within.
+ * @param  {mixed}  target    The target item to search for.
+ * @param  {Number} fromIndex The position to start searching from, if known.
+ * @return {Number}           The position of the target in the subject, or -1 if it does not exist.
+ */
+module.exports = function fastIndexOf (subject, target, fromIndex) {
+  var length = subject.length,
+      i = 0;
+
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
+    if (i < 0) {
+      i += length;
+      if (i < 0) {
+        i = 0;
+      }
+    }
+  }
+
+  for (; i < length; i++) {
+    if (subject[i] === target) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+},{}],8:[function(require,module,exports){
+'use strict';
+
+/**
+ * # Last Index Of
+ *
+ * A faster `Array.prototype.lastIndexOf()` implementation.
+ *
+ * @param  {Array}  subject The array (or array-like) to search within.
+ * @param  {mixed}  target  The target item to search for.
+ * @param  {Number} fromIndex The position to start searching backwards from, if known.
+ * @return {Number}         The last position of the target in the subject, or -1 if it does not exist.
+ */
+module.exports = function fastLastIndexOf (subject, target, fromIndex) {
+  var length = subject.length,
+      i = length - 1;
+
+  if (typeof fromIndex === 'number') {
+    i = fromIndex;
+    if (i < 0) {
+      i += length;
+    }
+  }
+  for (; i >= 0; i--) {
+    if (subject[i] === target) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+},{}],9:[function(require,module,exports){
+'use strict';
+
+var bindInternal3 = require('../function/bindInternal3');
+
+/**
+ * # Map
+ *
+ * A fast `.map()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to map over.
+ * @param  {Function} fn          The mapper function.
+ * @param  {Object}   thisContext The context for the mapper.
+ * @return {Array}                The array containing the results.
+ */
+module.exports = function fastMap (subject, fn, thisContext) {
+  var length = subject.length,
+      result = new Array(length),
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    result[i] = iterator(subject[i], i, subject);
+  }
+  return result;
+};
+
+},{"../function/bindInternal3":73}],10:[function(require,module,exports){
+'use strict';
+
+var bindInternal4 = require('../function/bindInternal4');
+
+/**
+ * # Reduce
+ *
+ * A fast `.reduce()` implementation.
+ *
+ * @param  {Array}    subject      The array (or array-like) to reduce.
+ * @param  {Function} fn           The reducer function.
+ * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
+ * @param  {Object}   thisContext  The context for the reducer.
+ * @return {mixed}                 The final result.
+ */
+module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
+  var length = subject.length,
+      iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
+      i, result;
+
+  if (initialValue === undefined) {
+    i = 1;
+    result = subject[0];
+  }
+  else {
+    i = 0;
+    result = initialValue;
+  }
+
+  for (; i < length; i++) {
+    result = iterator(result, subject[i], i, subject);
+  }
+
+  return result;
+};
+
+},{"../function/bindInternal4":74}],11:[function(require,module,exports){
+'use strict';
+
+var bindInternal4 = require('../function/bindInternal4');
+
+/**
+ * # Reduce Right
+ *
+ * A fast `.reduceRight()` implementation.
+ *
+ * @param  {Array}    subject      The array (or array-like) to reduce.
+ * @param  {Function} fn           The reducer function.
+ * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
+ * @param  {Object}   thisContext  The context for the reducer.
+ * @return {mixed}                 The final result.
+ */
+module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
+  var length = subject.length,
+      iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
+      i, result;
+
+  if (initialValue === undefined) {
+    i = length - 2;
+    result = subject[length - 1];
+  }
+  else {
+    i = length - 1;
+    result = initialValue;
+  }
+
+  for (; i >= 0; i--) {
+    result = iterator(result, subject[i], i, subject);
+  }
+
+  return result;
+};
+
+},{"../function/bindInternal4":74}],12:[function(require,module,exports){
+'use strict';
+
+var bindInternal3 = require('../function/bindInternal3');
+
+/**
+ * # Some
+ *
+ * A fast `.some()` implementation.
+ *
+ * @param  {Array}    subject     The array (or array-like) to iterate over.
+ * @param  {Function} fn          The visitor function.
+ * @param  {Object}   thisContext The context for the visitor.
+ * @return {Boolean}              true if at least one item in the array passes the truth test.
+ */
+module.exports = function fastSome (subject, fn, thisContext) {
+  var length = subject.length,
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i;
+  for (i = 0; i < length; i++) {
+    if (iterator(subject[i], i, subject)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+},{"../function/bindInternal3":73}],13:[function(require,module,exports){
+var fast = require('../'),
     utils = require('./utils');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
@@ -14,8 +356,8 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), null, input);
 };
 
-},{"../lib":68,"./utils":53}],2:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"./utils":65}],14:[function(require,module,exports){
+var fast = require('../'),
     utils = require('./utils');
 
 var input = [1,2,3];
@@ -30,10 +372,10 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), null, input);
 };
 
-},{"../lib":68,"./utils":53}],3:[function(require,module,exports){
-module.exports=require(2)
-},{"../lib":68,"./utils":53}],4:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"./utils":65}],15:[function(require,module,exports){
+module.exports=require(14)
+},{"../":79,"./utils":65}],16:[function(require,module,exports){
+var fast = require('../'),
     utils = require('./utils');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
@@ -48,8 +390,8 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../lib":68,"./utils":53}],5:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"./utils":65}],17:[function(require,module,exports){
+var fast = require('../'),
     utils = require('./utils');
 
 var input = [1,2,3];
@@ -64,8 +406,8 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../lib":68,"./utils":53}],6:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"./utils":65}],18:[function(require,module,exports){
+var fast = require('../'),
     utils = require('./utils');
 
 var input = [1,2,3,4,5,6];
@@ -79,10 +421,10 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../lib":68,"./utils":53}],7:[function(require,module,exports){
+},{"../":79,"./utils":65}],19:[function(require,module,exports){
 'use strict';
 
-var fast = require('../lib'),
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     shimmed = !/\[native code\]/.test(Object.assign),
@@ -92,127 +434,127 @@ var fast = require('../lib'),
 exports['Object.assign()' + (shimmed ? ' (shim!)' : '')] = function () {
   return  Object.assign(
     {a: Math.random()},
-    {
+    modObj({
       b: Math.random()
-    },
-    {
+    }),
+    modObj({
       c: Math.random()
-    },
-    {
+    }),
+    modObj({
       d: Math.random(),
       da: Math.random(),
       db: Math.random()
-    },
-    {
+    }),
+    modObj({
       e: Math.random()
-    },
-    {
+    }),
+    modObj({
       f: Math.random(),
       fa: Math.random(),
       fb: Math.random(),
       fc: Math.random()
-    },
-    {
+    }),
+    modObj({
       g: Math.random()
-    },
-    {
+    }),
+    modObj({
       h: Math.random()
-    },
-    {
+    }),
+    modObj({
       i: Math.random(),
       ia: Math.random()
-    },
-    {
+    }),
+    modObj({
       j: Math.random()
-    },
-    {
+    }),
+    modObj({
       k: Math.random()
-    }
+    })
   );
 };
 
 exports['fast.assign()'] = function () {
   return fast.assign(
     {a: Math.random()},
-    {
+    modObj({
       b: Math.random()
-    },
-    {
+    }),
+    modObj({
       c: Math.random()
-    },
-    {
+    }),
+    modObj({
       d: Math.random(),
       da: Math.random(),
       db: Math.random()
-    },
-    {
+    }),
+    modObj({
       e: Math.random()
-    },
-    {
+    }),
+    modObj({
       f: Math.random(),
       fa: Math.random(),
       fb: Math.random(),
       fc: Math.random()
-    },
-    {
+    }),
+    modObj({
       g: Math.random()
-    },
-    {
+    }),
+    modObj({
       h: Math.random()
-    },
-    {
+    }),
+    modObj({
       i: Math.random(),
       ia: Math.random()
-    },
-    {
+    }),
+    modObj({
       j: Math.random()
-    },
-    {
+    }),
+    modObj({
       k: Math.random()
-    }
+    })
   );
 
 };
 
-exports['fast.assign() v0.0.4a'] = function () {
-  return history.assign_0_0_4a(
+exports['fast.assign() v0.0.4c'] = function () {
+  return history.assign_0_0_4c(
     {a: Math.random()},
-    {
+    modObj({
       b: Math.random()
-    },
-    {
+    }),
+    modObj({
       c: Math.random()
-    },
-    {
+    }),
+    modObj({
       d: Math.random(),
       da: Math.random(),
       db: Math.random()
-    },
-    {
+    }),
+    modObj({
       e: Math.random()
-    },
-    {
+    }),
+    modObj({
       f: Math.random(),
       fa: Math.random(),
       fb: Math.random(),
       fc: Math.random()
-    },
-    {
+    }),
+    modObj({
       g: Math.random()
-    },
-    {
+    }),
+    modObj({
       h: Math.random()
-    },
-    {
+    }),
+    modObj({
       i: Math.random(),
       ia: Math.random()
-    },
-    {
+    }),
+    modObj({
       j: Math.random()
-    },
-    {
+    }),
+    modObj({
       k: Math.random()
-    }
+    })
   );
 
 };
@@ -220,93 +562,55 @@ exports['fast.assign() v0.0.4a'] = function () {
 exports['fast.assign() v0.0.4b'] = function () {
   return history.assign_0_0_4b(
     {a: Math.random()},
-    {
+    modObj({
       b: Math.random()
-    },
-    {
+    }),
+    modObj({
       c: Math.random()
-    },
-    {
+    }),
+    modObj({
       d: Math.random(),
       da: Math.random(),
       db: Math.random()
-    },
-    {
+    }),
+    modObj({
       e: Math.random()
-    },
-    {
+    }),
+    modObj({
       f: Math.random(),
       fa: Math.random(),
       fb: Math.random(),
       fc: Math.random()
-    },
-    {
+    }),
+    modObj({
       g: Math.random()
-    },
-    {
+    }),
+    modObj({
       h: Math.random()
-    },
-    {
+    }),
+    modObj({
       i: Math.random(),
       ia: Math.random()
-    },
-    {
+    }),
+    modObj({
       j: Math.random()
-    },
-    {
+    }),
+    modObj({
       k: Math.random()
-    }
+    })
   );
 
 };
 
-exports['underscore.extend()'] = function () {
-  return underscore.extend(
-    {a: Math.random()},
-    {
-      b: Math.random()
-    },
-    {
-      c: Math.random()
-    },
-    {
-      d: Math.random(),
-      da: Math.random(),
-      db: Math.random()
-    },
-    {
-      e: Math.random()
-    },
-    {
-      f: Math.random(),
-      fa: Math.random(),
-      fb: Math.random(),
-      fc: Math.random()
-    },
-    {
-      g: Math.random()
-    },
-    {
-      h: Math.random()
-    },
-    {
-      i: Math.random(),
-      ia: Math.random()
-    },
-    {
-      j: Math.random()
-    },
-    {
-      k: Math.random()
-    }
-  );
 
-};
-
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],8:[function(require,module,exports){
+function modObj (obj) {
+  obj['wat' + Math.floor(Math.random() * 10000)] = Math.random();
+  return obj;
+}
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],20:[function(require,module,exports){
 'use strict';
 
-var fast = require('../lib'),
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     shimmed = !/\[native code\]/.test(Object.assign),
@@ -316,52 +620,52 @@ var fast = require('../lib'),
 exports['Object.assign()' + (shimmed ? ' (shim!)' : '')] = function () {
   return  Object.assign(
     {a: Math.random()},
-    {
+    modObj({
       b: Math.random()
-    },
-    {
+    }),
+    modObj({
       c: Math.random(),
       ca: Math.random(),
       cb: Math.random()
-    },
-    {
+    }),
+    modObj({
       d: Math.random()
-    }
+    })
   );
 };
 
 exports['fast.assign()'] = function () {
   return fast.assign(
     {a: Math.random()},
-    {
+    modObj({
       b: Math.random()
-    },
-    {
+    }),
+    modObj({
       c: Math.random(),
       ca: Math.random(),
       cb: Math.random()
-    },
-    {
+    }),
+    modObj({
       d: Math.random()
-    }
+    })
   );
 
 };
 
-exports['fast.assign() v0.0.4a'] = function () {
-  return history.assign_0_0_4a(
+exports['fast.assign() v0.0.4c'] = function () {
+  return history.assign_0_0_4c(
     {a: Math.random()},
-    {
+    modObj({
       b: Math.random()
-    },
-    {
+    }),
+    modObj({
       c: Math.random(),
       ca: Math.random(),
       cb: Math.random()
-    },
-    {
+    }),
+    modObj({
       d: Math.random()
-    }
+    })
   );
 
 };
@@ -369,132 +673,103 @@ exports['fast.assign() v0.0.4a'] = function () {
 exports['fast.assign() v0.0.4b'] = function () {
   return history.assign_0_0_4b(
     {a: Math.random()},
-    {
+    modObj({
       b: Math.random()
-    },
-    {
+    }),
+    modObj({
       c: Math.random(),
       ca: Math.random(),
       cb: Math.random()
-    },
-    {
+    }),
+    modObj({
       d: Math.random()
-    }
+    })
   );
 
 };
 
-exports['underscore.extend()'] = function () {
-  return underscore.extend(
-    {a: Math.random()},
-    {
-      b: Math.random()
-    },
-    {
-      c: Math.random(),
-      ca: Math.random(),
-      cb: Math.random()
-    },
-    {
-      d: Math.random()
-    }
-  );
 
-};
-
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],9:[function(require,module,exports){
+function modObj (obj) {
+  obj['wat' + Math.floor(Math.random() * 10000)] = Math.random();
+  return obj;
+}
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],21:[function(require,module,exports){
 'use strict';
 
-var fast = require('../lib'),
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     shimmed = !/\[native code\]/.test(Object.assign),
     history = require('../test/history');
 
 exports['Object.assign()' + (shimmed ? ' (shim!)' : '')] = function () {
-  return  Object.assign(
-    {a: Math.random()},
-    {
-      b: Math.random(),
-      c: Math.random(),
-      d: Math.random(),
-      e: Math.random(),
-      f: Math.random()
-    }
-  );
+  return Object.assign({a: Math.random()}, modObj({
+        b: Math.random(),
+        c: Math.random(),
+        d: Math.random(),
+        e: Math.random(),
+        f: Math.random(),
+        g: Math.random(),
+        h: Math.random()
+      }));
 };
 
 exports['fast.assign()'] = function () {
-  return fast.assign(
-    {a: Math.random()},
-    {
-      b: Math.random(),
-      c: Math.random(),
-      d: Math.random(),
-      e: Math.random(),
-      f: Math.random()
-    }
-  );
+  return fast.assign({a: Math.random()}, modObj({
+        b: Math.random(),
+        c: Math.random(),
+        d: Math.random(),
+        e: Math.random(),
+        f: Math.random(),
+        g: Math.random(),
+        h: Math.random()
+      }));
 };
 
-exports['fast.assign() v0.0.4a'] = function () {
-  return history.assign_0_0_4a(
-    {a: Math.random()},
-    {
-      b: Math.random(),
-      c: Math.random(),
-      d: Math.random(),
-      e: Math.random(),
-      f: Math.random()
-    }
-  );
+exports['fast.assign() v0.0.4c'] = function () {
+  return history.assign_0_0_4c({a: Math.random()}, modObj({
+        b: Math.random(),
+        c: Math.random(),
+        d: Math.random(),
+        e: Math.random(),
+        f: Math.random(),
+        g: Math.random(),
+        h: Math.random()
+      }));
 };
 
 exports['fast.assign() v0.0.4b'] = function () {
-  return history.assign_0_0_4b(
-    {a: Math.random()},
-    {
-      b: Math.random(),
-      c: Math.random(),
-      d: Math.random(),
-      e: Math.random(),
-      f: Math.random()
-    }
-  );
-};
-
-
-exports['underscore.extend()'] = function () {
-  return underscore.extend(
-    {a: Math.random()},
-    {
-      b: Math.random(),
-      c: Math.random(),
-      d: Math.random(),
-      e: Math.random(),
-      f: Math.random()
-    }
-  );
+  return history.assign_0_0_4b({a: Math.random()}, modObj({
+        b: Math.random(),
+        c: Math.random(),
+        d: Math.random(),
+        e: Math.random(),
+        f: Math.random(),
+        g: Math.random(),
+        h: Math.random()
+      }));
 };
 
 exports['lodash.assign()'] = function () {
-  return lodash.assign(
-    {a: Math.random()},
-    {
-      b: Math.random(),
-      c: Math.random(),
-      d: Math.random(),
-      e: Math.random(),
-      f: Math.random()
-    }
-  );
+  return lodash.assign({a: Math.random()}, modObj({
+        b: Math.random(),
+        c: Math.random(),
+        d: Math.random(),
+        e: Math.random(),
+        f: Math.random(),
+        g: Math.random(),
+        h: Math.random()
+      }));
 };
 
 
 
-
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],10:[function(require,module,exports){
-var fast = require('../lib'),
+function modObj (obj) {
+  obj['wat' + Math.floor(Math.random() * 10000)] = Math.random();
+  return obj;
+}
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],22:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history');
@@ -531,8 +806,8 @@ exports['lodash.bind()'] = function () {
 };
 
 
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],11:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],23:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     utils = require('./utils'),
@@ -566,8 +841,8 @@ exports['lodash.bind()'] = function () {
 };
 
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],12:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],24:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash');
 
@@ -604,8 +879,8 @@ exports['lodash.clone()'] = function () {
 };
 
 
-},{"../lib":68,"lodash":81,"underscore":82}],13:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"lodash":83,"underscore":84}],25:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
@@ -618,8 +893,8 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, 11, 12, [13, 14, 15], 16, 17, [18, 19], 20);
 };
 
-},{"../lib":68,"../test/history":83}],14:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97}],26:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history');
 
 var input = [];
@@ -636,8 +911,8 @@ exports['fast.concat()'] = function () {
   return fast.concat.apply(fast, input);
 };
 
-},{"../lib":68,"../test/history":83}],15:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97}],27:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
@@ -664,8 +939,8 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, chunks[0], chunks[1], chunks[2], chunks[3]);
 };
 
-},{"../lib":68,"../test/history":83}],16:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97}],28:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history');
 
 var input = [1,2,3,4,5,6,7,8,9,10];
@@ -678,8 +953,8 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, 11, 12, [13]);
 };
 
-},{"../lib":68,"../test/history":83}],17:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97}],29:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -706,8 +981,8 @@ exports['lodash.every()'] = function () {
   return lodash.every(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],18:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],30:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -738,8 +1013,8 @@ exports['lodash.every()'] = function () {
   return lodash.every(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],19:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],31:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -765,8 +1040,8 @@ exports['lodash.every()'] = function () {
   return lodash.every(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],20:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],32:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -793,8 +1068,8 @@ exports['lodash.filter()'] = function () {
   return lodash.filter(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],21:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],33:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -824,8 +1099,8 @@ exports['lodash.filter()'] = function () {
   return lodash.filter(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],22:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],34:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -851,9 +1126,9 @@ exports['lodash.filter()'] = function () {
   return lodash.filter(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],23:[function(require,module,exports){
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],35:[function(require,module,exports){
 (function (global){
-var fast = require('../lib'),
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -901,9 +1176,9 @@ exports['lodash.forEach()'] = function () {
 };
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],24:[function(require,module,exports){
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],36:[function(require,module,exports){
 (function (global){
-var fast = require('../lib'),
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -954,9 +1229,9 @@ exports['lodash.forEach()'] = function () {
 };
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],25:[function(require,module,exports){
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],37:[function(require,module,exports){
 (function (global){
-var fast = require('../lib'),
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1004,8 +1279,8 @@ exports['lodash.forEach()'] = function () {
 };
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],26:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],38:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1033,8 +1308,8 @@ exports['lodash.indexOf()'] = function () {
   return lodash.indexOf(input, 9) + lodash.indexOf(input, Math.random());
 };
 
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],27:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],39:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1066,8 +1341,8 @@ exports['lodash.indexOf()'] = function () {
 };
 
 
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],28:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],40:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1094,7 +1369,7 @@ exports['lodash.indexOf()'] = function () {
   return lodash.indexOf(input, 3) + lodash.indexOf(input, Math.random());
 };
 
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],29:[function(require,module,exports){
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],41:[function(require,module,exports){
 var Benchmark = require('benchmark'),
     shims = require('./shims');
 
@@ -1245,8 +1520,8 @@ function run (benchmarks) {
   continuation();
 }
 
-},{"./apply-10":1,"./apply-3":2,"./apply-6":3,"./apply-context-10":4,"./apply-context-3":5,"./apply-context-6":6,"./assign":9,"./assign-10":7,"./assign-3":8,"./bind":11,"./bind-prebound":10,"./clone":12,"./concat-10":13,"./concat-1000":15,"./concat-1000-apply":14,"./concat-3":16,"./every-10":17,"./every-1000":18,"./every-3":19,"./filter-10":20,"./filter-1000":21,"./filter-3":22,"./for-each-10":23,"./for-each-1000":24,"./for-each-3":25,"./index-of-10":26,"./index-of-1000":27,"./index-of-3":28,"./intern-long":30,"./intern-medium":31,"./intern-short":32,"./last-index-of-10":33,"./last-index-of-1000":34,"./last-index-of-3":35,"./map-10":36,"./map-1000":37,"./map-3":38,"./partial":40,"./partial-prebound":39,"./reduce-10":41,"./reduce-1000":42,"./reduce-3":43,"./reduce-right-10":44,"./reduce-right-1000":45,"./reduce-right-3":46,"./shims":47,"./some-10":48,"./some-1000":49,"./some-3":50,"./try":52,"./try-fn":51,"benchmark":79}],30:[function(require,module,exports){
-var fast = require('../lib'),
+},{"./apply-10":13,"./apply-3":14,"./apply-6":15,"./apply-context-10":16,"./apply-context-3":17,"./apply-context-6":18,"./assign":21,"./assign-10":19,"./assign-3":20,"./bind":23,"./bind-prebound":22,"./clone":24,"./concat-10":25,"./concat-1000":27,"./concat-1000-apply":26,"./concat-3":28,"./every-10":29,"./every-1000":30,"./every-3":31,"./filter-10":32,"./filter-1000":33,"./filter-3":34,"./for-each-10":35,"./for-each-1000":36,"./for-each-3":37,"./index-of-10":38,"./index-of-1000":39,"./index-of-3":40,"./intern-long":42,"./intern-medium":43,"./intern-short":44,"./last-index-of-10":45,"./last-index-of-1000":46,"./last-index-of-3":47,"./map-10":48,"./map-1000":49,"./map-3":50,"./partial":52,"./partial-prebound":51,"./reduce-10":53,"./reduce-1000":54,"./reduce-3":55,"./reduce-right-10":56,"./reduce-right-1000":57,"./reduce-right-3":58,"./shims":59,"./some-10":60,"./some-1000":61,"./some-3":62,"./try":64,"./try-fn":63,"benchmark":81}],42:[function(require,module,exports){
+var fast = require('../'),
     utils = require('./utils');
 
 var numbers = [Math.random(), Math.random()],
@@ -1267,8 +1542,8 @@ exports['fast.intern()'] = function () {
   try {} finally {}
 };
 
-},{"../lib":68,"./utils":53}],31:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"./utils":65}],43:[function(require,module,exports){
+var fast = require('../'),
     utils = require('./utils');
 
 var numbers = [Math.random(), Math.random()],
@@ -1289,8 +1564,8 @@ exports['fast.intern()'] = function () {
   try {} finally {}
 };
 
-},{"../lib":68,"./utils":53}],32:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"./utils":65}],44:[function(require,module,exports){
+var fast = require('../'),
     utils = require('./utils');
 
 var numbers = [Math.random(), Math.random()],
@@ -1311,8 +1586,8 @@ exports['fast.intern()'] = function () {
   try {} finally {}
 };
 
-},{"../lib":68,"./utils":53}],33:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"./utils":65}],45:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1339,8 +1614,8 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 9) + lodash.lastIndexOf(input, 1);
 };
 
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],34:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],46:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1371,8 +1646,8 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 999) + lodash.lastIndexOf(input, 1);
 };
 
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],35:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],47:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1399,8 +1674,8 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 1);
 };
 
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],36:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],48:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1439,8 +1714,8 @@ exports['lodash.map()'] = function () {
   return lodash.map(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],37:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],49:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1483,8 +1758,8 @@ exports['lodash.map()'] = function () {
 };
 
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],38:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],50:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1521,8 +1796,8 @@ exports['lodash.map()'] = function () {
   return lodash.map(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],39:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],51:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1562,8 +1837,8 @@ exports['lodash.partial()'] = function () {
   return loPartial(3);
 };
 
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],40:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],52:[function(require,module,exports){
+var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -1603,8 +1878,8 @@ exports['lodash.partial()'] = function () {
 };
 
 
-},{"../lib":68,"../test/history":83,"lodash":81,"underscore":82}],41:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],53:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1652,8 +1927,8 @@ exports['lodash.reduce()'] = function () {
 };
 
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],42:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],54:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1703,8 +1978,8 @@ exports['lodash.reduce()'] = function () {
   return lodash.reduce(input, fns(), 0);
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],43:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],55:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1751,8 +2026,8 @@ exports['lodash.reduce()'] = function () {
   return lodash.reduce(input, fns(), 0);
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],44:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],56:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1778,8 +2053,8 @@ exports['lodash.reduceRight()'] = function () {
   return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],45:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],57:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1809,8 +2084,8 @@ exports['lodash.reduceRight()'] = function () {
   return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],46:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],58:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1836,8 +2111,15 @@ exports['lodash.reduceRight()'] = function () {
   return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],47:[function(require,module,exports){
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],59:[function(require,module,exports){
 'use strict';
+
+if (typeof navigator === 'object') {
+  var realLog = console.log;
+  console.log = function (message) {
+    realLog.call(console, ('' + message).replace(/\u001b\[(?:[0-9]{1,3}(?:;[0-9]{1,3})*)?[m|K]/g, ''));
+  };
+}
 
 if (!Object.assign) {
   // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -1882,8 +2164,8 @@ if (!Object.assign) {
     }
   });
 }
-},{}],48:[function(require,module,exports){
-var fast = require('../lib'),
+},{}],60:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1910,8 +2192,8 @@ exports['lodash.some()'] = function () {
   return lodash.some(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],49:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],61:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1942,8 +2224,8 @@ exports['lodash.some()'] = function () {
   return lodash.some(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],50:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],62:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
     history = require('../test/history'),
@@ -1969,8 +2251,8 @@ exports['lodash.some()'] = function () {
   return lodash.some(input, fns());
 };
 
-},{"../lib":68,"../test/history":83,"./utils":53,"lodash":81,"underscore":82}],51:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],63:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash');
 
@@ -2016,8 +2298,8 @@ function doSomeWork () {
   d += factorial(2 * Math.random());
   return d;
 }
-},{"../lib":68,"lodash":81,"underscore":82}],52:[function(require,module,exports){
-var fast = require('../lib'),
+},{"../":79,"lodash":83,"underscore":84}],64:[function(require,module,exports){
+var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash');
 
@@ -2064,7 +2346,7 @@ exports['fast.try()'] = function () {
   });
 };
 
-},{"../lib":68,"lodash":81,"underscore":82}],53:[function(require,module,exports){
+},{"../":79,"lodash":83,"underscore":84}],65:[function(require,module,exports){
 /**
  * Function factory.
  * Accepts the same arguments as the Function constructor, creates 20 duplicate
@@ -2095,7 +2377,83 @@ exports.fns = function () {
     return fns[pointer % 20];
   };
 };
-},{}],54:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
+'use strict';
+
+var cloneArray = require('./array/clone');
+var cloneObject = require('./object/clone');
+
+/**
+ * # Clone
+ *
+ * Clone an item. Primitive values will be returned directly,
+ * arrays and objects will be shallow cloned. If you know the
+ * type of input you're dealing with, call `.cloneArray()` or `.cloneObject()`
+ * instead.
+ *
+ * @param  {mixed} input The input to clone.
+ * @return {mixed}       The cloned input.
+ */
+module.exports = function clone (input) {
+  if (!input || typeof input !== 'object') {
+    return input;
+  }
+  else if (Array.isArray(input)) {
+    return cloneArray(input);
+  }
+  else {
+    return cloneObject(input);
+  }
+};
+
+},{"./array/clone":1,"./object/clone":86}],67:[function(require,module,exports){
+'use strict';
+
+var filterArray = require('./array/filter'),
+    filterObject = require('./object/filter');
+
+/**
+ * # Filter
+ *
+ * A fast `.filter()` implementation.
+ *
+ * @param  {Array|Object} subject     The array or object to filter.
+ * @param  {Function}     fn          The filter function.
+ * @param  {Object}       thisContext The context for the filter.
+ * @return {Array|Object}             The array or object containing the filtered results.
+ */
+module.exports = function fastFilter (subject, fn, thisContext) {
+  if (subject instanceof Array) {
+    return filterArray(subject, fn, thisContext);
+  }
+  else {
+    return filterObject(subject, fn, thisContext);
+  }
+};
+},{"./array/filter":4,"./object/filter":87}],68:[function(require,module,exports){
+'use strict';
+
+var forEachArray = require('./array/forEach'),
+    forEachObject = require('./object/forEach');
+
+/**
+ * # ForEach
+ *
+ * A fast `.forEach()` implementation.
+ *
+ * @param  {Array|Object} subject     The array or object to iterate over.
+ * @param  {Function}     fn          The visitor function.
+ * @param  {Object}       thisContext The context for the visitor.
+ */
+module.exports = function fastForEach (subject, fn, thisContext) {
+  if (subject instanceof Array) {
+    return forEachArray(subject, fn, thisContext);
+  }
+  else {
+    return forEachObject(subject, fn, thisContext);
+  }
+};
+},{"./array/forEach":5,"./object/forEach":88}],69:[function(require,module,exports){
 'use strict';
 
 var applyWithContext = require('./applyWithContext');
@@ -2116,7 +2474,7 @@ module.exports = function fastApply (subject, thisContext, args) {
   return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
 };
 
-},{"./applyNoContext":55,"./applyWithContext":56}],55:[function(require,module,exports){
+},{"./applyNoContext":70,"./applyWithContext":71}],70:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2147,7 +2505,7 @@ module.exports = function applyNoContext (subject, args) {
   }
 };
 
-},{}],56:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2178,40 +2536,7 @@ module.exports = function applyWithContext (subject, thisContext, args) {
   }
 };
 
-},{}],57:[function(require,module,exports){
-'use strict';
-
-/**
- * Analogue of Object.assign().
- * Copies properties from one or more source objects to
- * a target object. Existing keys on the target object will be overwritten.
- *
- * > Note: This differs from spec in some important ways:
- * > 1. Will throw if passed non-objects, including `undefined` or `null` values.
- * > 2. Does not support the curious Exception handling behavior, exceptions are thrown immediately.
- * > For more details, see:
- * > https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
- *
- *
- *
- * @param  {Object} target      The target object to copy properties to.
- * @param  {Object} source, ... The source(s) to copy properties from.
- * @return {Object}             The updated target object.
- */
-module.exports = function fastAssign (target) {
-  var length = arguments.length,
-      source, key, i;
-
-  for (i = 1; i < length; i++) {
-    source = arguments[i];
-    for (key in source) {
-      target[key] = source[key];
-    }
-  }
-  return target;
-};
-
-},{}],58:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 'use strict';
 
 var applyWithContext = require('./applyWithContext');
@@ -2284,7 +2609,7 @@ module.exports = function fastBind (fn, thisContext) {
   }
 };
 
-},{"./applyNoContext":55,"./applyWithContext":56}],59:[function(require,module,exports){
+},{"./applyNoContext":70,"./applyWithContext":71}],73:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2297,7 +2622,7 @@ module.exports = function bindInternal3 (func, thisContext) {
   };
 };
 
-},{}],60:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2310,198 +2635,144 @@ module.exports = function bindInternal4 (func, thisContext) {
   };
 };
 
-},{}],61:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 'use strict';
 
-var cloneArray = require('./cloneArray');
-var cloneObject = require('./cloneObject');
+exports.apply = require('./apply');
+exports.bind = require('./bind');
+exports.partial = require('./partial');
+exports.partialConstructor = require('./partialConstructor');
+exports.try = require('./try');
+
+},{"./apply":69,"./bind":72,"./partial":76,"./partialConstructor":77,"./try":78}],76:[function(require,module,exports){
+'use strict';
+
+var applyWithContext = require('./applyWithContext');
 
 /**
- * # Clone
+ * # Partial Application
  *
- * Clone an item. Primitive values will be returned directly,
- * arrays and objects will be shallow cloned. If you know the
- * type of input you're dealing with, call `.cloneArray()` or `.cloneObject()`
- * instead.
+ * Partially apply a function. This is similar to `.bind()`,
+ * but with one important difference - the returned function is not bound
+ * to a particular context. This makes it easy to add partially
+ * applied methods to objects. If you need to bind to a context,
+ * use `.bind()` instead.
  *
- * @param  {mixed} input The input to clone.
- * @return {mixed}       The cloned input.
+ * > Note: This function does not support partial application for
+ * constructors, for that see `partialConstructor()`
+ *
+ *
+ * @param  {Function} fn          The function to partially apply.
+ * @param  {mixed}    args, ...   Arguments to pre-bind.
+ * @return {Function}             The partially applied function.
  */
-module.exports = function clone (input) {
-  if (!input || typeof input !== 'object') {
-    return input;
+module.exports = function fastPartial (fn) {
+  var boundLength = arguments.length - 1,
+      boundArgs;
+
+  boundArgs = new Array(boundLength);
+  for (var i = 0; i < boundLength; i++) {
+    boundArgs[i] = arguments[i + 1];
   }
-  else if (Array.isArray(input)) {
-    return cloneArray(input);
-  }
-  else {
-    return cloneObject(input);
-  }
+  return function () {
+    var length = arguments.length,
+        args = new Array(boundLength + length),
+        i;
+    for (i = 0; i < boundLength; i++) {
+      args[i] = boundArgs[i];
+    }
+    for (i = 0; i < length; i++) {
+      args[boundLength + i] = arguments[i];
+    }
+    return applyWithContext(fn, this, args);
+  };
 };
 
-},{"./cloneArray":62,"./cloneObject":63}],62:[function(require,module,exports){
+},{"./applyWithContext":71}],77:[function(require,module,exports){
 'use strict';
 
+var applyWithContext = require('./applyWithContext');
+
 /**
- * # Clone Array
+ * # Partial Constructor
  *
- * Clone an array or array like object (e.g. `arguments`).
- * This is the equivalent of calling `Array.prototype.slice.call(arguments)`, but
- * significantly faster.
+ * Partially apply a constructor function. The returned function
+ * will work with or without the `new` keyword.
  *
- * @param  {Array} input The array or array-like object to clone.
- * @return {Array}       The cloned array.
+ *
+ * @param  {Function} fn          The constructor function to partially apply.
+ * @param  {mixed}    args, ...   Arguments to pre-bind.
+ * @return {Function}             The partially applied constructor.
  */
-module.exports = function fastCloneArray (input) {
-  var length = input.length,
-      sliced = new Array(length),
-      i;
-  for (i = 0; i < length; i++) {
-    sliced[i] = input[i];
+module.exports = function fastPartialConstructor (fn) {
+  var boundLength = arguments.length - 1,
+      boundArgs;
+
+  boundArgs = new Array(boundLength);
+  for (var i = 0; i < boundLength; i++) {
+    boundArgs[i] = arguments[i + 1];
   }
-  return sliced;
-};
+  return function partialed () {
+    var length = arguments.length,
+        args = new Array(boundLength + length),
+        i;
+    for (i = 0; i < boundLength; i++) {
+      args[i] = boundArgs[i];
+    }
+    for (i = 0; i < length; i++) {
+      args[boundLength + i] = arguments[i];
+    }
 
-},{}],63:[function(require,module,exports){
-'use strict';
+    var thisContext = Object.create(fn.prototype),
+        result = applyWithContext(fn, thisContext, args);
 
-/**
- * # Clone Object
- *
- * Shallow clone a simple object.
- *
- * > Note: Prototypes and non-enumerable properties will not be copied!
- *
- * @param  {Object} input The object to clone.
- * @return {Object}       The cloned object.
- */
-module.exports = function fastCloneObject (input) {
-  var keys = Object.keys(input),
-      total = keys.length,
-      cloned = {},
-      i, key;
-
-  for (i = 0; i < total; i++) {
-    key = keys[i];
-    cloned[key] = input[key];
-  }
-
-  return cloned;
-};
-
-},{}],64:[function(require,module,exports){
-'use strict';
-
-/**
- * # Concat
- *
- * Concatenate multiple arrays.
- *
- * > Note: This function is effectively identical to `Array.prototype.concat()`.
- *
- *
- * @param  {Array|mixed} item, ... The item(s) to concatenate.
- * @return {Array}                 The array containing the concatenated items.
- */
-module.exports = function fastConcat () {
-  var length = arguments.length,
-      arr = [],
-      i, item, childLength, j;
-
-  for (i = 0; i < length; i++) {
-    item = arguments[i];
-    if (Array.isArray(item)) {
-      childLength = item.length;
-      for (j = 0; j < childLength; j++) {
-        arr.push(item[j]);
-      }
+    if (result != null && (typeof result === 'object' || typeof result === 'function')) {
+      return result;
     }
     else {
-      arr.push(item);
+      return thisContext;
     }
-  }
-  return arr;
+  };
 };
 
-},{}],65:[function(require,module,exports){
+},{"./applyWithContext":71}],78:[function(require,module,exports){
 'use strict';
 
-var bindInternal3 = require('./bindInternal3');
-
 /**
- * # Every
+ * # Try
  *
- * A fast `.every()` implementation.
+ * Allows functions to be optimised by isolating `try {} catch (e) {}` blocks
+ * outside the function declaration. Returns either the result of the function or an Error
+ * object if one was thrown. The caller should then check for `result instanceof Error`.
  *
- * @param  {Array}    subject     The array (or array-like) to iterate over.
- * @param  {Function} fn          The visitor function.
- * @param  {Object}   thisContext The context for the visitor.
- * @return {Boolean}              true if all items in the array passes the truth test.
+ * ```js
+ * var result = fast.try(myFunction);
+ * if (result instanceof Error) {
+ *    console.log('something went wrong');
+ * }
+ * else {
+ *   console.log('result:', result);
+ * }
+ * ```
+ *
+ * @param  {Function} fn The function to invoke.
+ * @return {mixed}       The result of the function, or an `Error` object.
  */
-module.exports = function fastEvery (subject, fn, thisContext) {
-  var length = subject.length,
-      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
-      i;
-  for (i = 0; i < length; i++) {
-    if (!iterator(subject[i], i, subject)) {
-      return false;
+module.exports = function fastTry (fn) {
+  try {
+    return fn();
+  }
+  catch (e) {
+    if (!(e instanceof Error)) {
+      return new Error(e);
+    }
+    else {
+      return e;
     }
   }
-  return true;
 };
 
-},{"./bindInternal3":59}],66:[function(require,module,exports){
-'use strict';
-
-var bindInternal3 = require('./bindInternal3');
-
-/**
- * # Filter
- *
- * A fast `.filter()` implementation.
- *
- * @param  {Array}    subject     The array (or array-like) to filter.
- * @param  {Function} fn          The filter function.
- * @param  {Object}   thisContext The context for the filter.
- * @return {Array}                The array containing the results.
- */
-module.exports = function fastFilter (subject, fn, thisContext) {
-  var length = subject.length,
-      result = [],
-      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
-      i;
-  for (i = 0; i < length; i++) {
-    if (iterator(subject[i], i, subject)) {
-      result.push(subject[i]);
-    }
-  }
-  return result;
-};
-
-},{"./bindInternal3":59}],67:[function(require,module,exports){
-'use strict';
-
-var bindInternal3 = require('./bindInternal3');
-
-/**
- * # For Each
- *
- * A fast `.forEach()` implementation.
- *
- * @param  {Array}    subject     The array (or array-like) to iterate over.
- * @param  {Function} fn          The visitor function.
- * @param  {Object}   thisContext The context for the visitor.
- */
-module.exports = function fastForEach (subject, fn, thisContext) {
-  var length = subject.length,
-      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
-      i;
-  for (i = 0; i < length; i++) {
-    iterator(subject[i], i, subject);
-  }
-};
-
-},{"./bindInternal3":59}],68:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2532,29 +2803,39 @@ function Fast (value) {
 
 module.exports = exports = Fast;
 
-Fast.apply = require('./apply');
-Fast.bind = require('./bind');
-Fast.partial = require('./partial');
-Fast.partialConstructor = require('./partialConstructor');
-Fast['try'] = Fast.attempt = require( './try' );
+Fast.array = require('./array');
+Fast['function'] = Fast.fn = require('./function');
+Fast.object = require('./object');
+Fast.string = require('./string');
 
-Fast.assign = require('./assign');
 Fast.clone = require('./clone');
-Fast.cloneObject = require('./cloneObject');
-Fast.cloneArray = require('./cloneArray');
 
-Fast.concat = require('./concat');
+Fast.apply = require('./function/apply');
+Fast.bind = require('./function/bind');
+Fast.partial = require('./function/partial');
+Fast.partialConstructor = require('./function/partialConstructor');
+Fast['try'] = Fast.attempt = require( './function/try' );
+
+Fast.assign = require('./object/assign');
+Fast.cloneObject = require('./object/clone');
+
 Fast.map = require('./map');
 Fast.filter = require('./filter');
 Fast.forEach = require('./forEach');
 Fast.reduce = require('./reduce');
 Fast.reduceRight = require('./reduceRight');
-Fast.some = require('./some');
-Fast.every = require('./every');
-Fast.indexOf = require('./indexOf');
-Fast.lastIndexOf = require('./lastIndexOf');
 
-Fast.intern = require('./intern');
+
+Fast.cloneArray = require('./array/clone');
+
+Fast.concat = require('./array/concat');
+Fast.some = require('./array/some');
+Fast.every = require('./array/every');
+Fast.indexOf = require('./array/indexOf');
+Fast.lastIndexOf = require('./array/lastIndexOf');
+
+Fast.intern = require('./string/intern');
+
 
 /**
  * # Concat
@@ -2729,385 +3010,31 @@ Object.defineProperty(Fast.prototype, 'length', {
   }
 });
 
-},{"./apply":54,"./assign":57,"./bind":58,"./clone":61,"./cloneArray":62,"./cloneObject":63,"./concat":64,"./every":65,"./filter":66,"./forEach":67,"./indexOf":69,"./intern":70,"./lastIndexOf":71,"./map":72,"./partial":73,"./partialConstructor":74,"./reduce":75,"./reduceRight":76,"./some":77,"./try":78}],69:[function(require,module,exports){
+},{"./array":6,"./array/clone":1,"./array/concat":2,"./array/every":3,"./array/indexOf":7,"./array/lastIndexOf":8,"./array/some":12,"./clone":66,"./filter":67,"./forEach":68,"./function":75,"./function/apply":69,"./function/bind":72,"./function/partial":76,"./function/partialConstructor":77,"./function/try":78,"./map":80,"./object":89,"./object/assign":85,"./object/clone":86,"./reduce":93,"./reduceRight":94,"./string":95,"./string/intern":96}],80:[function(require,module,exports){
 'use strict';
 
-/**
- * # Index Of
- *
- * A faster `Array.prototype.indexOf()` implementation.
- *
- * @param  {Array}  subject   The array (or array-like) to search within.
- * @param  {mixed}  target    The target item to search for.
- * @param  {Number} fromIndex The position to start searching from, if known.
- * @return {Number}           The position of the target in the subject, or -1 if it does not exist.
- */
-module.exports = function fastIndexOf (subject, target, fromIndex) {
-  var length = subject.length,
-      i = 0;
-
-  if (typeof fromIndex === 'number') {
-    i = fromIndex;
-    if (i < 0) {
-      i += length;
-      if (i < 0) {
-        i = 0;
-      }
-    }
-  }
-
-  for (; i < length; i++) {
-    if (subject[i] === target) {
-      return i;
-    }
-  }
-  return -1;
-};
-
-},{}],70:[function(require,module,exports){
-'use strict';
-
-// Compilers such as V8 use string interning to make string comparison very fast and efficient,
-// as efficient as comparing two references to the same object.
-//
-//
-// V8 does its best to intern strings automatically where it can, for instance:
-// ```js
-//   var greeting = "hello world";
-// ```
-// With this, comparison will be very fast:
-// ```js
-//   if (greeting === "hello world") {}
-// ```
-// However, there are several cases where V8 cannot intern the string, and instead
-// must resort to byte-wise comparison. This can be signficantly slower for long strings.
-// The most common example is string concatenation:
-// ```js
-//   function subject () { return "world"; };
-//   var greeting = "hello " + subject();
-// ```
-// In this case, V8 cannot intern the string. So this comparison is *much* slower:
-// ```js
-//  if (greeting === "hello world") {}
-// ```
-
-
-
-// At the moment, the fastest, safe way of interning a string is to
-// use it as a key in an object, and then use that key.
-//
-// Note: This technique comes courtesy of Petka Antonov - http://jsperf.com/istrn/11
-//
-// We create a container object in hash mode.
-// Most strings being interned will not be valid fast property names,
-// so we ensure hash mode now to avoid transitioning the object mode at runtime.
-var container = {'- ': true};
-delete container['- '];
-
-
-/**
- * Intern a string to make comparisons faster.
- *
- * > Note: This is a relatively expensive operation, you
- * shouldn't usually do the actual interning at runtime, instead
- * use this at compile time to make future work faster.
- *
- * @param  {String} string The string to intern.
- * @return {String}        The interned string.
- */
-module.exports = function fastIntern (string) {
-  container[string] = true;
-  var interned = Object.keys(container)[0];
-  delete container[interned];
-  return interned;
-};
-},{}],71:[function(require,module,exports){
-'use strict';
-
-/**
- * # Last Index Of
- *
- * A faster `Array.prototype.lastIndexOf()` implementation.
- *
- * @param  {Array}  subject The array (or array-like) to search within.
- * @param  {mixed}  target  The target item to search for.
- * @param  {Number} fromIndex The position to start searching backwards from, if known.
- * @return {Number}         The last position of the target in the subject, or -1 if it does not exist.
- */
-module.exports = function fastLastIndexOf (subject, target, fromIndex) {
-  var length = subject.length,
-      i = length - 1;
-
-  if (typeof fromIndex === 'number') {
-    i = fromIndex;
-    if (i < 0) {
-      i += length;
-    }
-  }
-  for (; i >= 0; i--) {
-    if (subject[i] === target) {
-      return i;
-    }
-  }
-  return -1;
-};
-
-},{}],72:[function(require,module,exports){
-'use strict';
-
-var bindInternal3 = require('./bindInternal3');
+var mapArray = require('./array/map'),
+    mapObject = require('./object/map');
 
 /**
  * # Map
  *
  * A fast `.map()` implementation.
  *
- * @param  {Array}    subject     The array (or array-like) to map over.
- * @param  {Function} fn          The mapper function.
- * @param  {Object}   thisContext The context for the mapper.
- * @return {Array}                The array containing the results.
+ * @param  {Array|Object} subject     The array or object to map over.
+ * @param  {Function}     fn          The mapper function.
+ * @param  {Object}       thisContext The context for the mapper.
+ * @return {Array|Object}             The array or object containing the results.
  */
 module.exports = function fastMap (subject, fn, thisContext) {
-  var length = subject.length,
-      result = new Array(length),
-      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
-      i;
-  for (i = 0; i < length; i++) {
-    result[i] = iterator(subject[i], i, subject);
-  }
-  return result;
-};
-
-},{"./bindInternal3":59}],73:[function(require,module,exports){
-'use strict';
-
-var applyWithContext = require('./applyWithContext');
-
-/**
- * # Partial Application
- *
- * Partially apply a function. This is similar to `.bind()`,
- * but with one important difference - the returned function is not bound
- * to a particular context. This makes it easy to add partially
- * applied methods to objects. If you need to bind to a context,
- * use `.bind()` instead.
- *
- * > Note: This function does not support partial application for
- * constructors, for that see `partialConstructor()`
- *
- *
- * @param  {Function} fn          The function to partially apply.
- * @param  {mixed}    args, ...   Arguments to pre-bind.
- * @return {Function}             The partially applied function.
- */
-module.exports = function fastPartial (fn) {
-  var boundLength = arguments.length - 1,
-      boundArgs;
-
-  boundArgs = new Array(boundLength);
-  for (var i = 0; i < boundLength; i++) {
-    boundArgs[i] = arguments[i + 1];
-  }
-  return function () {
-    var length = arguments.length,
-        args = new Array(boundLength + length),
-        i;
-    for (i = 0; i < boundLength; i++) {
-      args[i] = boundArgs[i];
-    }
-    for (i = 0; i < length; i++) {
-      args[boundLength + i] = arguments[i];
-    }
-    return applyWithContext(fn, this, args);
-  };
-};
-
-},{"./applyWithContext":56}],74:[function(require,module,exports){
-'use strict';
-
-var applyWithContext = require('./applyWithContext');
-
-/**
- * # Partial Constructor
- *
- * Partially apply a constructor function. The returned function
- * will work with or without the `new` keyword.
- *
- *
- * @param  {Function} fn          The constructor function to partially apply.
- * @param  {mixed}    args, ...   Arguments to pre-bind.
- * @return {Function}             The partially applied constructor.
- */
-module.exports = function fastPartialConstructor (fn) {
-  var boundLength = arguments.length - 1,
-      boundArgs;
-
-  boundArgs = new Array(boundLength);
-  for (var i = 0; i < boundLength; i++) {
-    boundArgs[i] = arguments[i + 1];
-  }
-  return function partialed () {
-    var length = arguments.length,
-        args = new Array(boundLength + length),
-        i;
-    for (i = 0; i < boundLength; i++) {
-      args[i] = boundArgs[i];
-    }
-    for (i = 0; i < length; i++) {
-      args[boundLength + i] = arguments[i];
-    }
-
-    var thisContext = Object.create(fn.prototype),
-        result = applyWithContext(fn, thisContext, args);
-
-    if (result != null && (typeof result === 'object' || typeof result === 'function')) {
-      return result;
-    }
-    else {
-      return thisContext;
-    }
-  };
-};
-
-},{"./applyWithContext":56}],75:[function(require,module,exports){
-'use strict';
-
-var bindInternal4 = require('./bindInternal4');
-
-/**
- * # Reduce
- *
- * A fast `.reduce()` implementation.
- *
- * @param  {Array}    subject      The array (or array-like) to reduce.
- * @param  {Function} fn           The reducer function.
- * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
- * @param  {Object}   thisContext  The context for the reducer.
- * @return {mixed}                 The final result.
- */
-module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
-  var length = subject.length,
-      iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
-      i, result;
-
-  if (initialValue === undefined) {
-    i = 1;
-    result = subject[0];
+  if (subject instanceof Array) {
+    return mapArray(subject, fn, thisContext);
   }
   else {
-    i = 0;
-    result = initialValue;
-  }
-
-  for (; i < length; i++) {
-    result = iterator(result, subject[i], i, subject);
-  }
-
-  return result;
-};
-
-},{"./bindInternal4":60}],76:[function(require,module,exports){
-'use strict';
-
-var bindInternal4 = require('./bindInternal4');
-
-/**
- * # Reduce Right
- *
- * A fast `.reduceRight()` implementation.
- *
- * @param  {Array}    subject      The array (or array-like) to reduce.
- * @param  {Function} fn           The reducer function.
- * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
- * @param  {Object}   thisContext  The context for the reducer.
- * @return {mixed}                 The final result.
- */
-module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
-  var length = subject.length,
-      iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
-      i, result;
-
-  if (initialValue === undefined) {
-    i = length - 2;
-    result = subject[length - 1];
-  }
-  else {
-    i = length - 1;
-    result = initialValue;
-  }
-
-  for (; i >= 0; i--) {
-    result = iterator(result, subject[i], i, subject);
-  }
-
-  return result;
-};
-
-},{"./bindInternal4":60}],77:[function(require,module,exports){
-'use strict';
-
-var bindInternal3 = require('./bindInternal3');
-
-/**
- * # Some
- *
- * A fast `.some()` implementation.
- *
- * @param  {Array}    subject     The array (or array-like) to iterate over.
- * @param  {Function} fn          The visitor function.
- * @param  {Object}   thisContext The context for the visitor.
- * @return {Boolean}              true if at least one item in the array passes the truth test.
- */
-module.exports = function fastSome (subject, fn, thisContext) {
-  var length = subject.length,
-      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
-      i;
-  for (i = 0; i < length; i++) {
-    if (iterator(subject[i], i, subject)) {
-      return true;
-    }
-  }
-  return false;
-};
-
-},{"./bindInternal3":59}],78:[function(require,module,exports){
-'use strict';
-
-/**
- * # Try
- *
- * Allows functions to be optimised by isolating `try {} catch (e) {}` blocks
- * outside the function declaration. Returns either the result of the function or an Error
- * object if one was thrown. The caller should then check for `result instanceof Error`.
- *
- * ```js
- * var result = fast.try(myFunction);
- * if (result instanceof Error) {
- *    console.log('something went wrong');
- * }
- * else {
- *   console.log('result:', result);
- * }
- * ```
- *
- * @param  {Function} fn The function to invoke.
- * @return {mixed}       The result of the function, or an `Error` object.
- */
-module.exports = function fastTry (fn) {
-  try {
-    return fn();
-  }
-  catch (e) {
-    if (!(e instanceof Error)) {
-      return new Error(e);
-    }
-    else {
-      return e;
-    }
+    return mapObject(subject, fn, thisContext);
   }
 };
-
-},{}],79:[function(require,module,exports){
+},{"./array/map":9,"./object/map":90}],81:[function(require,module,exports){
 (function (process,global){
 /*!
  * Benchmark.js v1.0.0 <http://benchmarkjs.com/>
@@ -7029,7 +6956,7 @@ module.exports = function fastTry (fn) {
 }(this));
 
 }).call(this,require("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"FWaASH":80}],80:[function(require,module,exports){
+},{"FWaASH":82}],82:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -7094,7 +7021,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],81:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -7130,19 +7057,13 @@ process.chdir = function (dir) {
   var HOT_COUNT = 150,
       HOT_SPAN = 16;
 
-  /** Used as the TypeError message for "Functions" methods */
+  /** Used to indicate the type of lazy iteratees */
+  var LAZY_FILTER_FLAG = 1,
+      LAZY_MAP_FLAG = 2,
+      LAZY_WHILE_FLAG = 3;
+
+  /** Used as the `TypeError` message for "Functions" methods */
   var FUNC_ERROR_TEXT = 'Expected a function';
-
-  /** Used as references for the max length and index of an array */
-  var MAX_ARRAY_LENGTH = Math.pow(2, 32) - 1,
-      MAX_ARRAY_INDEX =  MAX_ARRAY_LENGTH - 1;
-
-  /**
-   * Used as the maximum length of an array-like value.
-   * See the [ES6 spec](http://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength)
-   * for more details.
-   */
-  var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
 
   /** Used as the internal argument placeholder */
   var PLACEHOLDER = '__lodash_placeholder__';
@@ -7304,6 +7225,27 @@ process.chdir = function (dir) {
     'trailing': false
   };
 
+  /** Used to map latin-1 supplementary letters to basic latin letters */
+  var deburredLetters = {
+    '\xC0': 'A',  '\xC1': 'A', '\xC2': 'A', '\xC3': 'A', '\xC4': 'A', '\xC5': 'A',
+    '\xE0': 'a',  '\xE1': 'a', '\xE2': 'a', '\xE3': 'a', '\xE4': 'a', '\xE5': 'a',
+    '\xC7': 'C',  '\xE7': 'c',
+    '\xD0': 'D',  '\xF0': 'd',
+    '\xC8': 'E',  '\xC9': 'E', '\xCA': 'E', '\xCB': 'E',
+    '\xE8': 'e',  '\xE9': 'e', '\xEA': 'e', '\xEB': 'e',
+    '\xCC': 'I',  '\xCD': 'I', '\xCE': 'I', '\xCF': 'I',
+    '\xEC': 'i',  '\xED': 'i', '\xEE': 'i', '\xEF': 'i',
+    '\xD1': 'N',  '\xF1': 'n',
+    '\xD2': 'O',  '\xD3': 'O', '\xD4': 'O', '\xD5': 'O', '\xD6': 'O', '\xD8': 'O',
+    '\xF2': 'o',  '\xF3': 'o', '\xF4': 'o', '\xF5': 'o', '\xF6': 'o', '\xF8': 'o',
+    '\xD9': 'U',  '\xDA': 'U', '\xDB': 'U', '\xDC': 'U',
+    '\xF9': 'u',  '\xFA': 'u', '\xFB': 'u', '\xFC': 'u',
+    '\xDD': 'Y',  '\xFD': 'y', '\xFF': 'y',
+    '\xC6': 'Ae', '\xE6': 'ae',
+    '\xDE': 'Th', '\xFE': 'th',
+    '\xDF': 'ss'
+  };
+
   /**
    * Used to map characters to HTML entities.
    *
@@ -7337,25 +7279,11 @@ process.chdir = function (dir) {
     '&#96;': '`'
   };
 
-  /** Used to map latin-1 supplementary letters to basic latin letters */
-  var deburredLetters = {
-    '\xC0': 'A',  '\xC1': 'A', '\xC2': 'A', '\xC3': 'A', '\xC4': 'A', '\xC5': 'A',
-    '\xE0': 'a',  '\xE1': 'a', '\xE2': 'a', '\xE3': 'a', '\xE4': 'a', '\xE5': 'a',
-    '\xC7': 'C',  '\xE7': 'c',
-    '\xD0': 'D',  '\xF0': 'd',
-    '\xC8': 'E',  '\xC9': 'E', '\xCA': 'E', '\xCB': 'E',
-    '\xE8': 'e',  '\xE9': 'e', '\xEA': 'e', '\xEB': 'e',
-    '\xCC': 'I',  '\xCD': 'I', '\xCE': 'I', '\xCF': 'I',
-    '\xEC': 'i',  '\xED': 'i', '\xEE': 'i', '\xEF': 'i',
-    '\xD1': 'N',  '\xF1': 'n',
-    '\xD2': 'O',  '\xD3': 'O', '\xD4': 'O', '\xD5': 'O', '\xD6': 'O', '\xD8': 'O',
-    '\xF2': 'o',  '\xF3': 'o', '\xF4': 'o', '\xF5': 'o', '\xF6': 'o', '\xF8': 'o',
-    '\xD9': 'U',  '\xDA': 'U', '\xDB': 'U', '\xDC': 'U',
-    '\xF9': 'u',  '\xFA': 'u', '\xFB': 'u', '\xFC': 'u',
-    '\xDD': 'Y',  '\xFD': 'y', '\xFF': 'y',
-    '\xC6': 'Ae', '\xE6': 'ae',
-    '\xDE': 'Th', '\xFE': 'th',
-    '\xDF': 'ss'
+  /** Used to map iteratee types to lazy methods */
+  var lazyIterateeTypes = {
+    'filter': LAZY_FILTER_FLAG,
+    'map': LAZY_MAP_FLAG,
+    'takeWhile': LAZY_WHILE_FLAG
   };
 
   /** Used to determine if values are of the language type `Object` */
@@ -7762,7 +7690,7 @@ process.chdir = function (dir) {
   }
 
   /**
-   * Used by `deburr` to convert latin-1 to basic latin letters.
+   * Used by `_.deburr` to convert latin-1 to basic latin letters.
    *
    * @private
    * @param {string} letter The matched letter to deburr.
@@ -7856,7 +7784,7 @@ process.chdir = function (dir) {
   }
 
   /**
-   * Used by `_.trimmedLeftIndex` and `_.trimmedRightIndex` to determine if a
+   * Used by `trimmedLeftIndex` and `trimmedRightIndex` to determine if a
    * character code is whitespace.
    *
    * @private
@@ -8077,13 +8005,28 @@ process.chdir = function (dir) {
         nativeParseInt = context.parseInt,
         nativeRandom = Math.random;
 
+    /** Used as references for `-Infinity` and `Infinity` */
+    var NEGATIVE_INFINITY = Number.NEGATIVE_INFINITY,
+        POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
+
+    /** Used as references for the max length and index of an array */
+    var MAX_ARRAY_LENGTH = Math.pow(2, 32) - 1,
+        MAX_ARRAY_INDEX =  MAX_ARRAY_LENGTH - 1;
+
     /** Used as the size, in bytes, of each Float64Array element */
     var FLOAT64_BYTES_PER_ELEMENT = Float64Array ? Float64Array.BYTES_PER_ELEMENT : 0;
+
+    /**
+     * Used as the maximum length of an array-like value.
+     * See the [ES6 spec](http://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength)
+     * for more details.
+     */
+    var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
 
     /** Used to store function metadata */
     var metaMap = WeakMap && new WeakMap;
 
-    /** Used to lookup a built-in constructor by [[Class]] */
+    /** Used to lookup a built-in constructor by `[[Class]]` */
     var ctorByClass = {};
     ctorByClass[float32Class] = context.Float32Array;
     ctorByClass[float64Class] = context.Float64Array;
@@ -8183,29 +8126,14 @@ process.chdir = function (dir) {
      */
     function lodash(value) {
       if (value && typeof value == 'object') {
-        if (value instanceof lodashWrapper) {
+        if (value instanceof LodashWrapper) {
           return value;
         }
         if (!isArray(value) && hasOwnProperty.call(value, '__wrapped__')) {
-          return new lodashWrapper(value.__wrapped__, value.__chain__, baseSlice(value.__queue__));
+          return new LodashWrapper(value.__wrapped__, value.__chain__, baseSlice(value.__queue__));
         }
       }
-      return new lodashWrapper(value);
-    }
-
-    /**
-     * A fast path for creating `lodash` wrapper objects.
-     *
-     * @private
-     * @param {*} value The value to wrap in a `lodash` instance.
-     * @param {boolean} [chainAll=false] Enable chaining for all methods.
-     * @param {Array} [queue=[]] Actions to peform to resolve the unwrapped value.
-     * @returns {Object} Returns a `lodash` instance.
-     */
-    function lodashWrapper(value, chainAll, queue) {
-      this.__chain__ = !!chainAll;
-      this.__queue__ = queue || [];
-      this.__wrapped__ = value;
+      return new LodashWrapper(value);
     }
 
     /**
@@ -8249,7 +8177,7 @@ process.chdir = function (dir) {
        *
        * Firefox < 3.6, Opera > 9.50 - Opera < 11.60, and Safari < 5.1
        * (if the prototype or a property on the prototype has been set)
-       * incorrectly sets the `[[Enumerable]]` value of a function's `prototype`
+       * incorrectly set the `[[Enumerable]]` value of a function's `prototype`
        * property to `true`.
        *
        * @memberOf _.support
@@ -8305,8 +8233,7 @@ process.chdir = function (dir) {
       support.nonEnumShadows = !/valueOf/.test(props);
 
       /**
-       * Detect if own properties are iterated after inherited properties
-       * (IE < 9).
+       * Detect if own properties are iterated after inherited properties (IE < 9).
        *
        * @memberOf _.support
        * @type boolean
@@ -8516,7 +8443,7 @@ process.chdir = function (dir) {
      * "_.pluck" and "_.where" style callbacks.
      *
      * @private
-     * @param {*} [func=identity] The value to convert to a callback.
+     * @param {*} [func=_.identity] The value to convert to a callback.
      * @param {*} [thisArg] The `this` binding of the created callback.
      * @param {number} [argCount] The number of arguments the callback accepts.
      * @returns {Function} Returns the new function.
@@ -8530,6 +8457,7 @@ process.chdir = function (dir) {
         }
         var data = getData(func);
         if (typeof data == 'undefined') {
+          var support = lodash.support;
           if (support.funcNames) {
             data = !func.name;
           }
@@ -8786,8 +8714,8 @@ process.chdir = function (dir) {
     }
 
     /**
-     * The base implementation of `_.filter` without support for callback shorthands
-     * or `this` binding.
+     * The base implementation of `_.filter` without support for callback
+     * shorthands or `this` binding.
      *
      * @private
      * @param {Array|Object|string} collection The collection to iterate over.
@@ -9052,7 +8980,7 @@ process.chdir = function (dir) {
           return false;
         }
         if (valIsErr || valIsObj) {
-          if (!support.argsClass) {
+          if (!lodash.support.argsClass) {
             valIsArg = isArguments(value);
             othIsArg = isArguments(other);
           }
@@ -9298,6 +9226,7 @@ process.chdir = function (dir) {
      * @param {Function} func The function to partially apply arguments to.
      * @param {number} bitmask The bitmask of flags to compose.
      * @param {Array} args The arguments to be partially applied.
+     * @param {Array} holders The `args` placeholder indexes.
      * @param {*} [thisArg] The `this` binding of `func`.
      * @returns {Function} Returns the new partially applied function.
      */
@@ -9588,7 +9517,7 @@ process.chdir = function (dir) {
      *
      * @private
      * @param {Array} partialRightArgs The arguments to append to those provided.
-     * @param {Array} partialHolders The `partialRightArgs` placeholder indexes.
+     * @param {Array} partialRightHolders The `partialRightArgs` placeholder indexes.
      * @param {Array|Object} args The provided arguments.
      * @returns {Array} Returns the new array of composed arguments.
      */
@@ -9688,7 +9617,7 @@ process.chdir = function (dir) {
      * @private
      * @param {Function} func The function to bind.
      * @param {*} [thisArg] The `this` binding of `func`.
-     * @returns {Function} Returns the new wrapped function.
+     * @returns {Function} Returns the new bound function.
      */
     function createBindWrapper(func, thisArg) {
       var Ctor = createCtorWrapper(func);
@@ -9733,7 +9662,7 @@ process.chdir = function (dir) {
             result = '';
 
         while (++index < length) {
-          result = callback(result, array[index], index, words);
+          result = callback(result, array[index], index);
         }
         return result;
       };
@@ -9745,7 +9674,7 @@ process.chdir = function (dir) {
      *
      * @private
      * @param {Function} Ctor The constructor to wrap.
-     * @returns {Function} Returns the new function.
+     * @returns {Function} Returns the new wrapped function.
      */
     function createCtorWrapper(Ctor) {
       return function() {
@@ -9771,7 +9700,7 @@ process.chdir = function (dir) {
      * @param {Array} [partialHolders] The `partialArgs` placeholder indexes.
      * @param {Array} [partialRightArgs] The arguments to append to those provided to the new function.
      * @param {Array} [partialRightHolders] The `partialRightArgs` placeholder indexes.
-     * @returns {Function} Returns the new function.
+     * @returns {Function} Returns the new wrapped function.
      */
     function createHybridWrapper(func, bitmask, arity, thisArg, partialArgs, partialHolders, partialRightArgs, partialRightHolders) {
       var isBind = bitmask & BIND_FLAG,
@@ -9909,7 +9838,7 @@ process.chdir = function (dir) {
      * @param {Array} [partialHolders] The `partialArgs` placeholder indexes.
      * @param {Array} [partialRightArgs] The arguments to append to those provided to the new function.
      * @param {Array} [partialRightHolders] The `partialRightArgs` placeholder indexes.
-     * @returns {Function} Returns the new function.
+     * @returns {Function} Returns the new wrapped function.
      */
     function createWrapper(func, bitmask, arity, thisArg, partialArgs, partialHolders, partialRightArgs, partialRightHolders) {
       var isBindKey = bitmask & BIND_KEY_FLAG;
@@ -10060,7 +9989,7 @@ process.chdir = function (dir) {
         return object;
       }
       var Ctor = object.constructor,
-          isArgs = className == argsClass || (!support.argsClass && isArguments(object)),
+          isArgs = className == argsClass || (!lodash.support.argsClass && isArguments(object)),
           isObj = className == objectClass;
 
       if (isObj && !(typeof Ctor == 'function' && Ctor instanceof Ctor)) {
@@ -10214,7 +10143,7 @@ process.chdir = function (dir) {
      */
     function shimIsPlainObject(value) {
       var Ctor,
-          result;
+          support = lodash.support;
 
       // exit early for non `Object` objects
       if (!(value && typeof value == 'object' &&
@@ -10227,6 +10156,7 @@ process.chdir = function (dir) {
       // IE < 9 iterates inherited properties before own properties. If the first
       // iterated property is an object's own property then there are no inherited
       // enumerable properties.
+      var result;
       if (support.ownLast) {
         baseForIn(value, function(value, key, object) {
           result = hasOwnProperty.call(object, key);
@@ -10252,17 +10182,19 @@ process.chdir = function (dir) {
      * @returns {Array} Returns the array of property names.
      */
     function shimKeys(object) {
-      var keyIndex,
-          index = -1,
-          props = keysIn(object),
+      var props = keysIn(object),
           length = props.length,
           objLength = length && object.length,
-          maxIndex = objLength - 1,
-          result = [];
+          support = lodash.support;
 
       var allowIndexes = typeof objLength == 'number' && objLength > 0 &&
         (isArray(object) || (support.nonEnumStrings && isString(object)) ||
           (support.nonEnumArgs && isArguments(object)));
+
+      var keyIndex,
+          index = -1,
+          maxIndex = objLength - 1,
+          result = [];
 
       while (++index < length) {
         var key = props[index];
@@ -10289,7 +10221,7 @@ process.chdir = function (dir) {
       if (!(typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER)) {
         return values(value);
       }
-      if (support.unindexedChars && isString(value)) {
+      if (lodash.support.unindexedChars && isString(value)) {
         return value.split('');
       }
       return isObject(value) ? value : Object(value);
@@ -10303,7 +10235,7 @@ process.chdir = function (dir) {
      * @returns {Object} Returns the object.
      */
     function toObject(value) {
-      if (support.unindexedChars && isString(value)) {
+      if (lodash.support.unindexedChars && isString(value)) {
         var index = -1,
             length = value.length,
             result = Object(value);
@@ -10384,8 +10316,9 @@ process.chdir = function (dir) {
      * Creates an array excluding all values of the provided arrays using
      * `SameValueZero` for equality comparisons.
      *
-     * **Note:** `SameValueZero` is like strict equality, e.g. `===`, except that
-     * `NaN` matches `NaN`. See the [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
+     * e.g. `===`, except that `NaN` matches `NaN`. See the
+     * [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
      * for more details.
      *
      * @static
@@ -10491,7 +10424,7 @@ process.chdir = function (dir) {
      * @type Function
      * @category Array
      * @param {Array} array The array to query.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per element.
      * @param {*} [thisArg] The `this` binding of `predicate`.
      * @returns {Array} Returns the slice of `array`.
@@ -10540,7 +10473,7 @@ process.chdir = function (dir) {
      * @type Function
      * @category Array
      * @param {Array} array The array to query.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per element.
      * @param {*} [thisArg] The `this` binding of `predicate`.
      * @returns {Array} Returns the slice of `array`.
@@ -10587,7 +10520,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Array
      * @param {Array} array The array to search.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -10641,7 +10574,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Array
      * @param {Array} array The array to search.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -10749,8 +10682,9 @@ process.chdir = function (dir) {
      * it is used as the offset from the end of the collection. If `array` is
      * sorted providing `true` for `fromIndex` performs a faster binary search.
      *
-     * **Note:** `SameValueZero` is like strict equality, e.g. `===`, except that
-     * `NaN` matches `NaN`. See the [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
+     * e.g. `===`, except that `NaN` matches `NaN`. See the
+     * [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
      * for more details.
      *
      * @static
@@ -10782,8 +10716,10 @@ process.chdir = function (dir) {
       if (typeof fromIndex == 'number') {
         fromIndex = fromIndex < 0 ? nativeMax(length + fromIndex, 0) : (fromIndex || 0);
       } else if (fromIndex) {
-        var index = sortedIndex(array, value);
-        return array[index] === value ? index : -1;
+        var index = sortedIndex(array, value),
+            other = array[index];
+
+        return (value === value ? value === other : other !== other) ? index : -1;
       }
       return baseIndexOf(array, value, fromIndex);
     }
@@ -10802,16 +10738,16 @@ process.chdir = function (dir) {
      * // => [1, 2]
      */
     function initial(array) {
-      var length = array ? array.length : 0;
-      return slice(array, 0, (length || 1) - 1);
+      return dropRight(array, 1);
     }
 
     /**
      * Creates an array of unique values present in all provided arrays using
      * `SameValueZero` for equality comparisons.
      *
-     * **Note:** `SameValueZero` is like strict equality, e.g. `===`, except that
-     * `NaN` matches `NaN`. See the [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
+     * e.g. `===`, except that `NaN` matches `NaN`. See the
+     * [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
      * for more details.
      *
      * @static
@@ -10920,7 +10856,8 @@ process.chdir = function (dir) {
         index = (fromIndex < 0 ? nativeMax(length + fromIndex, 0) : nativeMin(fromIndex || 0, length - 1)) + 1;
       } else if (fromIndex) {
         index = sortedLastIndex(array, value) - 1;
-        return array[index] === value ? index : -1;
+        var other = array[index];
+        return (value === value ? value === other : other !== other) ? index : -1;
       }
       if (value !== value) {
         return indexOfNaN(array, index, true);
@@ -10939,8 +10876,9 @@ process.chdir = function (dir) {
      *
      * **Notes:**
      *  - Unlike `_.without`, this method mutates `array`.
-     *  - `SameValueZero` is like strict equality, e.g. `===`, except that `NaN` matches `NaN`.
-     *    See the [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     *  - `SameValueZero` comparisons are like strict equality comparisons,
+     *    e.g. `===`, except that `NaN` matches `NaN`. See the
+     *    [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
      *    for more details.
      *
      * @static
@@ -11023,7 +10961,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Array
      * @param {Array} array The array to modify.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -11071,7 +11009,7 @@ process.chdir = function (dir) {
      * // => [2, 3]
      */
     function rest(array) {
-      return slice(array, 1);
+      return drop(array, 1);
     }
 
     /**
@@ -11136,7 +11074,7 @@ process.chdir = function (dir) {
      * @category Array
      * @param {Array} array The array to inspect.
      * @param {*} value The value to evaluate.
-     * @param {Function|Object|string} [iteratee=identity] The function invoked
+     * @param {Function|Object|string} [iteratee=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
@@ -11177,7 +11115,7 @@ process.chdir = function (dir) {
      * @category Array
      * @param {Array} array The array to inspect.
      * @param {*} value The value to evaluate.
-     * @param {Function|Object|string} [iteratee=identity] The function invoked
+     * @param {Function|Object|string} [iteratee=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
@@ -11272,7 +11210,7 @@ process.chdir = function (dir) {
      * @type Function
      * @category Array
      * @param {Array} array The array to query.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per element.
      * @param {*} [thisArg] The `this` binding of `predicate`.
      * @returns {Array} Returns the slice of `array`.
@@ -11321,7 +11259,7 @@ process.chdir = function (dir) {
      * @type Function
      * @category Array
      * @param {Array} array The array to query.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per element.
      * @param {*} [thisArg] The `this` binding of `predicate`.
      * @returns {Array} Returns the slice of `array`.
@@ -11357,8 +11295,9 @@ process.chdir = function (dir) {
      * Creates an array of unique values, in order, of the provided arrays using
      * `SameValueZero` for equality comparisons.
      *
-     * **Note:** `SameValueZero` is like strict equality, e.g. `===`, except that
-     * `NaN` matches `NaN`. See the [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
+     * e.g. `===`, except that `NaN` matches `NaN`. See the
+     * [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
      * for more details.
      *
      * @static
@@ -11390,8 +11329,9 @@ process.chdir = function (dir) {
      * returns `true` for elements that have the properties of the given object,
      * else `false`.
      *
-     * **Note:** `SameValueZero` is like strict equality, e.g. `===`, except that
-     * `NaN` matches `NaN`. See the [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
+     * e.g. `===`, except that `NaN` matches `NaN`. See the
+     * [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
      * for more details.
      *
      * @static
@@ -11474,8 +11414,9 @@ process.chdir = function (dir) {
      * Creates an array excluding all provided values using `SameValueZero` for
      * equality comparisons.
      *
-     * **Note:** `SameValueZero` is like strict equality, e.g. `===`, except that
-     * `NaN` matches `NaN`. See the [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
+     * e.g. `===`, except that `NaN` matches `NaN`. See the
+     * [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
      * for more details.
      *
      * @static
@@ -11597,7 +11538,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Chain
      * @param {*} value The value to wrap.
-     * @returns {Object} Returns the new wrapper object.
+     * @returns {Object} Returns the new `LodashWrapper` object.
      * @example
      *
      * var users = [
@@ -11667,13 +11608,30 @@ process.chdir = function (dir) {
       return interceptor.call(thisArg, value);
     }
 
+    /*------------------------------------------------------------------------*/
+
+    /**
+     * A fast path for creating `lodash` wrapper objects.
+     *
+     * @private
+     * @param {*} value The value to wrap.
+     * @param {boolean} [chainAll=false] Enable chaining for all methods.
+     * @param {Array} [queue=[]] Actions to peform to resolve the unwrapped value.
+     * @returns {Object} Returns a `LodashWrapper` instance.
+     */
+    function LodashWrapper(value, chainAll, queue) {
+      this.__chain__ = !!chainAll;
+      this.__queue__ = queue || [];
+      this.__wrapped__ = value;
+    }
+
     /**
      * Enables explicit method chaining on the wrapper object.
      *
      * @name chain
      * @memberOf _
      * @category Chain
-     * @returns {*} Returns the wrapper object.
+     * @returns {*} Returns the `LodashWrapper` object.
      * @example
      *
      * var users = [
@@ -11694,6 +11652,32 @@ process.chdir = function (dir) {
      */
     function wrapperChain() {
       return chain(this);
+    }
+
+    /**
+     * Reverses the wrapped array so the first element becomes the last, the
+     * second element becomes the second to last, and so on.
+     *
+     * **Note:** This method mutates the wrapped array.
+     *
+     * @name chain
+     * @memberOf _
+     * @category Chain
+     * @returns {Object} Returns the new reversed `LodashWrapper` object.
+     * @example
+     *
+     * var array = [1, 2, 3];
+     *
+     * _(array).reverse().value()
+     * // => [3, 2, 1]
+     *
+     * console.log(array);
+     * // => [3, 2, 1]
+     */
+    function wrapperReverse() {
+      return this.thru(function(value) {
+        return value.reverse();
+      });
     }
 
     /**
@@ -11726,20 +11710,148 @@ process.chdir = function (dir) {
      * // => [1, 2, 3]
      */
     function wrapperValueOf() {
+      var result = this.__wrapped__;
+      if (result instanceof LazyWrapper) {
+        result = result.value();
+      }
       var index = -1,
           queue = this.__queue__,
-          length = queue.length,
-          result = this.__wrapped__;
+          length = queue.length;
 
       while (++index < length) {
         var args = [result],
             data = queue[index],
-            object = data[1];
+            object = data.object;
 
-        push.apply(args, data[2]);
-        result = object[data[0]].apply(object, args);
+        push.apply(args, data.args);
+        result = object[data.name].apply(object, args);
       }
       return result;
+    }
+
+    /*------------------------------------------------------------------------*/
+
+    /**
+     * Wraps `value` as a `LazyWrapper` object.
+     *
+     * @private
+     * @param {*} value The value to wrap.
+     * @returns {Object} Returns a `LazyWrapper` instance.
+     */
+    function LazyWrapper(value) {
+      this.dir = 1;
+      this.dropCount = 0;
+      this.filtered = false;
+      this.iteratees = [];
+      this.takeCount = POSITIVE_INFINITY;
+      this.views = [];
+      this.wrapped = value;
+    }
+
+    /**
+     * Creates a clone of the `LazyWrapper` object.
+     *
+     * @private
+     * @name clone
+     * @memberOf LazyWrapper
+     * @returns {Object} Returns the cloned `LazyWrapper` object.
+     */
+    function lazyClone() {
+      var result = new LazyWrapper(this.wrapped);
+      result.dir = this.dir;
+      result.dropCount = this.dropCount;
+      result.filtered = this.filtered;
+      result.takeCount = this.takeCount;
+      push.apply(result.iteratees, this.iteratees);
+      push.apply(result.views, this.views);
+      return result;
+    }
+
+    /**
+     * Reverses the direction of lazy iteration.
+     *
+     * @private
+     * @name reverse
+     * @memberOf LazyWrapper
+     * @returns {Object} Returns the new reversed `LazyWrapper` object.
+     */
+    function lazyReverse() {
+      var filtered = this.filtered,
+          result = filtered ? new LazyWrapper(this) : this.clone();
+
+      result.dir = this.dir * -1;
+      result.filtered = filtered;
+      return result;
+    }
+
+    /**
+     * Extracts the unwrapped value from its wrapper.
+     *
+     * @private
+     * @name value
+     * @memberOf LazyWrapper
+     * @returns {*} Returns the unwrapped value.
+     */
+    function lazyValue() {
+      var array = this.wrapped.value(),
+          length = array.length,
+          start = 0,
+          end = length,
+          views = this.views,
+          viewIndex = -1,
+          viewsLength = views.length;
+
+      while (++viewIndex < viewsLength) {
+        var view = views[viewIndex],
+            size = view.size;
+
+        switch (view.type) {
+          case 'drop':      start += size; break;
+          case 'dropRight': end -= size; break;
+          case 'take':      end = nativeMin(end, start + size); break;
+          case 'takeRight': start = nativeMax(start, end - size); break;
+        }
+      }
+      var dir = this.dir,
+          dropCount = this.dropCount,
+          droppedCount = 0,
+          doneDropping = !dropCount,
+          takeCount = nativeMin(end - start, this.takeCount - dropCount),
+          isRight = dir < 0,
+          index = isRight ? end : start - 1,
+          iteratees = this.iteratees,
+          iterateesLength = iteratees.length,
+          resIndex = 0,
+          result = [];
+
+      outer:
+      while (length-- && resIndex < takeCount) {
+        var iterateesIndex = -1,
+            value = array[index += dir];
+
+        while (++iterateesIndex < iterateesLength) {
+          var data = iteratees[iterateesIndex],
+              iteratee = data.iteratee,
+              computed = iteratee(value, index, array),
+              type = data.type;
+
+          if (type == LAZY_MAP_FLAG) {
+            value = computed;
+          } else if (!computed) {
+            if (type == LAZY_FILTER_FLAG) {
+              continue outer;
+            } else {
+              break outer;
+            }
+          }
+        }
+        if (doneDropping) {
+          result[resIndex++] = value;
+        } else {
+          doneDropping = ++droppedCount >= dropCount;
+        }
+      }
+      return isRight ? result.reverse() : result;
     }
 
     /*------------------------------------------------------------------------*/
@@ -11778,8 +11890,9 @@ process.chdir = function (dir) {
      * equality comparisons. If `fromIndex` is negative, it is used as the offset
      * from the end of the collection.
      *
-     * **Note:** `SameValueZero` is like strict equality, e.g. `===`, except that
-     * `NaN` matches `NaN`. See the [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+     * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
+     * e.g. `===`, except that `NaN` matches `NaN`. See the
+     * [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
      * for more details.
      *
      * @static
@@ -11842,7 +11955,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function|Object|string} [iteratee=identity] The function invoked
+     * @param {Function|Object|string} [iteratee=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
@@ -11879,7 +11992,7 @@ process.chdir = function (dir) {
      * @alias all
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -11928,7 +12041,7 @@ process.chdir = function (dir) {
      * @alias select
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -11975,7 +12088,7 @@ process.chdir = function (dir) {
      * @alias detect
      * @category Collection
      * @param {Array|Object|string} collection The collection to search.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -12018,7 +12131,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Collection
      * @param {Array|Object|string} collection The collection to search.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -12076,7 +12189,7 @@ process.chdir = function (dir) {
      * @alias each
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {Array|Object|string} Returns `collection`.
      * @example
@@ -12102,7 +12215,7 @@ process.chdir = function (dir) {
      * @alias eachRight
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {Array|Object|string} Returns `collection`.
      * @example
@@ -12134,7 +12247,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function|Object|string} [iteratee=identity] The function invoked
+     * @param {Function|Object|string} [iteratee=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
@@ -12177,7 +12290,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function|Object|string} [iteratee=identity] The function invoked
+     * @param {Function|Object|string} [iteratee=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
@@ -12245,7 +12358,7 @@ process.chdir = function (dir) {
      * @alias collect
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function|Object|string} [iteratee=identity] The function invoked
+     * @param {Function|Object|string} [iteratee=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
@@ -12320,7 +12433,7 @@ process.chdir = function (dir) {
     function max(collection, iteratee, thisArg) {
       iteratee = isIterateeCall(collection, iteratee, thisArg) ? null : iteratee;
 
-      var computed = -Infinity,
+      var computed = NEGATIVE_INFINITY,
           noIteratee = iteratee == null,
           isArr = noIteratee && isArray(collection),
           isStr = !isArr && isString(collection),
@@ -12344,7 +12457,7 @@ process.chdir = function (dir) {
 
         baseEach(collection, function(value, index, collection) {
           var current = iteratee(value, index, collection);
-          if (current > computed || (current === -Infinity && current === result)) {
+          if (current > computed || (current === NEGATIVE_INFINITY && current === result)) {
             computed = current;
             result = value;
           }
@@ -12399,7 +12512,7 @@ process.chdir = function (dir) {
     function min(collection, iteratee, thisArg) {
       iteratee = isIterateeCall(collection, iteratee, thisArg) ? null : iteratee;
 
-      var computed = Infinity,
+      var computed = POSITIVE_INFINITY,
           noIteratee = iteratee == null,
           isArr = noIteratee && isArray(collection),
           isStr = !isArr && isString(collection),
@@ -12423,7 +12536,7 @@ process.chdir = function (dir) {
 
         baseEach(collection, function(value, index, collection) {
           var current = iteratee(value, index, collection);
-          if (current < computed || (current === Infinity && current === result)) {
+          if (current < computed || (current === POSITIVE_INFINITY && current === result)) {
             computed = current;
             result = value;
           }
@@ -12449,7 +12562,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -12520,7 +12633,7 @@ process.chdir = function (dir) {
      * @alias foldl, inject
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [accumulator] The initial value.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {*} Returns the accumulated value.
@@ -12549,7 +12662,7 @@ process.chdir = function (dir) {
      * @alias foldr
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [accumulator] The initial value.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {*} Returns the accumulated value.
@@ -12579,7 +12692,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -12717,7 +12830,7 @@ process.chdir = function (dir) {
      * @alias any
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -12770,7 +12883,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Collection
      * @param {Array|Object|string} collection The collection to iterate over.
-     * @param {Array|Function|Object|string} [iteratee=identity] The function
+     * @param {Array|Function|Object|string} [iteratee=_.identity] The function
      *  invoked per iteration. If property name(s) or an object is provided it
      *  is used to create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
@@ -12850,7 +12963,7 @@ process.chdir = function (dir) {
     function toArray(collection) {
       var length = collection ? collection.length : 0;
       if (typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER) {
-        return (support.unindexedChars && isString(collection))
+        return (lodash.support.unindexedChars && isString(collection))
           ? collection.split('')
           : baseSlice(collection);
       }
@@ -13471,9 +13584,16 @@ process.chdir = function (dir) {
      * Creates a function that memoizes the result of `func`. If `resolver` is
      * provided it determines the cache key for storing the result based on the
      * arguments provided to the memoized function. By default, the first argument
-     * provided to the memoized function is used as the cache key. The `func` is
-     * invoked with the `this` binding of the memoized function. The result cache
-     * is exposed as the `cache` property on the memoized function.
+     * provided to the memoized function is coerced to a string and used as the
+     * cache key. The `func` is invoked with the `this` binding of the memoized
+     * function.
+     *
+     * **Note:** The cache is exposed as the `cache` property on the memoized
+     * function. Its creation may be customized by replacing the `_.memoize.Cache`
+     * constructor with one whose instances implement the ES6 `Map` method interface
+     * of `get`, `has`, and `set`. See the
+     * [ES6 spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-properties-of-the-map-prototype-object)
+     * for more details.
      *
      * @static
      * @memberOf _
@@ -13498,7 +13618,7 @@ process.chdir = function (dir) {
      * upperCase('fred');
      * // => 'FRED'
      *
-     * upperCase.cache.fred = 'BARNEY'
+     * upperCase.cache.set('fred, 'BARNEY');
      * upperCase('fred');
      * // => 'BARNEY'
      */
@@ -13507,16 +13627,17 @@ process.chdir = function (dir) {
         throw new TypeError(FUNC_ERROR_TEXT);
       }
       var memoized = function() {
-        var key = resolver ? resolver.apply(this, arguments) : arguments[0];
-        if (key == '__proto__') {
-          return func.apply(this, arguments);
+        var cache = memoized.cache,
+            key = resolver ? resolver.apply(this, arguments) : arguments[0];
+
+        if (cache.has(key)) {
+          return cache.get(key);
         }
-        var cache = memoized.cache;
-        return hasOwnProperty.call(cache, key)
-          ? cache[key]
-          : (cache[key] = func.apply(this, arguments));
+        var result = func.apply(this, arguments);
+        cache.set(key, result);
+        return result;
       };
-      memoized.cache = {};
+      memoized.cache = new memoize.Cache;
       return memoized;
     }
 
@@ -13566,7 +13687,7 @@ process.chdir = function (dir) {
      * initialize();
      * // `initialize` invokes `createApplication` once
      */
-    var once = partial(before, 2);
+    var once = basePartial(before,PARTIAL_FLAG, [2], []);
 
     /**
      * Creates a function that invokes `func` with `partial` arguments prepended
@@ -13719,6 +13840,63 @@ process.chdir = function (dir) {
     /*------------------------------------------------------------------------*/
 
     /**
+     * Creates the cache used by `_.memoize`.
+     *
+     * @private
+     * @static
+     * @name Cache
+     * @memberOf _.memoize
+     */
+    function MemCache() {
+      this.__wrapped__ = {};
+    }
+
+    /**
+     * Gets the value associated with `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf _.memoize.Cache
+     * @param {string} key The key of the value to retrieve.
+     * @returns {*} Returns the cached value.
+     */
+    function memGet(key) {
+      return this.__wrapped__[key];
+    }
+
+    /**
+     * Checks if an entry for `key` exists.
+     *
+     * @private
+     * @name get
+     * @memberOf _.memoize.Cache
+     * @param {string} key The name of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function memHas(key) {
+      return key != '__proto__' && hasOwnProperty.call(this.__wrapped__, key);
+    }
+
+    /**
+     * Sets the value associated with `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf _.memoize.Cache
+     * @param {string} key The key of the value to set.
+     * @param {*} value The value to set.
+     * @returns {Object} Returns the cache object.
+     */
+    function memSet(key, value) {
+      if (key != '__proto__') {
+        this.__wrapped__[key] = value;
+      }
+      return this;
+    }
+
+    /*------------------------------------------------------------------------*/
+
+    /**
      * Creates a clone of `value`. If `isDeep` is `true` nested objects are cloned,
      * otherwise they are assigned by reference. If `customizer` is provided it is
      * invoked to produce the cloned values. If `customizer` returns `undefined`
@@ -13829,7 +14007,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Lang
      * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an `arguments` object, else `false`.
+     * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
      * @example
      *
      * (function() { return _.isArguments(arguments); })();
@@ -13932,7 +14110,7 @@ process.chdir = function (dir) {
      */
     function isElement(value) {
       return (value && typeof value == 'object' && value.nodeType === 1 &&
-        (support.nodeClass ? toString.call(value).indexOf('Element') > -1 : isHostObject(value))) || false;
+        (lodash.support.nodeClass ? toString.call(value).indexOf('Element') > -1 : isHostObject(value))) || false;
     }
     // fallback for environments without DOM support
     if (!support.dom) {
@@ -14273,7 +14451,7 @@ process.chdir = function (dir) {
      * // => true
      */
     var isPlainObject = !getPrototypeOf ? shimIsPlainObject : function(value) {
-      if (!(value && toString.call(value) == objectClass) || (!support.argsClass && isArguments(value))) {
+      if (!(value && toString.call(value) == objectClass) || (!lodash.support.argsClass && isArguments(value))) {
         return false;
       }
       var valueOf = value.valueOf,
@@ -14458,7 +14636,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Object
      * @param {Object} object The object to search.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -14504,7 +14682,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Object
      * @param {Object} object The object to search.
-     * @param {Function|Object|string} [predicate=identity] The function invoked
+     * @param {Function|Object|string} [predicate=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `predicate`.
@@ -14545,7 +14723,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Object
      * @param {Object} object The object to iterate over.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {Object} Returns `object`.
      * @example
@@ -14577,7 +14755,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Object
      * @param {Object} object The object to iterate over.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {Object} Returns `object`.
      * @example
@@ -14609,7 +14787,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Object
      * @param {Object} object The object to iterate over.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {Object} Returns `object`.
      * @example
@@ -14634,7 +14812,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Object
      * @param {Object} object The object to iterate over.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {Object} Returns `object`.
      * @example
@@ -14677,7 +14855,7 @@ process.chdir = function (dir) {
      * @category Object
      * @param {Object} object The object to inspect.
      * @param {string} key The name of the property to check.
-     * @returns {boolean} Returns `true` if key is a direct property, else `false`.
+     * @returns {boolean} Returns `true` if `key` is a direct property, else `false`.
      * @example
      *
      * _.has({ 'a': 1, 'b': 2, 'c': 3 }, 'b');
@@ -14766,7 +14944,7 @@ process.chdir = function (dir) {
       }
       if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
           (typeof length == 'number' && length > 0) ||
-          (support.enumPrototypes && typeof object == 'function')) {
+          (lodash.support.enumPrototypes && typeof object == 'function')) {
         return shimKeys(object);
       }
       return isObject(object) ? nativeKeys(object) : [];
@@ -14799,7 +14977,9 @@ process.chdir = function (dir) {
       if (!isObject(object)) {
         object = Object(object);
       }
-      var length = object.length;
+      var length = object.length,
+          support = lodash.support;
+
       length = (typeof length == 'number' && length > 0 &&
         (isArray(object) || (support.nonEnumStrings && isString(object)) ||
           (support.nonEnumArgs && isArguments(object))) && length) || 0;
@@ -14864,7 +15044,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Object
      * @param {Object} object The object to iterate over.
-     * @param {Function|Object|string} [iteratee=identity] The function invoked
+     * @param {Function|Object|string} [iteratee=_.identity] The function invoked
      *  per iteration. If a property name or object is provided it is used to
      *  create a "_.pluck" or "_.where" style callback respectively.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
@@ -15056,7 +15236,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Object
      * @param {Array|Object} object The object to iterate over.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [accumulator] The custom accumulator value.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {*} Returns the accumulated value.
@@ -15198,7 +15378,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category String
      * @param {string} [string=''] The string to deburr.
-     * @returns {string} Returns the beburred string.
+     * @returns {string} Returns the deburred string.
      * @example
      *
      * _.deburr('déjà vu');
@@ -15633,8 +15813,8 @@ process.chdir = function (dir) {
 
       // use a sourceURL for easier debugging
       // http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-sourceurl
-      var sourceURL = options.sourceURL || ('/lodash/template/source[' + (++templateCounter) + ']');
-      sourceURL = sourceURL ? ('\n/*\n//# sourceURL=' + sourceURL + '\n*/') : '';
+      var sourceURL = 'sourceURL' in options ? options.sourceURL : ('/lodash/template/source[' + (++templateCounter) + ']');
+      sourceURL = sourceURL ? ('\n//# sourceURL=' + sourceURL) : '';
 
       string.replace(reDelimiters, function(match, escapeValue, interpolateValue, esTemplateValue, evaluateValue, offset) {
         interpolateValue || (interpolateValue = esTemplateValue);
@@ -15967,7 +16147,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @alias iteratee
      * @category Utility
-     * @param {*} [func=identity] The value to convert to a callback.
+     * @param {*} [func=_.identity] The value to convert to a callback.
      * @param {*} [thisArg] The `this` binding of the created callback.
      * @param- {Object} [guard] Enables use as a callback for functions like `_.map`.
      * @returns {Function} Returns the new function.
@@ -16169,10 +16349,11 @@ process.chdir = function (dir) {
         if (isFunc) {
           object.prototype[methodName] = (function(methodName) {
             return function() {
-              if (chain || this.__chain__) {
+              var chainAll = this.__chain__;
+              if (chain || chainAll) {
                 var result = object(this.__wrapped__);
-                result.__chain__ = this.__chain__;
-                (result.__queue__ = baseSlice(this.__queue__)).push([methodName, object, arguments]);
+                result.__chain__ = chainAll;
+                (result.__queue__ = baseSlice(this.__queue__)).push({ 'args': arguments, 'object': object, 'name': methodName });
                 return result;
               }
               var args = [this.value()];
@@ -16363,7 +16544,7 @@ process.chdir = function (dir) {
 
     /**
      * Creates an array of numbers (positive and/or negative) progressing from
-     * `start` up to but not including `end`. If `start` is less than `stop` a
+     * `start` up to but not including `end`. If `start` is less than `end` a
      * zero-length range is created unless a negative `step` is specified.
      *
      * @static
@@ -16469,7 +16650,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Utility
      * @param {number} n The number of times to invoke `iteratee`.
-     * @param {Function} [iteratee=identity] The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {*} [thisArg] The `this` binding of `iteratee`.
      * @returns {Array} Returns the array of results.
      * @example
@@ -16522,6 +16703,17 @@ process.chdir = function (dir) {
     }
 
     /*------------------------------------------------------------------------*/
+
+    // ensure `new LodashWrapper` is an instance of `lodash`
+    LodashWrapper.prototype = lodash.prototype;
+
+    // add functions to the memoize cache
+    MemCache.prototype.get = memGet;
+    MemCache.prototype.has = memHas;
+    MemCache.prototype.set = memSet;
+
+    // assign cache to `_.memoize`
+    memoize.Cache = MemCache;
 
     // add functions that return wrapped values when chaining
     lodash.after = after;
@@ -16756,25 +16948,132 @@ process.chdir = function (dir) {
      */
     lodash.VERSION = VERSION;
 
-    // ensure `new lodashWrapper` is an instance of `lodash`
-    lodashWrapper.prototype = lodash.prototype;
-
-    // add "Chaining" functions to the wrapper
-    lodash.prototype.chain = wrapperChain;
-    lodash.prototype.toString = wrapperToString;
-    lodash.prototype.toJSON = lodash.prototype.value = lodash.prototype.valueOf = wrapperValueOf;
-
     // assign default placeholders
     arrayEach(['bind', 'bindKey', 'curry', 'curryRight', 'partial', 'partialRight'], function(methodName) {
       lodash[methodName].placeholder = lodash;
     });
 
-    // add `Array.prototype` functions
-    arrayEach(['concat', 'join', 'pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(methodName) {
+    // add `LazyWrapper` methods that accept an `iteratee` value
+    arrayEach(['filter', 'map', 'takeWhile'], function(methodName, index) {
+      var isFilter = !index;
+
+      LazyWrapper.prototype[methodName] = function(iteratee, thisArg) {
+        iteratee = getCallback(iteratee, thisArg, 3);
+
+        var result = this.clone();
+        result.filtered = isFilter || result.filtered;
+        result.iteratees.push({ 'iteratee': iteratee, 'type': lazyIterateeTypes[methodName] });
+        return result;
+      };
+    });
+
+    // add `LazyWrapper` methods for `_.drop` and `_.take` variants
+    arrayEach(['drop', 'take'], function(methodName) {
+      var countName = methodName + 'Count',
+          whileName = methodName + 'While';
+
+      LazyWrapper.prototype[methodName] = function(n) {
+        n = n == null ? 1 : nativeMax(+n || 0, 0);
+
+        var result = this.clone();
+        if (this.filtered) {
+          result[countName] = n;
+          return result;
+        }
+        result.views.push({
+          'size': n,
+          'type': methodName + (result.dir < 0 ? 'Right' : '')
+        });
+        return result;
+      };
+
+      LazyWrapper.prototype[methodName + 'Right'] = function(n) {
+        return this.reverse()[methodName](n).reverse();
+      };
+
+      LazyWrapper.prototype[methodName + 'RightWhile'] = function(predicate, thisArg) {
+        var result = this.reverse()[whileName](predicate, thisArg);
+        result.filtered = true;
+        return result.reverse();
+      };
+    });
+
+    // add `LazyWrapper` methods for `_.first` and `_.last`
+    arrayEach(['first', 'last'], function(methodName, index) {
+      var takeName = 'take' + (index ? 'Right': '');
+
+      LazyWrapper.prototype[methodName] = function() {
+        return this[takeName](1).value()[0];
+      };
+    });
+
+    // add `LazyWrapper` methods for `_.initial` and `_.rest`
+    arrayEach(['initial', 'rest'], function(methodName, index) {
+      var dropName = 'drop' + (index ? '' : 'Right');
+
+      LazyWrapper.prototype[methodName] = function() {
+        return this[dropName](1);
+      };
+    });
+
+    LazyWrapper.prototype.dropWhile = function(iteratee, thisArg) {
+      iteratee = getCallback(iteratee, thisArg, 3);
+
+      var done,
+          lastIndex,
+          isRight = this.dir < 0;
+
+      return this.filter(function(value, index, array) {
+        done = done && (isRight ? index < lastIndex : index > lastIndex);
+        lastIndex = index;
+        return done || (done = !iteratee(value, index, array));
+      });
+    };
+
+    LazyWrapper.prototype.reject = function(iteratee, thisArg) {
+      iteratee = getCallback(iteratee, thisArg, 3);
+
+      return this.filter(function(value, index, array) {
+        return !iteratee(value, index, array);
+      });
+    };
+
+    // add `LazyWrapper` methods to `LodashWrapper`
+    baseForOwn(LazyWrapper.prototype, function(func, methodName) {
+      var retUnwrapped = /^(?:first|last)$/.test(methodName);
+
+      lodash.prototype[methodName] = function() {
+        var args = arguments,
+            chainAll = this.__chain__,
+            value = this.__wrapped__,
+            isLazy = value instanceof LazyWrapper;
+
+        if (retUnwrapped && !chainAll) {
+          if (isLazy) {
+            return func.apply(value, args);
+          }
+          var otherArgs = [this.value()];
+          push.apply(otherArgs, args);
+          return lodash[methodName].apply(lodash, otherArgs);
+        }
+        if (isLazy || isArray(value)) {
+          var result = func.apply(isLazy ? value : new LazyWrapper(this), args);
+          return new LodashWrapper(result, chainAll);
+        }
+        return this.thru(function(value) {
+          var otherArgs = [value];
+          push.apply(otherArgs, args);
+          return lodash[methodName].apply(lodash, otherArgs);
+        });
+      };
+    });
+
+    // add `Array.prototype` functions to `LodashWrapper`
+    arrayEach(['concat', 'join', 'pop', 'push', 'shift', 'sort', 'splice', 'unshift'], function(methodName) {
       var arrayFunc = arrayProto[methodName],
-          retUnwrapped = /^(?:join|pop|shift)$/.test(methodName),
-          chainName = /^(?:push|reverse|sort|unshift)$/.test(methodName) ? 'tap' : 'thru',
-          fixObjects = !support.spliceObjects && /^(?:pop|shift|splice)$/.test(methodName);
+          chainName = /^(?:push|sort|unshift)$/.test(methodName) ? 'tap' : 'thru',
+          fixObjects = !support.spliceObjects && /^(?:pop|shift|splice)$/.test(methodName),
+          retUnwrapped = /^(?:join|pop|shift)$/.test(methodName);
 
       // avoid array-like object bugs with `Array#shift` and `Array#splice` in
       // IE < 9, Firefox < 10, Narwhal, and RingoJS
@@ -16796,6 +17095,23 @@ process.chdir = function (dir) {
         });
       };
     });
+
+    // add functions to the lazy wrapper
+    LazyWrapper.prototype.clone = lazyClone;
+    LazyWrapper.prototype.reverse = lazyReverse;
+    LazyWrapper.prototype.value = lazyValue;
+
+    // add chaining functions to the lodash wrapper
+    lodash.prototype.chain = wrapperChain;
+    lodash.prototype.reverse = wrapperReverse;
+    lodash.prototype.toString = wrapperToString;
+    lodash.prototype.toJSON = lodash.prototype.value = lodash.prototype.valueOf = wrapperValueOf;
+
+    // add function aliases to the lodash wrapper
+    lodash.prototype.collect = lodash.prototype.map;
+    lodash.prototype.head = lodash.prototype.first;
+    lodash.prototype.select = lodash.prototype.filter;
+    lodash.prototype.tail = lodash.prototype.rest;
 
     return lodash;
   }
@@ -16836,7 +17152,7 @@ process.chdir = function (dir) {
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],82:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -16895,7 +17211,7 @@ process.chdir = function (dir) {
   // Internal function that returns an efficient (for current engines) version
   // of the passed-in callback, to be repeatedly applied in other Underscore
   // functions.
-  var createCallback = function(func, context, argCount) {
+  var optimizeCb = function(func, context, argCount) {
     if (context === void 0) return func;
     switch (argCount == null ? 3 : argCount) {
       case 1: return function(value) {
@@ -16919,11 +17235,14 @@ process.chdir = function (dir) {
   // A mostly-internal function to generate callbacks that can be applied
   // to each element in a collection, returning the desired result — either
   // identity, an arbitrary callback, a property matcher, or a property accessor.
-  _.iteratee = function(value, context, argCount) {
+  var cb = function(value, context, argCount) {
     if (value == null) return _.identity;
-    if (_.isFunction(value)) return createCallback(value, context, argCount);
+    if (_.isFunction(value)) return optimizeCb(value, context, argCount);
     if (_.isObject(value)) return _.matches(value);
     return _.property(value);
+  };
+  _.iteratee = function(value, context) {
+    return cb(value, context);
   };
 
   // Collection Functions
@@ -16934,7 +17253,7 @@ process.chdir = function (dir) {
   // sparse array-likes as if they were dense.
   _.each = _.forEach = function(obj, iteratee, context) {
     if (obj == null) return obj;
-    iteratee = createCallback(iteratee, context);
+    iteratee = optimizeCb(iteratee, context);
     var i, length = obj.length;
     if (length === +length) {
       for (i = 0; i < length; i++) {
@@ -16952,7 +17271,7 @@ process.chdir = function (dir) {
   // Return the results of applying the iteratee to each element.
   _.map = _.collect = function(obj, iteratee, context) {
     if (obj == null) return [];
-    iteratee = _.iteratee(iteratee, context);
+    iteratee = cb(iteratee, context);
     var keys = obj.length !== +obj.length && _.keys(obj),
         length = (keys || obj).length,
         results = Array(length),
@@ -16970,7 +17289,7 @@ process.chdir = function (dir) {
   // or `foldl`.
   _.reduce = _.foldl = _.inject = function(obj, iteratee, memo, context) {
     if (obj == null) obj = [];
-    iteratee = createCallback(iteratee, context, 4);
+    iteratee = optimizeCb(iteratee, context, 4);
     var keys = obj.length !== +obj.length && _.keys(obj),
         length = (keys || obj).length,
         index = 0, currentKey;
@@ -16988,7 +17307,7 @@ process.chdir = function (dir) {
   // The right-associative version of reduce, also known as `foldr`.
   _.reduceRight = _.foldr = function(obj, iteratee, memo, context) {
     if (obj == null) obj = [];
-    iteratee = createCallback(iteratee, context, 4);
+    iteratee = optimizeCb(iteratee, context, 4);
     var keys = obj.length !== + obj.length && _.keys(obj),
         index = (keys || obj).length,
         currentKey;
@@ -17006,7 +17325,7 @@ process.chdir = function (dir) {
   // Return the first value which passes a truth test. Aliased as `detect`.
   _.find = _.detect = function(obj, predicate, context) {
     var result;
-    predicate = _.iteratee(predicate, context);
+    predicate = cb(predicate, context);
     _.some(obj, function(value, index, list) {
       if (predicate(value, index, list)) {
         result = value;
@@ -17021,7 +17340,7 @@ process.chdir = function (dir) {
   _.filter = _.select = function(obj, predicate, context) {
     var results = [];
     if (obj == null) return results;
-    predicate = _.iteratee(predicate, context);
+    predicate = cb(predicate, context);
     _.each(obj, function(value, index, list) {
       if (predicate(value, index, list)) results.push(value);
     });
@@ -17030,14 +17349,14 @@ process.chdir = function (dir) {
 
   // Return all the elements for which a truth test fails.
   _.reject = function(obj, predicate, context) {
-    return _.filter(obj, _.negate(_.iteratee(predicate)), context);
+    return _.filter(obj, _.negate(cb(predicate)), context);
   };
 
   // Determine whether all of the elements match a truth test.
   // Aliased as `all`.
   _.every = _.all = function(obj, predicate, context) {
     if (obj == null) return true;
-    predicate = _.iteratee(predicate, context);
+    predicate = cb(predicate, context);
     var keys = obj.length !== +obj.length && _.keys(obj),
         length = (keys || obj).length,
         index, currentKey;
@@ -17052,7 +17371,7 @@ process.chdir = function (dir) {
   // Aliased as `any`.
   _.some = _.any = function(obj, predicate, context) {
     if (obj == null) return false;
-    predicate = _.iteratee(predicate, context);
+    predicate = cb(predicate, context);
     var keys = obj.length !== +obj.length && _.keys(obj),
         length = (keys || obj).length,
         index, currentKey;
@@ -17110,7 +17429,7 @@ process.chdir = function (dir) {
         }
       }
     } else {
-      iteratee = _.iteratee(iteratee, context);
+      iteratee = cb(iteratee, context);
       _.each(obj, function(value, index, list) {
         computed = iteratee(value, index, list);
         if (computed > lastComputed || computed === -Infinity && result === -Infinity) {
@@ -17135,7 +17454,7 @@ process.chdir = function (dir) {
         }
       }
     } else {
-      iteratee = _.iteratee(iteratee, context);
+      iteratee = cb(iteratee, context);
       _.each(obj, function(value, index, list) {
         computed = iteratee(value, index, list);
         if (computed < lastComputed || computed === Infinity && result === Infinity) {
@@ -17174,7 +17493,7 @@ process.chdir = function (dir) {
 
   // Sort the object's values by a criterion produced by an iteratee.
   _.sortBy = function(obj, iteratee, context) {
-    iteratee = _.iteratee(iteratee, context);
+    iteratee = cb(iteratee, context);
     return _.pluck(_.map(obj, function(value, index, list) {
       return {
         value: value,
@@ -17196,7 +17515,7 @@ process.chdir = function (dir) {
   var group = function(behavior) {
     return function(obj, iteratee, context) {
       var result = {};
-      iteratee = _.iteratee(iteratee, context);
+      iteratee = cb(iteratee, context);
       _.each(obj, function(value, index) {
         var key = iteratee(value, index, obj);
         behavior(result, value, key);
@@ -17227,7 +17546,7 @@ process.chdir = function (dir) {
   // Use a comparator function to figure out the smallest index at which
   // an object should be inserted so as to maintain order. Uses binary search.
   _.sortedIndex = function(array, obj, iteratee, context) {
-    iteratee = _.iteratee(iteratee, context, 1);
+    iteratee = cb(iteratee, context, 1);
     var value = iteratee(obj);
     var low = 0, high = array.length;
     while (low < high) {
@@ -17254,7 +17573,7 @@ process.chdir = function (dir) {
   // Split a collection into two arrays: one whose elements all satisfy the given
   // predicate, and one whose elements all do not satisfy the predicate.
   _.partition = function(obj, predicate, context) {
-    predicate = _.iteratee(predicate, context);
+    predicate = cb(predicate, context);
     var pass = [], fail = [];
     _.each(obj, function(value, key, obj) {
       (predicate(value, key, obj) ? pass : fail).push(value);
@@ -17343,7 +17662,7 @@ process.chdir = function (dir) {
       iteratee = isSorted;
       isSorted = false;
     }
-    if (iteratee != null) iteratee = _.iteratee(iteratee, context);
+    if (iteratee != null) iteratee = cb(iteratee, context);
     var result = [];
     var seen = [];
     for (var i = 0, length = array.length; i < length; i++) {
@@ -17770,7 +18089,7 @@ process.chdir = function (dir) {
     var result = {}, key;
     if (obj == null) return result;
     if (_.isFunction(iteratee)) {
-      iteratee = createCallback(iteratee, context);
+      iteratee = optimizeCb(iteratee, context);
       for (key in obj) {
         var value = obj[key];
         if (iteratee(value, key, obj)) result[key] = value;
@@ -18048,7 +18367,7 @@ process.chdir = function (dir) {
   // Run a function **n** times.
   _.times = function(n, iteratee, context) {
     var accum = Array(Math.max(0, n));
-    iteratee = createCallback(iteratee, context, 1);
+    iteratee = optimizeCb(iteratee, context, 1);
     for (var i = 0; i < n; i++) accum[i] = iteratee(i);
     return accum;
   };
@@ -18274,7 +18593,352 @@ process.chdir = function (dir) {
   }
 }.call(this));
 
-},{}],83:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
+'use strict';
+
+/**
+ * Analogue of Object.assign().
+ * Copies properties from one or more source objects to
+ * a target object. Existing keys on the target object will be overwritten.
+ *
+ * > Note: This differs from spec in some important ways:
+ * > 1. Will throw if passed non-objects, including `undefined` or `null` values.
+ * > 2. Does not support the curious Exception handling behavior, exceptions are thrown immediately.
+ * > For more details, see:
+ * > https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+ *
+ *
+ *
+ * @param  {Object} target      The target object to copy properties to.
+ * @param  {Object} source, ... The source(s) to copy properties from.
+ * @return {Object}             The updated target object.
+ */
+module.exports = function fastAssign (target) {
+  var totalArgs = arguments.length,
+      source, i, totalKeys, keys, key, j;
+
+  for (i = 1; i < totalArgs; i++) {
+    source = arguments[i];
+    keys = Object.keys(source);
+    totalKeys = keys.length;
+    for (j = 0; j < totalKeys; j++) {
+      key = keys[j];
+      target[key] = source[key];
+    }
+  }
+  return target;
+};
+
+},{}],86:[function(require,module,exports){
+'use strict';
+
+/**
+ * # Clone Object
+ *
+ * Shallow clone a simple object.
+ *
+ * > Note: Prototypes and non-enumerable properties will not be copied!
+ *
+ * @param  {Object} input The object to clone.
+ * @return {Object}       The cloned object.
+ */
+module.exports = function fastCloneObject (input) {
+  var keys = Object.keys(input),
+      total = keys.length,
+      cloned = {},
+      i, key;
+
+  for (i = 0; i < total; i++) {
+    key = keys[i];
+    cloned[key] = input[key];
+  }
+
+  return cloned;
+};
+
+},{}],87:[function(require,module,exports){
+'use strict';
+
+var bindInternal3 = require('../function/bindInternal3');
+
+/**
+ * # Filter
+ *
+ * A fast object `.filter()` implementation.
+ *
+ * @param  {Object}   subject     The object to filter.
+ * @param  {Function} fn          The filter function.
+ * @param  {Object}   thisContext The context for the filter.
+ * @return {Object}               The new object containing the filtered results.
+ */
+module.exports = function fastFilterObject (subject, fn, thisContext) {
+  var keys = Object.keys(subject),
+      length = keys.length,
+      result = {},
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i, key;
+  for (i = 0; i < length; i++) {
+    key = keys[i];
+    if (iterator(subject[key], key, subject)) {
+      result[key] = subject[key];
+    }
+  }
+  return result;
+};
+
+},{"../function/bindInternal3":73}],88:[function(require,module,exports){
+'use strict';
+
+var bindInternal3 = require('../function/bindInternal3');
+
+/**
+ * # For Each
+ *
+ * A fast object `.forEach()` implementation.
+ *
+ * @param  {Object}   subject     The object to iterate over.
+ * @param  {Function} fn          The visitor function.
+ * @param  {Object}   thisContext The context for the visitor.
+ */
+module.exports = function fastForEachObject (subject, fn, thisContext) {
+  var keys = Object.keys(subject),
+      length = keys.length,
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      key, i;
+  for (i = 0; i < length; i++) {
+    key = keys[i];
+    iterator(subject[key], key, subject);
+  }
+};
+
+},{"../function/bindInternal3":73}],89:[function(require,module,exports){
+'use strict';
+
+exports.assign = require('./assign');
+exports.clone = require('./clone');
+exports.filter = require('./filter');
+exports.forEach = require('./forEach');
+exports.map = require('./map');
+exports.reduce = require('./reduce');
+exports.reduceRight = require('./reduceRight');
+},{"./assign":85,"./clone":86,"./filter":87,"./forEach":88,"./map":90,"./reduce":91,"./reduceRight":92}],90:[function(require,module,exports){
+'use strict';
+
+var bindInternal3 = require('../function/bindInternal3');
+
+/**
+ * # Map
+ *
+ * A fast object `.map()` implementation.
+ *
+ * @param  {Object}   subject     The object to map over.
+ * @param  {Function} fn          The mapper function.
+ * @param  {Object}   thisContext The context for the mapper.
+ * @return {Object}               The new object containing the results.
+ */
+module.exports = function fastMapObject (subject, fn, thisContext) {
+  var keys = Object.keys(subject),
+      length = keys.length,
+      result = {},
+      iterator = thisContext !== undefined ? bindInternal3(fn, thisContext) : fn,
+      i, key;
+  for (i = 0; i < length; i++) {
+    key = keys[i];
+    result[key] = iterator(subject[key], key, subject);
+  }
+  return result;
+};
+
+},{"../function/bindInternal3":73}],91:[function(require,module,exports){
+'use strict';
+
+var bindInternal4 = require('../function/bindInternal4');
+
+/**
+ * # Reduce
+ *
+ * A fast object `.reduce()` implementation.
+ *
+ * @param  {Object}   subject      The object to reduce over.
+ * @param  {Function} fn           The reducer function.
+ * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
+ * @param  {Object}   thisContext  The context for the reducer.
+ * @return {mixed}                 The final result.
+ */
+module.exports = function fastReduceObject (subject, fn, initialValue, thisContext) {
+  var keys = Object.keys(subject),
+      length = keys.length,
+      iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
+      i, key, result;
+
+  if (initialValue === undefined) {
+    i = 1;
+    result = subject[keys[0]];
+  }
+  else {
+    i = 0;
+    result = initialValue;
+  }
+
+  for (; i < length; i++) {
+    key = keys[i];
+    result = iterator(result, subject[key], key, subject);
+  }
+
+  return result;
+};
+
+},{"../function/bindInternal4":74}],92:[function(require,module,exports){
+'use strict';
+
+var bindInternal4 = require('../function/bindInternal4');
+
+/**
+ * # Reduce
+ *
+ * A fast object `.reduce()` implementation.
+ *
+ * @param  {Object}   subject      The object to reduce over.
+ * @param  {Function} fn           The reducer function.
+ * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
+ * @param  {Object}   thisContext  The context for the reducer.
+ * @return {mixed}                 The final result.
+ */
+module.exports = function fastReduceRightObject (subject, fn, initialValue, thisContext) {
+  var keys = Object.keys(subject),
+      length = keys.length,
+      iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
+      i, key, result;
+
+  if (initialValue === undefined) {
+    i = length - 2;
+    result = subject[keys[length - 1]];
+  }
+  else {
+    i = length - 1;
+    result = initialValue;
+  }
+
+  for (; i >= 0; i--) {
+    key = keys[i];
+    result = iterator(result, subject[key], key, subject);
+  }
+
+  return result;
+};
+
+},{"../function/bindInternal4":74}],93:[function(require,module,exports){
+'use strict';
+
+var reduceArray = require('./array/reduce'),
+    reduceObject = require('./object/reduce');
+
+/**
+ * # Reduce
+ *
+ * A fast `.reduce()` implementation.
+ *
+ * @param  {Array|Object} subject      The array or object to reduce over.
+ * @param  {Function}     fn           The reducer function.
+ * @param  {mixed}        initialValue The initial value for the reducer, defaults to subject[0].
+ * @param  {Object}       thisContext  The context for the reducer.
+ * @return {Array|Object}              The array or object containing the results.
+ */
+module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
+  if (subject instanceof Array) {
+    return reduceArray(subject, fn, initialValue, thisContext);
+  }
+  else {
+    return reduceObject(subject, fn, initialValue, thisContext);
+  }
+};
+},{"./array/reduce":10,"./object/reduce":91}],94:[function(require,module,exports){
+'use strict';
+
+var reduceRightArray = require('./array/reduceRight'),
+    reduceRightObject = require('./object/reduceRight');
+
+/**
+ * # Reduce Right
+ *
+ * A fast `.reduceRight()` implementation.
+ *
+ * @param  {Array|Object} subject      The array or object to reduce over.
+ * @param  {Function}     fn           The reducer function.
+ * @param  {mixed}        initialValue The initial value for the reducer, defaults to subject[0].
+ * @param  {Object}       thisContext  The context for the reducer.
+ * @return {Array|Object}              The array or object containing the results.
+ */
+module.exports = function fastReduceRight (subject, fn, initialValue, thisContext) {
+  if (subject instanceof Array) {
+    return reduceRightArray(subject, fn, initialValue, thisContext);
+  }
+  else {
+    return reduceRightObject(subject, fn, initialValue, thisContext);
+  }
+};
+},{"./array/reduceRight":11,"./object/reduceRight":92}],95:[function(require,module,exports){
+'use strict';
+
+exports.intern = require('./intern');
+},{"./intern":96}],96:[function(require,module,exports){
+'use strict';
+
+// Compilers such as V8 use string interning to make string comparison very fast and efficient,
+// as efficient as comparing two references to the same object.
+//
+//
+// V8 does its best to intern strings automatically where it can, for instance:
+// ```js
+//   var greeting = "hello world";
+// ```
+// With this, comparison will be very fast:
+// ```js
+//   if (greeting === "hello world") {}
+// ```
+// However, there are several cases where V8 cannot intern the string, and instead
+// must resort to byte-wise comparison. This can be signficantly slower for long strings.
+// The most common example is string concatenation:
+// ```js
+//   function subject () { return "world"; };
+//   var greeting = "hello " + subject();
+// ```
+// In this case, V8 cannot intern the string. So this comparison is *much* slower:
+// ```js
+//  if (greeting === "hello world") {}
+// ```
+
+
+
+// At the moment, the fastest, safe way of interning a string is to
+// use it as a key in an object, and then use that key.
+//
+// Note: This technique comes courtesy of Petka Antonov - http://jsperf.com/istrn/11
+//
+// We create a container object in hash mode.
+// Most strings being interned will not be valid fast property names,
+// so we ensure hash mode now to avoid transitioning the object mode at runtime.
+var container = {'- ': true};
+delete container['- '];
+
+
+/**
+ * Intern a string to make comparisons faster.
+ *
+ * > Note: This is a relatively expensive operation, you
+ * shouldn't usually do the actual interning at runtime, instead
+ * use this at compile time to make future work faster.
+ *
+ * @param  {String} string The string to intern.
+ * @return {String}        The interned string.
+ */
+module.exports = function fastIntern (string) {
+  container[string] = true;
+  var interned = Object.keys(container)[0];
+  delete container[interned];
+  return interned;
+};
+},{}],97:[function(require,module,exports){
 exports.concat_0_0_0 = function fastConcat () {
   var length = arguments.length,
       arr = [],
@@ -18665,4 +19329,17 @@ exports.assign_0_0_4b = function fastAssign (target) {
   return target;
 };
 
-},{}]},{},[29])
+exports.assign_0_0_4c = function fastAssign (target) {
+  var totalArgs = arguments.length,
+      source, i;
+
+  for (i = 1; i < totalArgs; i++) {
+    source = arguments[i];
+    for (var key in source) {
+      target[key] = source[key];
+    }
+  }
+  return target;
+};
+
+},{}]},{},[41])

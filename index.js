@@ -28,6 +28,11 @@ function Fast (value) {
 
 module.exports = exports = Fast;
 
+Fast.array = require('./array');
+Fast['function'] = Fast.fn = require('./function');
+Fast.object = require('./object');
+Fast.string = require('./string');
+
 Fast.clone = require('./clone');
 
 Fast.apply = require('./function/apply');
@@ -37,21 +42,25 @@ Fast.partialConstructor = require('./function/partialConstructor');
 Fast['try'] = Fast.attempt = require( './function/try' );
 
 Fast.assign = require('./object/assign');
-Fast.cloneObject = require('./object/clone');
+Fast.cloneObject = require('./object/clone'); // @deprecated use fast.object.clone()
 
-Fast.cloneArray = require('./array/clone');
+Fast.map = require('./map');
+Fast.filter = require('./filter');
+Fast.forEach = require('./forEach');
+Fast.reduce = require('./reduce');
+Fast.reduceRight = require('./reduceRight');
+
+
+Fast.cloneArray = require('./array/clone'); // @deprecated use fast.array.clone()
+
 Fast.concat = require('./array/concat');
-Fast.map = require('./array/map');
-Fast.filter = require('./array/filter');
-Fast.forEach = require('./array/forEach');
-Fast.reduce = require('./array/reduce');
-Fast.reduceRight = require('./array/reduceRight');
 Fast.some = require('./array/some');
 Fast.every = require('./array/every');
 Fast.indexOf = require('./array/indexOf');
 Fast.lastIndexOf = require('./array/lastIndexOf');
 
 Fast.intern = require('./string/intern');
+
 
 /**
  * # Concat

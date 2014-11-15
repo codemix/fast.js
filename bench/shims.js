@@ -1,5 +1,12 @@
 'use strict';
 
+if (typeof navigator === 'object') {
+  var realLog = console.log;
+  console.log = function (message) {
+    realLog.call(console, ('' + message).replace(/\u001b\[(?:[0-9]{1,3}(?:;[0-9]{1,3})*)?[m|K]/g, ''));
+  };
+}
+
 if (!Object.assign) {
   // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
   Object.defineProperty(Object, "assign", {
