@@ -82,7 +82,37 @@ module.exports = function fastEvery (subject, fn, thisContext) {
   return true;
 };
 
-},{"../function/bindInternal3":21}],4:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":22}],4:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * # Fill
+ * Fill an array with values, optionally starting and stopping at a given index.
+ *
+ * > Note: unlike the specced Array.prototype.fill(), this version does not support
+ * > negative start / end arguments.
+ *
+ * @param  {Array}   subject The array to fill.
+ * @param  {mixed}   value   The value to insert.
+ * @param  {Integer} start   The start position, defaults to 0.
+ * @param  {Integer} end     The end position, defaults to subject.length
+ * @return {Array}           The now filled subject.
+ */
+module.exports = function fastFill (subject, value, start, end) {
+  var length = subject.length,
+      i;
+  if (start === undefined) {
+    start = 0;
+  }
+  if (end === undefined) {
+    end = length;
+  }
+  for (i = start; i < end; i++) {
+    subject[i] = value;
+  }
+  return subject;
+};
+},{}],5:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -110,7 +140,7 @@ module.exports = function fastFilter (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":21}],5:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":22}],6:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -133,7 +163,7 @@ module.exports = function fastForEach (subject, fn, thisContext) {
   }
 };
 
-},{"../function/bindInternal3":21}],6:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":22}],7:[function(_dereq_,module,exports){
 'use strict';
 
 exports.clone = _dereq_('./clone');
@@ -148,7 +178,8 @@ exports.pluck = _dereq_('./pluck');
 exports.reduce = _dereq_('./reduce');
 exports.reduceRight = _dereq_('./reduceRight');
 exports.some = _dereq_('./some');
-},{"./clone":1,"./concat":2,"./every":3,"./filter":4,"./forEach":5,"./indexOf":7,"./lastIndexOf":8,"./map":9,"./pluck":10,"./reduce":11,"./reduceRight":12,"./some":13}],7:[function(_dereq_,module,exports){
+exports.fill = _dereq_('./fill');
+},{"./clone":1,"./concat":2,"./every":3,"./fill":4,"./filter":5,"./forEach":6,"./indexOf":8,"./lastIndexOf":9,"./map":10,"./pluck":11,"./reduce":12,"./reduceRight":13,"./some":14}],8:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -183,7 +214,7 @@ module.exports = function fastIndexOf (subject, target, fromIndex) {
   return -1;
 };
 
-},{}],8:[function(_dereq_,module,exports){
+},{}],9:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -214,7 +245,7 @@ module.exports = function fastLastIndexOf (subject, target, fromIndex) {
   return -1;
 };
 
-},{}],9:[function(_dereq_,module,exports){
+},{}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -240,7 +271,7 @@ module.exports = function fastMap (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":21}],10:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":22}],11:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -265,7 +296,7 @@ module.exports = function fastPluck (input, field) {
   }
   return plucked;
 };
-},{}],11:[function(_dereq_,module,exports){
+},{}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('../function/bindInternal4');
@@ -302,7 +333,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal4":22}],12:[function(_dereq_,module,exports){
+},{"../function/bindInternal4":23}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('../function/bindInternal4');
@@ -339,7 +370,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal4":22}],13:[function(_dereq_,module,exports){
+},{"../function/bindInternal4":23}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -366,7 +397,7 @@ module.exports = function fastSome (subject, fn, thisContext) {
   return false;
 };
 
-},{"../function/bindInternal3":21}],14:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":22}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var cloneArray = _dereq_('./array/clone');
@@ -395,7 +426,7 @@ module.exports = function clone (input) {
   }
 };
 
-},{"./array/clone":1,"./object/clone":30}],15:[function(_dereq_,module,exports){
+},{"./array/clone":1,"./object/clone":31}],16:[function(_dereq_,module,exports){
 'use strict';
 
 var filterArray = _dereq_('./array/filter'),
@@ -419,7 +450,7 @@ module.exports = function fastFilter (subject, fn, thisContext) {
     return filterObject(subject, fn, thisContext);
   }
 };
-},{"./array/filter":4,"./object/filter":31}],16:[function(_dereq_,module,exports){
+},{"./array/filter":5,"./object/filter":32}],17:[function(_dereq_,module,exports){
 'use strict';
 
 var forEachArray = _dereq_('./array/forEach'),
@@ -442,7 +473,7 @@ module.exports = function fastForEach (subject, fn, thisContext) {
     return forEachObject(subject, fn, thisContext);
   }
 };
-},{"./array/forEach":5,"./object/forEach":32}],17:[function(_dereq_,module,exports){
+},{"./array/forEach":6,"./object/forEach":33}],18:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -463,7 +494,7 @@ module.exports = function fastApply (subject, thisContext, args) {
   return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
 };
 
-},{"./applyNoContext":18,"./applyWithContext":19}],18:[function(_dereq_,module,exports){
+},{"./applyNoContext":19,"./applyWithContext":20}],19:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -494,7 +525,7 @@ module.exports = function applyNoContext (subject, args) {
   }
 };
 
-},{}],19:[function(_dereq_,module,exports){
+},{}],20:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -525,7 +556,7 @@ module.exports = function applyWithContext (subject, thisContext, args) {
   }
 };
 
-},{}],20:[function(_dereq_,module,exports){
+},{}],21:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -598,7 +629,7 @@ module.exports = function fastBind (fn, thisContext) {
   }
 };
 
-},{"./applyNoContext":18,"./applyWithContext":19}],21:[function(_dereq_,module,exports){
+},{"./applyNoContext":19,"./applyWithContext":20}],22:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -611,7 +642,7 @@ module.exports = function bindInternal3 (func, thisContext) {
   };
 };
 
-},{}],22:[function(_dereq_,module,exports){
+},{}],23:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -624,7 +655,7 @@ module.exports = function bindInternal4 (func, thisContext) {
   };
 };
 
-},{}],23:[function(_dereq_,module,exports){
+},{}],24:[function(_dereq_,module,exports){
 'use strict';
 
 exports.apply = _dereq_('./apply');
@@ -633,7 +664,7 @@ exports.partial = _dereq_('./partial');
 exports.partialConstructor = _dereq_('./partialConstructor');
 exports.try = _dereq_('./try');
 
-},{"./apply":17,"./bind":20,"./partial":24,"./partialConstructor":25,"./try":26}],24:[function(_dereq_,module,exports){
+},{"./apply":18,"./bind":21,"./partial":25,"./partialConstructor":26,"./try":27}],25:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -677,7 +708,7 @@ module.exports = function fastPartial (fn) {
   };
 };
 
-},{"./applyWithContext":19}],25:[function(_dereq_,module,exports){
+},{"./applyWithContext":20}],26:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -724,7 +755,7 @@ module.exports = function fastPartialConstructor (fn) {
   };
 };
 
-},{"./applyWithContext":19}],26:[function(_dereq_,module,exports){
+},{"./applyWithContext":20}],27:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -761,7 +792,7 @@ module.exports = function fastTry (fn) {
   }
 };
 
-},{}],27:[function(_dereq_,module,exports){
+},{}],28:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -826,6 +857,7 @@ Fast.every = Fast.array.every;
 Fast.indexOf = Fast.array.indexOf;
 Fast.lastIndexOf = Fast.array.lastIndexOf;
 Fast.pluck = Fast.array.pluck;
+Fast.fill = Fast.array.fill;
 
 Fast.intern = Fast.string.intern;
 
@@ -1003,7 +1035,7 @@ Object.defineProperty(Fast.prototype, 'length', {
   }
 });
 
-},{"./array":6,"./clone":14,"./filter":15,"./forEach":16,"./function":23,"./map":28,"./object":33,"./reduce":39,"./reduceRight":40,"./string":41}],28:[function(_dereq_,module,exports){
+},{"./array":7,"./clone":15,"./filter":16,"./forEach":17,"./function":24,"./map":29,"./object":34,"./reduce":40,"./reduceRight":41,"./string":42}],29:[function(_dereq_,module,exports){
 'use strict';
 
 var mapArray = _dereq_('./array/map'),
@@ -1027,7 +1059,7 @@ module.exports = function fastMap (subject, fn, thisContext) {
     return mapObject(subject, fn, thisContext);
   }
 };
-},{"./array/map":9,"./object/map":35}],29:[function(_dereq_,module,exports){
+},{"./array/map":10,"./object/map":36}],30:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -1063,7 +1095,7 @@ module.exports = function fastAssign (target) {
   return target;
 };
 
-},{}],30:[function(_dereq_,module,exports){
+},{}],31:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -1090,7 +1122,7 @@ module.exports = function fastCloneObject (input) {
   return cloned;
 };
 
-},{}],31:[function(_dereq_,module,exports){
+},{}],32:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -1120,7 +1152,7 @@ module.exports = function fastFilterObject (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":21}],32:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":22}],33:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -1145,7 +1177,7 @@ module.exports = function fastForEachObject (subject, fn, thisContext) {
   }
 };
 
-},{"../function/bindInternal3":21}],33:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":22}],34:[function(_dereq_,module,exports){
 'use strict';
 
 exports.assign = _dereq_('./assign');
@@ -1157,7 +1189,7 @@ exports.reduce = _dereq_('./reduce');
 exports.reduceRight = _dereq_('./reduceRight');
 exports.keys = _dereq_('./keys');
 exports.values = _dereq_('./values');
-},{"./assign":29,"./clone":30,"./filter":31,"./forEach":32,"./keys":34,"./map":35,"./reduce":36,"./reduceRight":37,"./values":38}],34:[function(_dereq_,module,exports){
+},{"./assign":30,"./clone":31,"./filter":32,"./forEach":33,"./keys":35,"./map":36,"./reduce":37,"./reduceRight":38,"./values":39}],35:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -1166,7 +1198,7 @@ exports.values = _dereq_('./values');
  * @param  {Object} obj The object to get keys for.
  * @return {Array}      The array of keys.
  */
-module.exports = typeof Object.keys === "function" ? Object.keys : function fastKeys (obj) {
+module.exports = typeof Object.keys === "function" ? Object.keys : /* istanbul ignore next */ function fastKeys (obj) {
   var keys = [];
   for (var key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
@@ -1175,7 +1207,7 @@ module.exports = typeof Object.keys === "function" ? Object.keys : function fast
   }
   return keys;
 };
-},{}],35:[function(_dereq_,module,exports){
+},{}],36:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -1203,7 +1235,7 @@ module.exports = function fastMapObject (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":21}],36:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":22}],37:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('../function/bindInternal4');
@@ -1242,7 +1274,7 @@ module.exports = function fastReduceObject (subject, fn, initialValue, thisConte
   return result;
 };
 
-},{"../function/bindInternal4":22}],37:[function(_dereq_,module,exports){
+},{"../function/bindInternal4":23}],38:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('../function/bindInternal4');
@@ -1281,7 +1313,7 @@ module.exports = function fastReduceRightObject (subject, fn, initialValue, this
   return result;
 };
 
-},{"../function/bindInternal4":22}],38:[function(_dereq_,module,exports){
+},{"../function/bindInternal4":23}],39:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -1302,7 +1334,7 @@ module.exports = function fastValues (obj) {
   }
   return values;
 };
-},{}],39:[function(_dereq_,module,exports){
+},{}],40:[function(_dereq_,module,exports){
 'use strict';
 
 var reduceArray = _dereq_('./array/reduce'),
@@ -1327,7 +1359,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
     return reduceObject(subject, fn, initialValue, thisContext);
   }
 };
-},{"./array/reduce":11,"./object/reduce":36}],40:[function(_dereq_,module,exports){
+},{"./array/reduce":12,"./object/reduce":37}],41:[function(_dereq_,module,exports){
 'use strict';
 
 var reduceRightArray = _dereq_('./array/reduceRight'),
@@ -1352,11 +1384,11 @@ module.exports = function fastReduceRight (subject, fn, initialValue, thisContex
     return reduceRightObject(subject, fn, initialValue, thisContext);
   }
 };
-},{"./array/reduceRight":12,"./object/reduceRight":37}],41:[function(_dereq_,module,exports){
+},{"./array/reduceRight":13,"./object/reduceRight":38}],42:[function(_dereq_,module,exports){
 'use strict';
 
 exports.intern = _dereq_('./intern');
-},{"./intern":42}],42:[function(_dereq_,module,exports){
+},{"./intern":43}],43:[function(_dereq_,module,exports){
 'use strict';
 
 // Compilers such as V8 use string interning to make string comparison very fast and efficient,
@@ -1413,6 +1445,6 @@ module.exports = function fastIntern (string) {
   delete container[interned];
   return interned;
 };
-},{}]},{},[27])
-(27)
+},{}]},{},[28])
+(28)
 });
