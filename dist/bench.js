@@ -247,11 +247,11 @@ module.exports = function fastMap (subject, fn, thisContext) {
  * # Pluck
  * Pluck the property with the given name from an array of objects.
  *
- * @param  {String} field The name of the field to pluck.
  * @param  {Array}  input The values to pluck from.
+ * @param  {String} field The name of the field to pluck.
  * @return {Array}        The plucked array of values.
  */
-module.exports = function fastPluck (field, input) {
+module.exports = function fastPluck (input, field) {
   var length = input.length,
       plucked = [],
       count = 0,
@@ -1948,7 +1948,7 @@ exports['Native Array::reduce() plucker'] = function () {
 
 exports['fast.pluck()'] = function () {
   var values = getValues();
-  return fast.pluck('b', values);
+  return fast.pluck(values, 'b');
 };
 
 exports['underscore.pluck()'] = function () {
