@@ -37,7 +37,7 @@ exports['Native Array::reduce() plucker'] = function () {
 
 exports['fast.pluck()'] = function () {
   var values = getValues();
-  return fast.pluck('b', values);
+  return fast.pluck(values, 'b');
 };
 
 exports['underscore.pluck()'] = function () {
