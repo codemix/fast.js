@@ -6,7 +6,7 @@
  * @param  {Object} obj The object to get keys for.
  * @return {Array}      The array of keys.
  */
-module.exports = typeof Object.keys === "function" ? Object.keys : function fastKeys (obj) {
+module.exports = typeof Object.keys === "function" ? Object.keys : /* istanbul ignore next */ function fastKeys (obj) {
   var keys = [];
   for (var key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {

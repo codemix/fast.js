@@ -886,6 +886,20 @@ describe('fast.values()', function () {
   });
 });
 
+describe('fast.fill()', function () {
+  it('should fill an array with values', function () {
+    fast.fill(new Array(5), true).should.eql([true, true, true, true, true]);
+  });
+  it('should fill an array with values, with an offset', function () {
+    var input = fast.fill(new Array(5), true);
+    fast.fill(input, false, 2).should.eql([true, true, false, false, false]);
+  });
+  it('should fill an array with values, with an offset and an end', function () {
+    var input = fast.fill(new Array(5), true);
+    fast.fill(input, false, 2,4).should.eql([true, true, false, false, true]);
+  });
+});
+
 describe('Fast', function () {
   var input = fast([1,2,3,4,5,6]);
 

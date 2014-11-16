@@ -62,6 +62,7 @@ Fast.every = Fast.array.every;
 Fast.indexOf = Fast.array.indexOf;
 Fast.lastIndexOf = Fast.array.lastIndexOf;
 Fast.pluck = Fast.array.pluck;
+Fast.fill = Fast.array.fill;
 
 Fast.intern = Fast.string.intern;
 

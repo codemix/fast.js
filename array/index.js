@@ -12,3 +12,4 @@ exports.pluck = require('./pluck');
 exports.reduce = require('./reduce');
 exports.reduceRight = require('./reduceRight');
 exports.some = require('./some');
+exports.fill = require('./fill');
