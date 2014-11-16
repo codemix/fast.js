@@ -1,5 +1,9 @@
 node_modules
 coverage
 npm-debug.log
+
 ci/environments/sm
 !ci/environments/sm/README.md
+
+ci/environments/v8/v8-git-mirror
+ci/environments/v8/bench.js
