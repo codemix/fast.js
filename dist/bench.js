@@ -82,7 +82,7 @@ module.exports = function fastEvery (subject, fn, thisContext) {
   return true;
 };
 
-},{"../function/bindInternal3":73}],4:[function(require,module,exports){
+},{"../function/bindInternal3":76}],4:[function(require,module,exports){
 'use strict';
 
 var bindInternal3 = require('../function/bindInternal3');
@@ -110,7 +110,7 @@ module.exports = function fastFilter (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":73}],5:[function(require,module,exports){
+},{"../function/bindInternal3":76}],5:[function(require,module,exports){
 'use strict';
 
 var bindInternal3 = require('../function/bindInternal3');
@@ -133,7 +133,7 @@ module.exports = function fastForEach (subject, fn, thisContext) {
   }
 };
 
-},{"../function/bindInternal3":73}],6:[function(require,module,exports){
+},{"../function/bindInternal3":76}],6:[function(require,module,exports){
 'use strict';
 
 exports.clone = require('./clone');
@@ -144,10 +144,11 @@ exports.forEach = require('./forEach');
 exports.indexOf = require('./indexOf');
 exports.lastIndexOf = require('./lastIndexOf');
 exports.map = require('./map');
+exports.pluck = require('./pluck');
 exports.reduce = require('./reduce');
 exports.reduceRight = require('./reduceRight');
 exports.some = require('./some');
-},{"./clone":1,"./concat":2,"./every":3,"./filter":4,"./forEach":5,"./indexOf":7,"./lastIndexOf":8,"./map":9,"./reduce":10,"./reduceRight":11,"./some":12}],7:[function(require,module,exports){
+},{"./clone":1,"./concat":2,"./every":3,"./filter":4,"./forEach":5,"./indexOf":7,"./lastIndexOf":8,"./map":9,"./pluck":10,"./reduce":11,"./reduceRight":12,"./some":13}],7:[function(require,module,exports){
 'use strict';
 
 /**
@@ -239,7 +240,32 @@ module.exports = function fastMap (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":73}],10:[function(require,module,exports){
+},{"../function/bindInternal3":76}],10:[function(require,module,exports){
+'use strict';
+
+/**
+ * # Pluck
+ * Pluck the property with the given name from an array of objects.
+ *
+ * @param  {String} field The name of the field to pluck.
+ * @param  {Array}  input The values to pluck from.
+ * @return {Array}        The plucked array of values.
+ */
+module.exports = function fastPluck (field, input) {
+  var length = input.length,
+      plucked = [],
+      count = 0,
+      value, i;
+
+  for (i = 0; i < length; i++) {
+    value = input[i];
+    if (value != null && value[field] !== undefined) {
+      plucked[count++] = value[field];
+    }
+  }
+  return plucked;
+};
+},{}],11:[function(require,module,exports){
 'use strict';
 
 var bindInternal4 = require('../function/bindInternal4');
@@ -276,7 +302,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal4":74}],11:[function(require,module,exports){
+},{"../function/bindInternal4":77}],12:[function(require,module,exports){
 'use strict';
 
 var bindInternal4 = require('../function/bindInternal4');
@@ -313,7 +339,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal4":74}],12:[function(require,module,exports){
+},{"../function/bindInternal4":77}],13:[function(require,module,exports){
 'use strict';
 
 var bindInternal3 = require('../function/bindInternal3');
@@ -340,7 +366,7 @@ module.exports = function fastSome (subject, fn, thisContext) {
   return false;
 };
 
-},{"../function/bindInternal3":73}],13:[function(require,module,exports){
+},{"../function/bindInternal3":76}],14:[function(require,module,exports){
 var fast = require('../'),
     utils = require('./utils');
 
@@ -356,7 +382,7 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), null, input);
 };
 
-},{"../":79,"./utils":65}],14:[function(require,module,exports){
+},{"../":82,"./utils":67}],15:[function(require,module,exports){
 var fast = require('../'),
     utils = require('./utils');
 
@@ -372,9 +398,9 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), null, input);
 };
 
-},{"../":79,"./utils":65}],15:[function(require,module,exports){
-module.exports=require(14)
-},{"../":79,"./utils":65}],16:[function(require,module,exports){
+},{"../":82,"./utils":67}],16:[function(require,module,exports){
+module.exports=require(15)
+},{"../":82,"./utils":67}],17:[function(require,module,exports){
 var fast = require('../'),
     utils = require('./utils');
 
@@ -390,7 +416,7 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../":79,"./utils":65}],17:[function(require,module,exports){
+},{"../":82,"./utils":67}],18:[function(require,module,exports){
 var fast = require('../'),
     utils = require('./utils');
 
@@ -406,7 +432,7 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../":79,"./utils":65}],18:[function(require,module,exports){
+},{"../":82,"./utils":67}],19:[function(require,module,exports){
 var fast = require('../'),
     utils = require('./utils');
 
@@ -421,7 +447,7 @@ exports['fast.apply()'] = function () {
   return fast.apply(fns(), {foo: 1}, input);
 };
 
-},{"../":79,"./utils":65}],19:[function(require,module,exports){
+},{"../":82,"./utils":67}],20:[function(require,module,exports){
 'use strict';
 
 var fast = require('../'),
@@ -607,7 +633,7 @@ function modObj (obj) {
   obj['wat' + Math.floor(Math.random() * 10000)] = Math.random();
   return obj;
 }
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],20:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],21:[function(require,module,exports){
 'use strict';
 
 var fast = require('../'),
@@ -693,7 +719,7 @@ function modObj (obj) {
   obj['wat' + Math.floor(Math.random() * 10000)] = Math.random();
   return obj;
 }
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],21:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],22:[function(require,module,exports){
 'use strict';
 
 var fast = require('../'),
@@ -768,7 +794,7 @@ function modObj (obj) {
   obj['wat' + Math.floor(Math.random() * 10000)] = Math.random();
   return obj;
 }
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],22:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],23:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -806,7 +832,7 @@ exports['lodash.bind()'] = function () {
 };
 
 
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],23:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],24:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -841,7 +867,7 @@ exports['lodash.bind()'] = function () {
 };
 
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],24:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],25:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -879,7 +905,7 @@ exports['lodash.clone()'] = function () {
 };
 
 
-},{"../":79,"lodash":83,"underscore":84}],25:[function(require,module,exports){
+},{"../":82,"lodash":86,"underscore":87}],26:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history');
 
@@ -893,7 +919,7 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, 11, 12, [13, 14, 15], 16, 17, [18, 19], 20);
 };
 
-},{"../":79,"../test/history":97}],26:[function(require,module,exports){
+},{"../":82,"../test/history":102}],27:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history');
 
@@ -911,7 +937,7 @@ exports['fast.concat()'] = function () {
   return fast.concat.apply(fast, input);
 };
 
-},{"../":79,"../test/history":97}],27:[function(require,module,exports){
+},{"../":82,"../test/history":102}],28:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history');
 
@@ -939,7 +965,7 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, chunks[0], chunks[1], chunks[2], chunks[3]);
 };
 
-},{"../":79,"../test/history":97}],28:[function(require,module,exports){
+},{"../":82,"../test/history":102}],29:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history');
 
@@ -953,7 +979,7 @@ exports['fast.concat()'] = function () {
   return fast.concat(input, 11, 12, [13]);
 };
 
-},{"../":79,"../test/history":97}],29:[function(require,module,exports){
+},{"../":82,"../test/history":102}],30:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -981,7 +1007,7 @@ exports['lodash.every()'] = function () {
   return lodash.every(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],30:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],31:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1013,7 +1039,7 @@ exports['lodash.every()'] = function () {
   return lodash.every(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],31:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],32:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1040,7 +1066,7 @@ exports['lodash.every()'] = function () {
   return lodash.every(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],32:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],33:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1068,7 +1094,7 @@ exports['lodash.filter()'] = function () {
   return lodash.filter(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],33:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],34:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1099,7 +1125,7 @@ exports['lodash.filter()'] = function () {
   return lodash.filter(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],34:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],35:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1126,7 +1152,7 @@ exports['lodash.filter()'] = function () {
   return lodash.filter(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],35:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],36:[function(require,module,exports){
 (function (global){
 var fast = require('../'),
     underscore = require('underscore'),
@@ -1176,7 +1202,7 @@ exports['lodash.forEach()'] = function () {
 };
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],36:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],37:[function(require,module,exports){
 (function (global){
 var fast = require('../'),
     underscore = require('underscore'),
@@ -1229,7 +1255,7 @@ exports['lodash.forEach()'] = function () {
 };
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],37:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],38:[function(require,module,exports){
 (function (global){
 var fast = require('../'),
     underscore = require('underscore'),
@@ -1279,7 +1305,7 @@ exports['lodash.forEach()'] = function () {
 };
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],38:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],39:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -1308,7 +1334,7 @@ exports['lodash.indexOf()'] = function () {
   return lodash.indexOf(input, 9) + lodash.indexOf(input, Math.random());
 };
 
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],39:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],40:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -1341,7 +1367,7 @@ exports['lodash.indexOf()'] = function () {
 };
 
 
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],40:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],41:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -1369,13 +1395,17 @@ exports['lodash.indexOf()'] = function () {
   return lodash.indexOf(input, 3) + lodash.indexOf(input, Math.random());
 };
 
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],41:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],42:[function(require,module,exports){
 var Benchmark = require('benchmark'),
     shims = require('./shims');
 
 
 
 run([
+  bench('Native Object.keys().map() value extractor vs fast.values()', require('./values')),
+
+  bench('Native .reduce() plucker vs fast.pluck()', require('./pluck')),
+
 
   bench('Object.assign() vs fast.assign()', require('./assign')),
   bench('Object.assign() vs fast.assign() (3 arguments)', require('./assign-3')),
@@ -1520,7 +1550,7 @@ function run (benchmarks) {
   continuation();
 }
 
-},{"./apply-10":13,"./apply-3":14,"./apply-6":15,"./apply-context-10":16,"./apply-context-3":17,"./apply-context-6":18,"./assign":21,"./assign-10":19,"./assign-3":20,"./bind":23,"./bind-prebound":22,"./clone":24,"./concat-10":25,"./concat-1000":27,"./concat-1000-apply":26,"./concat-3":28,"./every-10":29,"./every-1000":30,"./every-3":31,"./filter-10":32,"./filter-1000":33,"./filter-3":34,"./for-each-10":35,"./for-each-1000":36,"./for-each-3":37,"./index-of-10":38,"./index-of-1000":39,"./index-of-3":40,"./intern-long":42,"./intern-medium":43,"./intern-short":44,"./last-index-of-10":45,"./last-index-of-1000":46,"./last-index-of-3":47,"./map-10":48,"./map-1000":49,"./map-3":50,"./partial":52,"./partial-prebound":51,"./reduce-10":53,"./reduce-1000":54,"./reduce-3":55,"./reduce-right-10":56,"./reduce-right-1000":57,"./reduce-right-3":58,"./shims":59,"./some-10":60,"./some-1000":61,"./some-3":62,"./try":64,"./try-fn":63,"benchmark":81}],42:[function(require,module,exports){
+},{"./apply-10":14,"./apply-3":15,"./apply-6":16,"./apply-context-10":17,"./apply-context-3":18,"./apply-context-6":19,"./assign":22,"./assign-10":20,"./assign-3":21,"./bind":24,"./bind-prebound":23,"./clone":25,"./concat-10":26,"./concat-1000":28,"./concat-1000-apply":27,"./concat-3":29,"./every-10":30,"./every-1000":31,"./every-3":32,"./filter-10":33,"./filter-1000":34,"./filter-3":35,"./for-each-10":36,"./for-each-1000":37,"./for-each-3":38,"./index-of-10":39,"./index-of-1000":40,"./index-of-3":41,"./intern-long":43,"./intern-medium":44,"./intern-short":45,"./last-index-of-10":46,"./last-index-of-1000":47,"./last-index-of-3":48,"./map-10":49,"./map-1000":50,"./map-3":51,"./partial":53,"./partial-prebound":52,"./pluck":54,"./reduce-10":55,"./reduce-1000":56,"./reduce-3":57,"./reduce-right-10":58,"./reduce-right-1000":59,"./reduce-right-3":60,"./shims":61,"./some-10":62,"./some-1000":63,"./some-3":64,"./try":66,"./try-fn":65,"./values":68,"benchmark":84}],43:[function(require,module,exports){
 var fast = require('../'),
     utils = require('./utils');
 
@@ -1542,7 +1572,7 @@ exports['fast.intern()'] = function () {
   try {} finally {}
 };
 
-},{"../":79,"./utils":65}],43:[function(require,module,exports){
+},{"../":82,"./utils":67}],44:[function(require,module,exports){
 var fast = require('../'),
     utils = require('./utils');
 
@@ -1564,7 +1594,7 @@ exports['fast.intern()'] = function () {
   try {} finally {}
 };
 
-},{"../":79,"./utils":65}],44:[function(require,module,exports){
+},{"../":82,"./utils":67}],45:[function(require,module,exports){
 var fast = require('../'),
     utils = require('./utils');
 
@@ -1586,7 +1616,7 @@ exports['fast.intern()'] = function () {
   try {} finally {}
 };
 
-},{"../":79,"./utils":65}],45:[function(require,module,exports){
+},{"../":82,"./utils":67}],46:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -1614,7 +1644,7 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 9) + lodash.lastIndexOf(input, 1);
 };
 
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],46:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],47:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -1646,7 +1676,7 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 999) + lodash.lastIndexOf(input, 1);
 };
 
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],47:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],48:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -1674,7 +1704,7 @@ exports['lodash.lastIndexOf()'] = function () {
   return lodash.lastIndexOf(input, 1);
 };
 
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],48:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],49:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1714,7 +1744,7 @@ exports['lodash.map()'] = function () {
   return lodash.map(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],49:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],50:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1758,7 +1788,7 @@ exports['lodash.map()'] = function () {
 };
 
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],50:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],51:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1796,7 +1826,7 @@ exports['lodash.map()'] = function () {
   return lodash.map(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],51:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],52:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -1837,7 +1867,7 @@ exports['lodash.partial()'] = function () {
   return loPartial(3);
 };
 
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],52:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],53:[function(require,module,exports){
 var fast = require('../'),
     history = require('../test/history'),
     underscore = require('underscore'),
@@ -1878,7 +1908,52 @@ exports['lodash.partial()'] = function () {
 };
 
 
-},{"../":79,"../test/history":97,"lodash":83,"underscore":84}],53:[function(require,module,exports){
+},{"../":82,"../test/history":102,"lodash":86,"underscore":87}],54:[function(require,module,exports){
+var fast = require('../'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    utils = require('./utils'),
+    history = require('../test/history');
+
+
+exports['Native Array::reduce() plucker'] = function () {
+  var values = generateValues();
+  return values.reduce(function (plucked, item) {
+    if (item != null && item.b !== undefined) {
+      plucked.push(item.b);
+    }
+    return plucked;
+  }, []);
+};
+
+exports['fast.pluck()'] = function () {
+  var values = generateValues();
+  return fast.pluck('b', values);
+};
+
+exports['underscore.pluck()'] = function () {
+  var values = generateValues();
+  return underscore.pluck(values, 'b');
+};
+
+exports['lodash.pluck()'] = function () {
+  var values = generateValues();
+  return lodash.pluck(values, 'b');
+};
+
+
+function generateValues () {
+  var values = [];
+  for (var i = 0, limit = 10; i < limit; i++) {
+    values[i] = i % 7 === 0 ? null : i % 3 === 0 ? true : {
+      a: Math.random(),
+      b: Math.random(),
+      c: Math.random()
+    };
+  }
+  return values;
+}
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],55:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1927,7 +2002,7 @@ exports['lodash.reduce()'] = function () {
 };
 
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],54:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],56:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -1978,7 +2053,7 @@ exports['lodash.reduce()'] = function () {
   return lodash.reduce(input, fns(), 0);
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],55:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],57:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -2026,7 +2101,7 @@ exports['lodash.reduce()'] = function () {
   return lodash.reduce(input, fns(), 0);
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],56:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],58:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -2053,7 +2128,7 @@ exports['lodash.reduceRight()'] = function () {
   return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],57:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],59:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -2084,7 +2159,7 @@ exports['lodash.reduceRight()'] = function () {
   return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],58:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],60:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -2111,7 +2186,7 @@ exports['lodash.reduceRight()'] = function () {
   return lodash.reduceRight(input, fns(), 0);
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],59:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],61:[function(require,module,exports){
 'use strict';
 
 if (typeof navigator === 'object') {
@@ -2164,7 +2239,7 @@ if (!Object.assign) {
     }
   });
 }
-},{}],60:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -2192,7 +2267,7 @@ exports['lodash.some()'] = function () {
   return lodash.some(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],61:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],63:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -2224,7 +2299,7 @@ exports['lodash.some()'] = function () {
   return lodash.some(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],62:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],64:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash'),
@@ -2251,7 +2326,7 @@ exports['lodash.some()'] = function () {
   return lodash.some(input, fns());
 };
 
-},{"../":79,"../test/history":97,"./utils":65,"lodash":83,"underscore":84}],63:[function(require,module,exports){
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],65:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -2298,7 +2373,7 @@ function doSomeWork () {
   d += factorial(2 * Math.random());
   return d;
 }
-},{"../":79,"lodash":83,"underscore":84}],64:[function(require,module,exports){
+},{"../":82,"lodash":86,"underscore":87}],66:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
     lodash = require('lodash');
@@ -2346,7 +2421,7 @@ exports['fast.try()'] = function () {
   });
 };
 
-},{"../":79,"lodash":83,"underscore":84}],65:[function(require,module,exports){
+},{"../":82,"lodash":86,"underscore":87}],67:[function(require,module,exports){
 /**
  * Function factory.
  * Accepts the same arguments as the Function constructor, creates 20 duplicate
@@ -2377,7 +2452,59 @@ exports.fns = function () {
     return fns[pointer % 20];
   };
 };
-},{}],66:[function(require,module,exports){
+
+
+exports.valueStream = function (length, func) {
+  var values = new Array(length),
+      i;
+  for (i = 0; i < length; i++) {
+    values[i] = func();
+  }
+
+  var index = 0;
+  return function getValue () {
+    index++;
+    if (index >= length) {
+      index = 0;
+    }
+    return values[index];
+  }
+}
+},{}],68:[function(require,module,exports){
+var fast = require('../'),
+    underscore = require('underscore'),
+    lodash = require('lodash'),
+    utils = require('./utils'),
+    history = require('../test/history');
+
+var getValue = utils.valueStream(20, function () {
+  var obj = {};
+  obj['a' + Math.floor(Math.random() * 10000)] = Math.random();
+  obj['b' + Math.floor(Math.random() * 10000)] = Math.random();
+  obj['c' + Math.floor(Math.random() * 10000)] = Math.random();
+  return obj
+});
+
+exports['Native Object.keys().map()'] = function () {
+  var values = getValue();
+  return Object.keys(values).map(function (key) {
+    return values[key];
+  });
+}
+
+exports['fast.values()'] = function () {
+  return fast.values(getValue());
+};
+
+exports['underscore.values()'] = function () {
+  return underscore.values(getValue());
+};
+
+exports['lodash.values()'] = function () {
+  return lodash.values(getValue());
+};
+
+},{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],69:[function(require,module,exports){
 'use strict';
 
 var cloneArray = require('./array/clone');
@@ -2406,7 +2533,7 @@ module.exports = function clone (input) {
   }
 };
 
-},{"./array/clone":1,"./object/clone":86}],67:[function(require,module,exports){
+},{"./array/clone":1,"./object/clone":89}],70:[function(require,module,exports){
 'use strict';
 
 var filterArray = require('./array/filter'),
@@ -2430,7 +2557,7 @@ module.exports = function fastFilter (subject, fn, thisContext) {
     return filterObject(subject, fn, thisContext);
   }
 };
-},{"./array/filter":4,"./object/filter":87}],68:[function(require,module,exports){
+},{"./array/filter":4,"./object/filter":90}],71:[function(require,module,exports){
 'use strict';
 
 var forEachArray = require('./array/forEach'),
@@ -2453,7 +2580,7 @@ module.exports = function fastForEach (subject, fn, thisContext) {
     return forEachObject(subject, fn, thisContext);
   }
 };
-},{"./array/forEach":5,"./object/forEach":88}],69:[function(require,module,exports){
+},{"./array/forEach":5,"./object/forEach":91}],72:[function(require,module,exports){
 'use strict';
 
 var applyWithContext = require('./applyWithContext');
@@ -2474,7 +2601,7 @@ module.exports = function fastApply (subject, thisContext, args) {
   return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
 };
 
-},{"./applyNoContext":70,"./applyWithContext":71}],70:[function(require,module,exports){
+},{"./applyNoContext":73,"./applyWithContext":74}],73:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2505,7 +2632,7 @@ module.exports = function applyNoContext (subject, args) {
   }
 };
 
-},{}],71:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2536,7 +2663,7 @@ module.exports = function applyWithContext (subject, thisContext, args) {
   }
 };
 
-},{}],72:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 'use strict';
 
 var applyWithContext = require('./applyWithContext');
@@ -2609,7 +2736,7 @@ module.exports = function fastBind (fn, thisContext) {
   }
 };
 
-},{"./applyNoContext":70,"./applyWithContext":71}],73:[function(require,module,exports){
+},{"./applyNoContext":73,"./applyWithContext":74}],76:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2622,7 +2749,7 @@ module.exports = function bindInternal3 (func, thisContext) {
   };
 };
 
-},{}],74:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2635,7 +2762,7 @@ module.exports = function bindInternal4 (func, thisContext) {
   };
 };
 
-},{}],75:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 'use strict';
 
 exports.apply = require('./apply');
@@ -2644,7 +2771,7 @@ exports.partial = require('./partial');
 exports.partialConstructor = require('./partialConstructor');
 exports.try = require('./try');
 
-},{"./apply":69,"./bind":72,"./partial":76,"./partialConstructor":77,"./try":78}],76:[function(require,module,exports){
+},{"./apply":72,"./bind":75,"./partial":79,"./partialConstructor":80,"./try":81}],79:[function(require,module,exports){
 'use strict';
 
 var applyWithContext = require('./applyWithContext');
@@ -2688,7 +2815,7 @@ module.exports = function fastPartial (fn) {
   };
 };
 
-},{"./applyWithContext":71}],77:[function(require,module,exports){
+},{"./applyWithContext":74}],80:[function(require,module,exports){
 'use strict';
 
 var applyWithContext = require('./applyWithContext');
@@ -2735,7 +2862,7 @@ module.exports = function fastPartialConstructor (fn) {
   };
 };
 
-},{"./applyWithContext":71}],78:[function(require,module,exports){
+},{"./applyWithContext":74}],81:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2772,7 +2899,7 @@ module.exports = function fastTry (fn) {
   }
 };
 
-},{}],79:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2808,17 +2935,20 @@ Fast['function'] = Fast.fn = require('./function');
 Fast.object = require('./object');
 Fast.string = require('./string');
 
+
+Fast.apply = Fast['function'].apply;
+Fast.bind = Fast['function'].bind;
+Fast.partial = Fast['function'].partial;
+Fast.partialConstructor = Fast['function'].partialConstructor;
+Fast['try'] = Fast.attempt = Fast['function']['try'];
+
+Fast.assign = Fast.object.assign;
+Fast.cloneObject = Fast.object.clone; // @deprecated use fast.object.clone()
+Fast.keys = Fast.object.keys;
+Fast.values = Fast.object.values;
+
+
 Fast.clone = require('./clone');
-
-Fast.apply = require('./function/apply');
-Fast.bind = require('./function/bind');
-Fast.partial = require('./function/partial');
-Fast.partialConstructor = require('./function/partialConstructor');
-Fast['try'] = Fast.attempt = require( './function/try' );
-
-Fast.assign = require('./object/assign');
-Fast.cloneObject = require('./object/clone');
-
 Fast.map = require('./map');
 Fast.filter = require('./filter');
 Fast.forEach = require('./forEach');
@@ -2826,15 +2956,16 @@ Fast.reduce = require('./reduce');
 Fast.reduceRight = require('./reduceRight');
 
 
-Fast.cloneArray = require('./array/clone');
+Fast.cloneArray = Fast.array.clone; // @deprecated use fast.array.clone()
 
-Fast.concat = require('./array/concat');
-Fast.some = require('./array/some');
-Fast.every = require('./array/every');
-Fast.indexOf = require('./array/indexOf');
-Fast.lastIndexOf = require('./array/lastIndexOf');
+Fast.concat = Fast.array.concat;
+Fast.some = Fast.array.some;
+Fast.every = Fast.array.every;
+Fast.indexOf = Fast.array.indexOf;
+Fast.lastIndexOf = Fast.array.lastIndexOf;
+Fast.pluck = Fast.array.pluck;
 
-Fast.intern = require('./string/intern');
+Fast.intern = Fast.string.intern;
 
 
 /**
@@ -3010,7 +3141,7 @@ Object.defineProperty(Fast.prototype, 'length', {
   }
 });
 
-},{"./array":6,"./array/clone":1,"./array/concat":2,"./array/every":3,"./array/indexOf":7,"./array/lastIndexOf":8,"./array/some":12,"./clone":66,"./filter":67,"./forEach":68,"./function":75,"./function/apply":69,"./function/bind":72,"./function/partial":76,"./function/partialConstructor":77,"./function/try":78,"./map":80,"./object":89,"./object/assign":85,"./object/clone":86,"./reduce":93,"./reduceRight":94,"./string":95,"./string/intern":96}],80:[function(require,module,exports){
+},{"./array":6,"./clone":69,"./filter":70,"./forEach":71,"./function":78,"./map":83,"./object":92,"./reduce":98,"./reduceRight":99,"./string":100}],83:[function(require,module,exports){
 'use strict';
 
 var mapArray = require('./array/map'),
@@ -3034,7 +3165,7 @@ module.exports = function fastMap (subject, fn, thisContext) {
     return mapObject(subject, fn, thisContext);
   }
 };
-},{"./array/map":9,"./object/map":90}],81:[function(require,module,exports){
+},{"./array/map":9,"./object/map":94}],84:[function(require,module,exports){
 (function (process,global){
 /*!
  * Benchmark.js v1.0.0 <http://benchmarkjs.com/>
@@ -6956,7 +7087,7 @@ module.exports = function fastMap (subject, fn, thisContext) {
 }(this));
 
 }).call(this,require("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"FWaASH":82}],82:[function(require,module,exports){
+},{"FWaASH":85}],85:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -7021,7 +7152,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],83:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -7047,7 +7178,8 @@ process.chdir = function (dir) {
       CURRY_RIGHT_FLAG = 8,
       CURRY_BOUND_FLAG = 16,
       PARTIAL_FLAG = 32,
-      PARTIAL_RIGHT_FLAG = 64;
+      PARTIAL_RIGHT_FLAG = 64,
+      REARG_FLAG = 128;
 
   /** Used as default options for `_.trunc` */
   var DEFAULT_TRUNC_LENGTH = 30,
@@ -7058,9 +7190,9 @@ process.chdir = function (dir) {
       HOT_SPAN = 16;
 
   /** Used to indicate the type of lazy iteratees */
-  var LAZY_FILTER_FLAG = 1,
-      LAZY_MAP_FLAG = 2,
-      LAZY_WHILE_FLAG = 3;
+  var LAZY_FILTER_FLAG = 0,
+      LAZY_MAP_FLAG = 1,
+      LAZY_WHILE_FLAG = 2;
 
   /** Used as the `TypeError` message for "Functions" methods */
   var FUNC_ERROR_TEXT = 'Expected a function';
@@ -7105,7 +7237,7 @@ process.chdir = function (dir) {
   var reHostCtor = /^\[object .+?Constructor\]$/;
 
   /** Used to match latin-1 supplement letters (excluding mathematical operators) */
-  var reLatin1 = /[\xC0-\xD6\xD8-\xDE\xDF-\xF6\xF8-\xFF]/g;
+  var reLatin1 = /[\xc0-\xd6\xd8-\xde\xdf-\xf6\xf8-\xff]/g;
 
   /** Used to ensure capturing order of template delimiters */
   var reNoMatch = /($^)/;
@@ -7125,8 +7257,8 @@ process.chdir = function (dir) {
 
   /** Used to match words to create compound words */
   var reWords = (function() {
-    var upper = '[A-Z\\xC0-\\xD6\\xD8-\\xDE]',
-        lower = '[a-z\\xDF-\\xF6\\xF8-\\xFF]+';
+    var upper = '[A-Z\\xc0-\\xd6\\xd8-\\xde]',
+        lower = '[a-z\\xdf-\\xf6\\xf8-\\xff]+';
 
     return RegExp(upper + '{2,}(?=' + upper + lower + ')|' + upper + '?' + lower + '|' + upper + '+|[0-9]+', 'g');
   }());
@@ -7134,13 +7266,13 @@ process.chdir = function (dir) {
   /** Used to detect and test whitespace */
   var whitespace = (
     // whitespace
-    ' \t\x0B\f\xA0\ufeff' +
+    ' \t\x0b\f\xa0\ufeff' +
 
     // line terminators
     '\n\r\u2028\u2029' +
 
     // unicode category "Zs" space separators
-    '\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000'
+    '\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000'
   );
 
   /** Used to assign default `context` object properties */
@@ -7227,23 +7359,23 @@ process.chdir = function (dir) {
 
   /** Used to map latin-1 supplementary letters to basic latin letters */
   var deburredLetters = {
-    '\xC0': 'A',  '\xC1': 'A', '\xC2': 'A', '\xC3': 'A', '\xC4': 'A', '\xC5': 'A',
-    '\xE0': 'a',  '\xE1': 'a', '\xE2': 'a', '\xE3': 'a', '\xE4': 'a', '\xE5': 'a',
-    '\xC7': 'C',  '\xE7': 'c',
-    '\xD0': 'D',  '\xF0': 'd',
-    '\xC8': 'E',  '\xC9': 'E', '\xCA': 'E', '\xCB': 'E',
-    '\xE8': 'e',  '\xE9': 'e', '\xEA': 'e', '\xEB': 'e',
-    '\xCC': 'I',  '\xCD': 'I', '\xCE': 'I', '\xCF': 'I',
-    '\xEC': 'i',  '\xED': 'i', '\xEE': 'i', '\xEF': 'i',
-    '\xD1': 'N',  '\xF1': 'n',
-    '\xD2': 'O',  '\xD3': 'O', '\xD4': 'O', '\xD5': 'O', '\xD6': 'O', '\xD8': 'O',
-    '\xF2': 'o',  '\xF3': 'o', '\xF4': 'o', '\xF5': 'o', '\xF6': 'o', '\xF8': 'o',
-    '\xD9': 'U',  '\xDA': 'U', '\xDB': 'U', '\xDC': 'U',
-    '\xF9': 'u',  '\xFA': 'u', '\xFB': 'u', '\xFC': 'u',
-    '\xDD': 'Y',  '\xFD': 'y', '\xFF': 'y',
-    '\xC6': 'Ae', '\xE6': 'ae',
-    '\xDE': 'Th', '\xFE': 'th',
-    '\xDF': 'ss'
+    '\xc0': 'A',  '\xc1': 'A', '\xc2': 'A', '\xc3': 'A', '\xc4': 'A', '\xc5': 'A',
+    '\xe0': 'a',  '\xe1': 'a', '\xe2': 'a', '\xe3': 'a', '\xe4': 'a', '\xe5': 'a',
+    '\xc7': 'C',  '\xe7': 'c',
+    '\xd0': 'D',  '\xf0': 'd',
+    '\xc8': 'E',  '\xc9': 'E', '\xca': 'E', '\xcb': 'E',
+    '\xe8': 'e',  '\xe9': 'e', '\xea': 'e', '\xeb': 'e',
+    '\xcC': 'I',  '\xcd': 'I', '\xce': 'I', '\xcf': 'I',
+    '\xeC': 'i',  '\xed': 'i', '\xee': 'i', '\xef': 'i',
+    '\xd1': 'N',  '\xf1': 'n',
+    '\xd2': 'O',  '\xd3': 'O', '\xd4': 'O', '\xd5': 'O', '\xd6': 'O', '\xd8': 'O',
+    '\xf2': 'o',  '\xf3': 'o', '\xf4': 'o', '\xf5': 'o', '\xf6': 'o', '\xf8': 'o',
+    '\xd9': 'U',  '\xda': 'U', '\xdb': 'U', '\xdc': 'U',
+    '\xf9': 'u',  '\xfa': 'u', '\xfb': 'u', '\xfc': 'u',
+    '\xdd': 'Y',  '\xfd': 'y', '\xff': 'y',
+    '\xc6': 'Ae', '\xe6': 'ae',
+    '\xde': 'Th', '\xfe': 'th',
+    '\xdf': 'ss'
   };
 
   /**
@@ -7279,13 +7411,6 @@ process.chdir = function (dir) {
     '&#96;': '`'
   };
 
-  /** Used to map iteratee types to lazy methods */
-  var lazyIterateeTypes = {
-    'filter': LAZY_FILTER_FLAG,
-    'map': LAZY_MAP_FLAG,
-    'takeWhile': LAZY_WHILE_FLAG
-  };
-
   /** Used to determine if values are of the language type `Object` */
   var objectTypes = {
     'function': true,
@@ -7302,8 +7427,13 @@ process.chdir = function (dir) {
     '\u2029': 'u2029'
   };
 
-  /** Used as a reference to the global object */
-  var root = (objectTypes[typeof window] && window) || this;
+  /**
+   * Used as a reference to the global object.
+   *
+   * The `this` value is used if it is the global object to avoid Greasemonkey's
+   * restricted `window` object, otherwise the `window` object is used.
+   */
+  var root = (objectTypes[typeof window] && window !== (this && this.window)) ? window : this;
 
   /** Detect free variable `exports` */
   var freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports;
@@ -7386,26 +7516,6 @@ process.chdir = function (dir) {
   }
 
   /**
-   * A specialized version of `_.map` for arrays without support for callback
-   * shorthands or `this` binding.
-   *
-   * @private
-   * @param {Array} array The array to iterate over.
-   * @param {Function} iteratee The function invoked per iteration.
-   * @returns {Array} Returns the new mapped array.
-   */
-  function arrayMap(array, iteratee) {
-    var index = -1,
-        length = array.length,
-        result = Array(length);
-
-    while (++index < length) {
-      result[index] = iteratee(array[index], index, array);
-    }
-    return result;
-  }
-
-  /**
    * A specialized version of `_.filter` for arrays without support for callback
    * shorthands or `this` binding.
    *
@@ -7425,6 +7535,26 @@ process.chdir = function (dir) {
       if (predicate(value, index, array)) {
         result[++resIndex] = value;
       }
+    }
+    return result;
+  }
+
+  /**
+   * A specialized version of `_.map` for arrays without support for callback
+   * shorthands or `this` binding.
+   *
+   * @private
+   * @param {Array} array The array to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @returns {Array} Returns the new mapped array.
+   */
+  function arrayMap(array, iteratee) {
+    var index = -1,
+        length = array.length,
+        result = Array(length);
+
+    while (++index < length) {
+      result[index] = iteratee(array[index], index, array);
     }
     return result;
   }
@@ -7501,26 +7631,6 @@ process.chdir = function (dir) {
   }
 
   /**
-   * The base implementation of `_.at` without support for strings and individual
-   * key arguments.
-   *
-   * @private
-   * @param {Array|Object} collection The collection to iterate over.
-   * @param {number[]|string[]} [props] The property names or indexes of elements to pick.
-   * @returns {Array} Returns the new array of picked elements.
-   */
-  function baseAt(collection, props) {
-    var index = -1,
-        length = props.length,
-        result = Array(length);
-
-    while(++index < length) {
-      result[index] = collection[props[index]];
-    }
-    return result;
-  }
-
-  /**
    * The base implementation of `compareAscending` which compares values and
    * sorts them in ascending order without guaranteeing a stable sort.
    *
@@ -7589,21 +7699,7 @@ process.chdir = function (dir) {
   }
 
   /**
-   * An implementation of `_.contains` for cache objects that mimics the return
-   * signature of `_.indexOf` by returning `0` if the value is found, else `-1`.
-   *
-   * @private
-   * @param {Object} cache The cache object to inspect.
-   * @param {*} value The value to search for.
-   * @returns {number} Returns `0` if `value` is found, else `-1`.
-   */
-  function cacheIndexOf(cache, value) {
-    return cache.has(value) ? 0 : -1;
-  }
-
-  /**
-   * Used by `_.max` and `_.min` as the default callback when a given collection
-   * is a string value.
+   * Used by `_.max` and `_.min` as the default callback for string values.
    *
    * @private
    * @param {string} string The string to inspect.
@@ -7685,7 +7781,7 @@ process.chdir = function (dir) {
     // for `object` and `other`. See https://github.com/jashkenas/underscore/pull/1247
     //
     // This also ensures a stable sort in V8 and other engines.
-    // See https://code.google.com/p/v8/issues/detail?id=90
+    // See https://code.google.com/p/v8/issues/detail?id=90.
     return object.index - other.index;
   }
 
@@ -7755,7 +7851,7 @@ process.chdir = function (dir) {
    */
   var isHostObject = (function() {
     try {
-      ({ 'toString': 0 } + '');
+      String({ 'toString': 0 } + '');
     } catch(e) {
       return function() { return false; };
     }
@@ -7767,20 +7863,16 @@ process.chdir = function (dir) {
   }());
 
   /**
-   * Checks if the provided arguments are from an iteratee call.
+   * Checks if `value` is valid array-like index.
    *
    * @private
-   * @param {*} value The potential iteratee value argument.
-   * @param {*} index The potential iteratee index or key argument.
-   * @param {*} object The potential iteratee object argument.
-   * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+   * @param {*} value The value to check.
+   * @param {number} [length] The upper bound of a valid index.
+   * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
    */
-  function isIterateeCall(value, index, object) {
-    var indexType = typeof index,
-        objectType = typeof object;
-
-    return (object && (indexType == 'number' || indexType == 'string') &&
-      (objectType == 'function' || objectType == 'object') && object[index] === value) || false;
+  function isIndex(value, length) {
+    value = +value;
+    return value > -1 && value % 1 == 0 && (length == null || value < length);
   }
 
   /**
@@ -8057,31 +8149,31 @@ process.chdir = function (dir) {
     /*------------------------------------------------------------------------*/
 
     /**
-     * Creates a `lodash` object which wraps the given value to enable intuitive
-     * method chaining.
+     * Creates a `lodash` object which wraps `value` to enable intuitive chaining.
+     * Explicit chaining may be enabled by using `_.chain`. Chaining is supported
+     * in custom builds as long as the `_#value` method is implicitly or explicitly
+     * included in the build.
      *
      * In addition to Lo-Dash methods, wrappers also have the following `Array` methods:
      * `concat`, `join`, `pop`, `push`, `reverse`, `shift`, `slice`, `sort`, `splice`,
      * and `unshift`
      *
-     * Chaining is supported in custom builds as long as the `value` method is
-     * implicitly or explicitly included in the build.
-     *
      * The chainable wrapper functions are:
      * `after`, `assign`, `at`, `before`, `bind`, `bindAll`, `bindKey`, `callback`,
      * `chain`, `chunk`, `compact`, `concat`, `constant`, `countBy`, `create`,
      * `curry`, `debounce`, `defaults`, `defer`, `delay`, `difference`, `drop`,
-     * `dropRight`, `dropRightWhile`, `dropWhile`, `filter`, `flatten`, `flattenDeep`,
-     * `flow`, `flowRight`, `forEach`, `forEachRight`, `forIn`, `forInRight`,
-     * `forOwn`, `forOwnRight`, `functions`, `groupBy`, `indexBy`, `initial`,
-     * `intersection`, `invert`, `invoke`, `keys`, `keysIn`, `map`, `mapValues`,
-     * `matches`, `memoize`, `merge`, `mixin`, `negate`, `noop`, `omit`, `once`,
-     * `pairs`, `partial`, `partialRight`, `partition`, `pick`, `pluck`, `property`,
-     * `pull`, `pullAt`, `push`, `range`, `reject`, `remove`, `rest`, `reverse`,
-     * `shuffle`, `slice`, `sort`, `sortBy`, `splice`, `take`, `takeRight`,
-     * `takeRightWhile`, `takeWhile`, `tap`, `throttle`, `thru`, `times`,
-     * `toArray`, `transform`, `union`, `uniq`, `unshift`, `unzip`, `values`,
-     * `valuesIn`, `where`, `without`, `wrap`, `xor`, `zip`, and `zipObject`
+     * `dropRight`, `dropRightWhile`, `dropWhile`, `filter`, `flatten`,
+     * `flattenDeep`, `flow`, `flowRight`, `forEach`, `forEachRight`, `forIn`,
+     * `forInRight`, `forOwn`, `forOwnRight`, `functions`, `groupBy`, `indexBy`,
+     * `initial`, `intersection`, `invert`, `invoke`, `keys`, `keysIn`, `map`,
+     * `mapValues`, `matches`, `memoize`, `merge`, `mixin`, `negate`, `noop`,
+     * `omit`, `once`, `pairs`, `partial`, `partialRight`, `partition`, `pick`,
+     * `pluck`, `property`, `propertyOf`, `pull`, `pullAt`, `push`, `range`,
+     * `rearg`, `reject`, `remove`, `rest`, `reverse`, `shuffle`, `slice`, `sort`,
+     * `sortBy`, `splice`, `take`, `takeRight`, `takeRightWhile`, `takeWhile`,
+     * `tap`, `throttle`, `thru`, `times`, `toArray`, `transform`, `union`, `uniq`,
+     * `unshift`, `unzip`, `values`, `valuesIn`, `where`, `without`, `wrap`, `xor`,
+     * `zip`, and `zipObject`
      *
      * The non-chainable wrapper functions are:
      * `attempt`, `camelCase`, `capitalize`, `clone`, `cloneDeep`, `contains`,
@@ -8091,16 +8183,14 @@ process.chdir = function (dir) {
      * `isElement`, `isEmpty`, `isEqual`, `isError`, `isFinite`, `isFunction`,
      * `isNative`, `isNaN`, `isNull`, `isNumber`, `isObject`, `isPlainObject`,
      * `isRegExp`, `isString`, `isUndefined`, `join`, `kebabCase`, `last`,
-     * `lastIndexOf`, `max`, `min`, `noConflict`, `now`, `pad`, `padLeft`,
-     * `padRight`, `parseInt`, `pop`, `random`, `reduce`, `reduceRight`, `repeat`,
-     * `result`, `runInContext`, `shift`, `size`, `snakeCase`, `some`, `sortedIndex`,
+     * `lastIndexOf`, `max`, `min`, `noConflict`, `now`, `pad`, `padLeft`, `padRight`,
+     * `parseInt`, `pop`, `random`, `reduce`, `reduceRight`, `repeat`, `result`,
+     * `runInContext`, `shift`, `size`, `snakeCase`, `some`, `sortedIndex`,
      * `sortedLastIndex`, `startsWith`, `template`, `trim`, `trimLeft`, `trimRight`,
      * `trunc`, `unescape`, `uniqueId`, `value`, and `words`
      *
-     * The wrapper function `sample` will return a wrapped value when `n` is
-     * provided, otherwise it will return an unwrapped value.
-     *
-     * Explicit chaining can be enabled by using the `_.chain` method.
+     * The wrapper function `sample` will return a wrapped value when `n` is provided,
+     * otherwise it will return an unwrapped value.
      *
      * @name _
      * @constructor
@@ -8125,15 +8215,29 @@ process.chdir = function (dir) {
      * // => true
      */
     function lodash(value) {
-      if (value && typeof value == 'object') {
+      if (value && typeof value == 'object' && !isArray(value)) {
         if (value instanceof LodashWrapper) {
           return value;
         }
-        if (!isArray(value) && hasOwnProperty.call(value, '__wrapped__')) {
+        if (hasOwnProperty.call(value, '__wrapped__')) {
           return new LodashWrapper(value.__wrapped__, value.__chain__, baseSlice(value.__queue__));
         }
       }
       return new LodashWrapper(value);
+    }
+
+    /**
+     * The base constructor for creating `lodash` wrapper objects.
+     *
+     * @private
+     * @param {*} value The value to wrap.
+     * @param {boolean} [chainAll=false] Enable chaining for all wrapper methods.
+     * @param {Array} [queue=[]] Actions to peform to resolve the unwrapped value.
+     */
+    function LodashWrapper(value, chainAll, queue) {
+      this.__chain__ = !!chainAll;
+      this.__queue__ = queue || [];
+      this.__wrapped__ = value;
     }
 
     /**
@@ -8244,12 +8348,11 @@ process.chdir = function (dir) {
        * Detect if `Array#shift` and `Array#splice` augment array-like objects
        * correctly.
        *
-       * Firefox < 10, IE compatibility mode, and IE < 9 have buggy Array `shift()`
+       * Firefox < 10, compatibility modes of IE 8, and IE < 9 have buggy Array `shift()`
        * and `splice()` functions that fail to remove the last element, `value[0]`,
        * of array-like objects even though the `length` property is set to `0`.
-       * The `shift()` method is buggy in IE 8 compatibility mode, while `splice()`
-       * is buggy regardless of mode in IE < 9 and buggy in compatibility mode
-       * in IE 9.
+       * The `shift()` method is buggy in compatibility modes of IE 8, while `splice()`
+       * is buggy regardless of mode in IE < 9.
        *
        * @memberOf _.support
        * @type boolean
@@ -8362,6 +8465,272 @@ process.chdir = function (dir) {
     /*------------------------------------------------------------------------*/
 
     /**
+     * Creates a lazy wrapper object which wraps `value` to enable lazy evaluation.
+     *
+     * @private
+     * @param {*} value The value to wrap.
+     */
+    function LazyWrapper(value) {
+      this.dir = 1;
+      this.dropCount = 0;
+      this.filtered = false;
+      this.iteratees = null;
+      this.takeCount = POSITIVE_INFINITY;
+      this.views = null;
+      this.wrapped = value;
+    }
+
+    /**
+     * Creates a clone of the lazy wrapper object.
+     *
+     * @private
+     * @name clone
+     * @memberOf LazyWrapper
+     * @returns {Object} Returns the cloned `LazyWrapper` object.
+     */
+    function lazyClone() {
+      var iteratees = this.iteratees,
+          views = this.views,
+          result = new LazyWrapper(this.wrapped);
+
+      result.dir = this.dir;
+      result.dropCount = this.dropCount;
+      result.filtered = this.filtered;
+      result.iteratees = iteratees ? baseSlice(iteratees) : null;
+      result.takeCount = this.takeCount;
+      result.views = views ? baseSlice(views) : null;
+      return result;
+    }
+
+    /**
+     * Reverses the direction of lazy iteration.
+     *
+     * @private
+     * @name reverse
+     * @memberOf LazyWrapper
+     * @returns {Object} Returns the new reversed `LazyWrapper` object.
+     */
+    function lazyReverse() {
+      var filtered = this.filtered,
+          result = filtered ? new LazyWrapper(this) : this.clone();
+
+      result.dir = this.dir * -1;
+      result.filtered = filtered;
+      return result;
+    }
+
+    /**
+     * Extracts the unwrapped value from its lazy wrapper.
+     *
+     * @private
+     * @name value
+     * @memberOf LazyWrapper
+     * @returns {*} Returns the unwrapped value.
+     */
+    function lazyValue() {
+      var array = this.wrapped.value(),
+          dir = this.dir,
+          isRight = dir < 0,
+          length = array.length,
+          view = getView(0, length, this.views),
+          start = view.start,
+          end = view.end,
+          dropCount = this.dropCount,
+          takeCount = nativeMin(end - start, this.takeCount - dropCount),
+          index = isRight ? end : start - 1,
+          iteratees = this.iteratees,
+          iterLength = iteratees ? iteratees.length : 0,
+          resIndex = 0,
+          result = [];
+
+      outer:
+      while (length-- && resIndex < takeCount) {
+        index += dir;
+
+        var iterIndex = -1,
+            value = array[index];
+
+        while (++iterIndex < iterLength) {
+          var data = iteratees[iterIndex],
+              iteratee = data.iteratee,
+              computed = iteratee(value, index, array),
+              type = data.type;
+
+          if (type == LAZY_MAP_FLAG) {
+            value = computed;
+          } else if (!computed) {
+            if (type == LAZY_FILTER_FLAG) {
+              continue outer;
+            } else {
+              break outer;
+            }
+          }
+        }
+        if (dropCount) {
+          dropCount--;
+        } else {
+          result[resIndex++] = value;
+        }
+      }
+      return isRight ? result.reverse() : result;
+    }
+
+    /*------------------------------------------------------------------------*/
+
+    /**
+     * Creates a cache object to store key/value pairs.
+     *
+     * @private
+     * @static
+     * @name Cache
+     * @memberOf _.memoize
+     */
+    function MapCache() {
+      this.__data__ = {};
+    }
+
+    /**
+     * Gets the cached value for `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf _.memoize.Cache
+     * @param {string} key The key of the value to retrieve.
+     * @returns {*} Returns the cached value.
+     */
+    function mapGet(key) {
+      return this.__data__[key];
+    }
+
+    /**
+     * Checks if a cached value for `key` exists.
+     *
+     * @private
+     * @name has
+     * @memberOf _.memoize.Cache
+     * @param {string} key The name of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function mapHas(key) {
+      return key != '__proto__' && hasOwnProperty.call(this.__data__, key);
+    }
+
+    /**
+     * Adds `value` to `key` of the cache.
+     *
+     * @private
+     * @name set
+     * @memberOf _.memoize.Cache
+     * @param {string} key The key of the value to cache.
+     * @param {*} value The value to cache.
+     * @returns {Object} Returns the cache object.
+     */
+    function mapSet(key, value) {
+      if (key != '__proto__') {
+        this.__data__[key] = value;
+      }
+      return this;
+    }
+
+    /*------------------------------------------------------------------------*/
+
+    /**
+     *
+     * Creates a cache object to store unique values.
+     *
+     * @private
+     * @param {Array} [values] The values to cache.
+     */
+    function SetCache(values) {
+      var length = values ? values.length : 0;
+
+      this.data = { 'number': {}, 'set': new Set };
+      while (length--) {
+        this.push(values[length]);
+      }
+    }
+
+    /**
+     * Checks if `value` is in `cache` mimicking the return signature of
+     * `_.indexOf` by returning `0` if the value is found, else `-1`.
+     *
+     * @private
+     * @param {Object} cache The cache to search.
+     * @param {*} value The value to search for.
+     * @returns {number} Returns `0` if `value` is found, else `-1`.
+     */
+    function cacheIndexOf(cache, value) {
+      var type = typeof value,
+          data = cache.data,
+          result = type == 'number' ? data[type][value] : data.set.has(value);
+
+      return result ? 0 : -1;
+    }
+
+    /**
+     * Adds `value` to the cache.
+     *
+     * @private
+     * @name push
+     * @memberOf SetCache
+     * @param {*} value The value to cache.
+     */
+    function cachePush(value) {
+      var data = this.data,
+          type = typeof value;
+
+      if (type == 'number') {
+        data[type][value] = true;
+      } else {
+        data.set.add(value);
+      }
+    }
+
+    /*------------------------------------------------------------------------*/
+
+    /**
+     * A specialized version of `_.max` for arrays without support for iteratees.
+     *
+     * @private
+     * @param {Array} array The array to iterate over.
+     * @returns {*} Returns the maximum value.
+     */
+    function arrayMax(array) {
+      var index = -1,
+          length = array.length,
+          result = NEGATIVE_INFINITY;
+
+      while (++index < length) {
+        var value = array[index];
+        if (value > result) {
+          result = value;
+        }
+      }
+      return result;
+    }
+
+    /**
+     * A specialized version of `_.min` for arrays without support for iteratees.
+     *
+     * @private
+     * @param {Array} array The array to iterate over.
+     * @returns {*} Returns the minimum value.
+     */
+    function arrayMin(array) {
+      var index = -1,
+          length = array.length,
+          result = POSITIVE_INFINITY;
+
+      while (++index < length) {
+        var value = array[index];
+        if (value < result) {
+          result = value;
+        }
+      }
+      return result;
+    }
+
+    /**
      * Used by `_.defaults` to customize its `_.assign` use.
      *
      * @private
@@ -8370,9 +8739,7 @@ process.chdir = function (dir) {
      * @returns {*} Returns the value to assign to the destination object.
      */
     function assignDefaults(objectValue, sourceValue) {
-      return typeof objectValue == 'undefined'
-        ? sourceValue
-        : objectValue;
+      return typeof objectValue == 'undefined' ? sourceValue : objectValue;
     }
 
     /**
@@ -8419,6 +8786,34 @@ process.chdir = function (dir) {
     }
 
     /**
+     * The base implementation of `_.at` without support for strings and individual
+     * key arguments.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {number[]|string[]} [props] The property names or indexes of elements to pick.
+     * @returns {Array} Returns the new array of picked elements.
+     */
+    function baseAt(collection, props) {
+      var index = -1,
+          length = collection ? collection.length : 0,
+          isArr = isLength(length),
+          propsLength = props.length,
+          result = Array(propsLength);
+
+      while(++index < propsLength) {
+        var key = props[index];
+        if (isArr) {
+          key = parseFloat(key);
+          result[index] = isIndex(key, length) ? collection[key] : undefined;
+        } else {
+          result[index] = collection[key];
+        }
+      }
+      return result;
+    }
+
+    /**
      * The base implementation of `_.bindAll` without support for individual
      * method name arguments.
      *
@@ -8433,7 +8828,7 @@ process.chdir = function (dir) {
 
       while (++index < length) {
         var key = methodNames[index];
-        object[key] = createWrapper(object[key], BIND_FLAG, null, object);
+        object[key] = createWrapper(object[key], BIND_FLAG, object);
       }
       return object;
     }
@@ -8511,12 +8906,17 @@ process.chdir = function (dir) {
      * @param {*} value The value to clone.
      * @param {boolean} [isDeep=false] Specify a deep clone.
      * @param {Function} [customizer] The function to customize cloning values.
+     * @param {string} [key] The key of `value`.
+     * @param {Object} [object] The object `value` belongs to.
      * @param {Array} [stackA=[]] Tracks traversed source objects.
      * @param {Array} [stackB=[]] Associates clones with source counterparts.
      * @returns {*} Returns the cloned value.
      */
-    function baseClone(value, isDeep, customizer, stackA, stackB) {
-      var result = customizer ? customizer(value) : undefined;
+    function baseClone(value, isDeep, customizer, key, object, stackA, stackB) {
+      var result;
+      if (customizer) {
+        result = object ? customizer(value, key, object) : customizer(value);
+      }
       if (typeof result != 'undefined') {
         return result;
       }
@@ -8526,7 +8926,12 @@ process.chdir = function (dir) {
         result = initArrayClone(value, isDeep);
       } else if (isObject(value)) {
         result = initObjectClone(value, isDeep);
-        value = (isDeep && toString.call(result) == objectClass) ? value : result;
+        if (result === null) {
+          isDeep = false;
+          result = {};
+        } else if (isDeep) {
+          isDeep = toString.call(result) == objectClass;
+        }
       }
       if (!isDeep || result === value) {
         return result;
@@ -8547,11 +8952,8 @@ process.chdir = function (dir) {
       stackB.push(result);
 
       // recursively populate clone (susceptible to call stack limits)
-      (isArr ? arrayEach : baseForOwn)(value, function(valValue, key) {
-        var valClone = customizer ? customizer(valValue, key) : undefined;
-        result[key] = typeof valClone == 'undefined'
-          ? baseClone(valValue, isDeep, null, stackA, stackB)
-          : valClone;
+      (isArr ? arrayEach : baseForOwn)(value, function(subValue, key) {
+        result[key] = baseClone(subValue, isDeep, customizer, key, value, stackA, stackB);
       });
       return result;
     }
@@ -8583,23 +8985,6 @@ process.chdir = function (dir) {
     }
 
     /**
-     * The base implementation of `_.curry` and `_.curryRight` which handles
-     * resolving the default arity of `func`.
-     *
-     * @private
-     * @param {Function} func The function to curry.
-     * @param {number} bitmask The bitmask of flags to compose.
-     * @param {number} [arity=func.length] The arity of `func`.
-     * @returns {Function} Returns the new curried function.
-     */
-    function baseCurry(func, bitmask, arity) {
-      if (typeof arity != 'number') {
-        arity = arity == null ? (func ? func.length : 0) : nativeMax(+arity || 0, 0);
-      }
-      return createWrapper(func, bitmask, arity);
-    }
-
-    /**
      * The base implementation of `_.difference` which accepts a single array
      * of values to exclude.
      *
@@ -8615,15 +9000,15 @@ process.chdir = function (dir) {
       }
       var index = -1,
           indexOf = getIndexOf(),
-          prereq = indexOf == baseIndexOf,
-          isLarge = prereq && createCache && values && values.length >= 200,
-          isCommon = prereq && !isLarge,
+          isCommon = indexOf == baseIndexOf,
+          cache = isCommon && values.length >= 200 && createCache(values),
           result = [],
           valuesLength = values.length;
 
-      if (isLarge) {
+      if (cache) {
         indexOf = cacheIndexOf;
-        values = createCache(values);
+        isCommon = false;
+        values = cache;
       }
       outer:
       while (++index < length) {
@@ -8656,7 +9041,7 @@ process.chdir = function (dir) {
      */
     function baseEach(collection, iteratee) {
       var length = collection ? collection.length : 0;
-      if (!(typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER)) {
+      if (!isLength(length)) {
         return baseForOwn(collection, iteratee);
       }
       var index = -1,
@@ -8681,7 +9066,7 @@ process.chdir = function (dir) {
      */
     function baseEachRight(collection, iteratee) {
       var length = collection ? collection.length : 0;
-      if (!(typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER)) {
+      if (!isLength(length)) {
         return baseForOwnRight(collection, iteratee);
       }
       var iterable = toObject(collection);
@@ -9126,7 +9511,7 @@ process.chdir = function (dir) {
           length = collection ? collection.length : 0,
           result = [];
 
-      if (typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER) {
+      if (isLength(length)) {
         result.length = length;
       }
       baseEach(collection, function(value) {
@@ -9170,8 +9555,8 @@ process.chdir = function (dir) {
       var isSrcArr = isArrayLike(source);
 
       (isSrcArr ? arrayEach : baseForOwn)(source, function(srcValue, key, source) {
-        var isArr = srcValue && isArrayLike(srcValue),
-            isObj = srcValue && isPlainObject(srcValue),
+        var isArr = isArrayLike(srcValue),
+            isObj = isPlainObject(srcValue),
             value = object[key];
 
         if (!(isArr || isObj)) {
@@ -9218,31 +9603,6 @@ process.chdir = function (dir) {
     }
 
     /**
-     * The base implementation of `_.partial` and `_.partialRight` which accepts
-     * an array of arguments to partially apply and handles resolving the arity
-     * of `func`.
-     *
-     * @private
-     * @param {Function} func The function to partially apply arguments to.
-     * @param {number} bitmask The bitmask of flags to compose.
-     * @param {Array} args The arguments to be partially applied.
-     * @param {Array} holders The `args` placeholder indexes.
-     * @param {*} [thisArg] The `this` binding of `func`.
-     * @returns {Function} Returns the new partially applied function.
-     */
-    function basePartial(func, bitmask, args, holders, thisArg) {
-      if (func) {
-        var data = getData(func),
-            arity = data ? data[2] : func.length;
-
-        arity = nativeMax(arity - args.length, 0);
-      }
-      return (bitmask & PARTIAL_FLAG)
-        ? createWrapper(func, bitmask, arity, thisArg, args, holders)
-        : createWrapper(func, bitmask, arity, thisArg, null, null, args, holders);
-    }
-
-    /**
      * The base implementation of `_.pullAt` without support for individual
      * index arguments.
      *
@@ -9258,7 +9618,7 @@ process.chdir = function (dir) {
       indexes.sort(baseCompareAscending);
       while (length--) {
         var index = parseFloat(indexes[length]);
-        if (index != previous && index > -1 && index % 1 == 0) {
+        if (index != previous && isIndex(index)) {
           var previous = index;
           splice.call(array, index, 1);
         }
@@ -9391,15 +9751,16 @@ process.chdir = function (dir) {
       var index = -1,
           indexOf = getIndexOf(),
           length = array.length,
-          prereq = indexOf == baseIndexOf,
-          isLarge = prereq && createCache && length >= 200,
-          isCommon = prereq && !isLarge,
+          isCommon = indexOf == baseIndexOf,
+          isLarge = isCommon && length >= 200,
+          seen = isLarge && createCache(),
           result = [];
 
-      if (isLarge) {
-        var seen = createCache();
+      if (seen) {
         indexOf = cacheIndexOf;
+        isCommon = false;
       } else {
+        isLarge = false;
         seen = iteratee ? [] : result;
       }
       outer:
@@ -9482,28 +9843,40 @@ process.chdir = function (dir) {
     }
 
     /**
+     * Used by `_.matches` to clone `source` values, letting uncloneable values
+     * passthu instead of returning empty objects.
+     *
+     * @private
+     * @param {*} value The value to clone.
+     * @returns {*} Returns the cloned value.
+     */
+    function clonePassthru(value) {
+      return isCloneable(value) ? undefined : value;
+    }
+
+    /**
      * Creates an array that is the composition of partially applied arguments,
      * placeholders, and provided arguments into a single array of arguments.
      *
      * @private
-     * @param {Array} partialArgs The arguments to prepend to those provided.
-     * @param {Array} partialHolders The `partialArgs` placeholder indexes.
      * @param {Array|Object} args The provided arguments.
+     * @param {Array} partials The arguments to prepend to those provided.
+     * @param {Array} holders The `partials` placeholder indexes.
      * @returns {Array} Returns the new array of composed arguments.
      */
-    function composeArgs(partialArgs, partialHolders, args) {
-      var holdersLength = partialHolders.length,
+    function composeArgs(args, partials, holders) {
+      var holdersLength = holders.length,
           argsIndex = -1,
           argsLength = nativeMax(args.length - holdersLength, 0),
           leftIndex = -1,
-          leftLength = partialArgs.length,
+          leftLength = partials.length,
           result = Array(argsLength + leftLength);
 
       while (++leftIndex < leftLength) {
-        result[leftIndex] = partialArgs[leftIndex];
+        result[leftIndex] = partials[leftIndex];
       }
       while (++argsIndex < holdersLength) {
-        result[partialHolders[argsIndex]] = args[argsIndex];
+        result[holders[argsIndex]] = args[argsIndex];
       }
       while (argsLength--) {
         result[leftIndex++] = args[argsIndex++];
@@ -9516,18 +9889,18 @@ process.chdir = function (dir) {
      * is tailored for `_.partialRight`.
      *
      * @private
-     * @param {Array} partialRightArgs The arguments to append to those provided.
-     * @param {Array} partialRightHolders The `partialRightArgs` placeholder indexes.
      * @param {Array|Object} args The provided arguments.
+     * @param {Array} partials The arguments to append to those provided.
+     * @param {Array} holders The `partials` placeholder indexes.
      * @returns {Array} Returns the new array of composed arguments.
      */
-    function composeArgsRight(partialRightArgs, partialRightHolders, args) {
+    function composeArgsRight(args, partials, holders) {
       var holdersIndex = -1,
-          holdersLength = partialRightHolders.length,
+          holdersLength = holders.length,
           argsIndex = -1,
           argsLength = nativeMax(args.length - holdersLength, 0),
           rightIndex = -1,
-          rightLength = partialRightArgs.length,
+          rightLength = partials.length,
           result = Array(argsLength + rightLength);
 
       while (++argsIndex < argsLength) {
@@ -9535,10 +9908,10 @@ process.chdir = function (dir) {
       }
       var pad = argsIndex;
       while (++rightIndex < rightLength) {
-        result[pad + rightIndex] = partialRightArgs[rightIndex];
+        result[pad + rightIndex] = partials[rightIndex];
       }
       while (++holdersIndex < holdersLength) {
-        result[pad + partialRightHolders[holdersIndex]] = args[argsIndex++];
+        result[pad + holders[holdersIndex]] = args[argsIndex++];
       }
       return result;
     }
@@ -9629,21 +10002,14 @@ process.chdir = function (dir) {
     }
 
     /**
-     * Creates a cache object to optimize linear searches of large arrays.
+     * Creates a `Set` cache object to optimize linear searches of large arrays.
      *
      * @private
-     * @param {Array} [array=[]] The array to search.
-     * @returns {Object} Returns the new cache object.
+     * @param {Array} [values] The values to cache.
+     * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
      */
-    var createCache = Set && function(array) {
-      var cache = new Set,
-          length = array ? array.length : 0;
-
-      cache.push = cache.add;
-      while (length--) {
-        cache.push(array[length]);
-      }
-      return cache;
+    var createCache = !Set ? constant(null) : function(values) {
+      return new SetCache(values);
     };
 
     /**
@@ -9694,15 +10060,16 @@ process.chdir = function (dir) {
      * @private
      * @param {Function|string} func The function or method name to reference.
      * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
-     * @param {number} arity The arity of `func`.
      * @param {*} [thisArg] The `this` binding of `func`.
-     * @param {Array} [partialArgs] The arguments to prepend to those provided to the new function.
-     * @param {Array} [partialHolders] The `partialArgs` placeholder indexes.
-     * @param {Array} [partialRightArgs] The arguments to append to those provided to the new function.
-     * @param {Array} [partialRightHolders] The `partialRightArgs` placeholder indexes.
+     * @param {Array} [partials] The arguments to prepend to those provided to the new function.
+     * @param {Array} [holders] The `partials` placeholder indexes.
+     * @param {Array} [partialsRight] The arguments to append to those provided to the new function.
+     * @param {Array} [holdersRight] The `partialsRight` placeholder indexes.
+     * @param {Array} [argPos] The argument positions of the new function.
+     * @param {number} arity The arity of `func`.
      * @returns {Function} Returns the new wrapped function.
      */
-    function createHybridWrapper(func, bitmask, arity, thisArg, partialArgs, partialHolders, partialRightArgs, partialRightHolders) {
+    function createHybridWrapper(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, arity) {
       var isBind = bitmask & BIND_FLAG,
           isBindKey = bitmask & BIND_KEY_FLAG,
           isCurry = bitmask & CURRY_FLAG,
@@ -9720,23 +10087,27 @@ process.chdir = function (dir) {
         while (index--) {
           args[index] = arguments[index];
         }
-        if (partialArgs) {
-          args = composeArgs(partialArgs, partialHolders, args);
+        if (argPos) {
+          args = arrayReduceRight(argPos, reorder, args);
         }
-        if (partialRightArgs) {
-          args = composeArgsRight(partialRightArgs, partialRightHolders, args);
+        if (partials) {
+          args = composeArgs(args, partials, holders);
+        }
+        if (partialsRight) {
+          args = composeArgsRight(args, partialsRight, holdersRight);
         }
         if (isCurry || isCurryRight) {
           var placeholder = wrapper.placeholder,
-              holders = replaceHolders(args, placeholder);
+              argsHolders = replaceHolders(args, placeholder);
 
-          length -= holders.length;
+          length -= argsHolders.length;
           if (length < arity) {
-            var newArity = nativeMax(arity - length, 0),
-                newPartialArgs = isCurry ? args : null,
-                newPartialHolders = isCurry ? holders : null,
-                newPartialRightArgs = isCurry ? null : args,
-                newPartialRightHolders = isCurry ? null : holders;
+            var newArgPos = argPos ? baseSlice(argPos) : null,
+                newArity = nativeMax(arity - length, 0),
+                newsHolders = isCurry ? argsHolders : null,
+                newHoldersRight = isCurry ? null : argsHolders,
+                newPartials = isCurry ? args : null,
+                newPartialsRight = isCurry ? null : args;
 
             bitmask |= (isCurry ? PARTIAL_FLAG : PARTIAL_RIGHT_FLAG);
             bitmask &= ~(isCurry ? PARTIAL_RIGHT_FLAG : PARTIAL_FLAG);
@@ -9744,9 +10115,9 @@ process.chdir = function (dir) {
             if (!isCurryBound) {
               bitmask &= ~(BIND_FLAG | BIND_KEY_FLAG);
             }
-            var result = createHybridWrapper(func, bitmask, newArity, thisArg, newPartialArgs, newPartialHolders, newPartialRightArgs, newPartialRightHolders);
+            var result = createHybridWrapper(func, bitmask, thisArg, newPartials, newsHolders, newPartialsRight, newHoldersRight, newArgPos, newArity);
             result.placeholder = placeholder;
-            return setData(result, [func, bitmask, newArity, thisArg, newPartialArgs, newPartialHolders, newPartialRightArgs, newPartialRightHolders]);
+            return result;
           }
         }
         var thisBinding = isBind ? thisArg : this;
@@ -9789,25 +10160,25 @@ process.chdir = function (dir) {
      * @private
      * @param {Function} func The function to partially apply arguments to.
      * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
-     * @param {Array} partialArgs The arguments to prepend to those provided to the new function.
+     * @param {Array} partials The arguments to prepend to those provided to the new function.
      * @param {*} [thisArg] The `this` binding of `func`.
      * @returns {Function} Returns the new bound function.
      */
-    function createPartialWrapper(func, bitmask, partialArgs, thisArg) {
+    function createPartialWrapper(func, bitmask, partials, thisArg) {
       var isBind = bitmask & BIND_FLAG,
           Ctor = createCtorWrapper(func);
 
       function wrapper() {
         // avoid `arguments` object use disqualifying optimizations by
-        // converting it to an array before passing it to `composeArgs`
+        // converting it to an array before providing it to `composeArgs`
         var argsIndex = -1,
             argsLength = arguments.length,
             leftIndex = -1,
-            leftLength = partialArgs.length,
+            leftLength = partials.length,
             args = Array(argsLength + leftLength);
 
         while (++leftIndex < leftLength) {
-          args[leftIndex] = partialArgs[leftIndex];
+          args[leftIndex] = partials[leftIndex];
         }
         while (argsLength--) {
           args[leftIndex++] = arguments[++argsIndex];
@@ -9825,37 +10196,44 @@ process.chdir = function (dir) {
      * @param {Function|string} func The function or method name to reference.
      * @param {number} bitmask The bitmask of flags.
      *  The bitmask may be composed of the following flags:
-     *   1  - `_.bind`
-     *   2  - `_.bindKey`
-     *   4  - `_.curry`
-     *   8  - `_.curryRight`
-     *   16 - `_.curry` or `_.curryRight` of a bound function
-     *   32 - `_.partial`
-     *   64 - `_.partialRight`
-     * @param {number} arity The arity of `func`.
+     *     1 - `_.bind`
+     *     2 - `_.bindKey`
+     *     4 - `_.curry`
+     *     8 - `_.curryRight`
+     *    16 - `_.curry` or `_.curryRight` of a bound function
+     *    32 - `_.partial`
+     *    64 - `_.partialRight`
+     *   128 - `_.rearg`
      * @param {*} [thisArg] The `this` binding of `func`.
-     * @param {Array} [partialArgs] The arguments to prepend to those provided to the new function.
-     * @param {Array} [partialHolders] The `partialArgs` placeholder indexes.
-     * @param {Array} [partialRightArgs] The arguments to append to those provided to the new function.
-     * @param {Array} [partialRightHolders] The `partialRightArgs` placeholder indexes.
+     * @param {Array} [partials] The arguments to be partially applied.
+     * @param {Array} [holders] The `partialArgs` placeholder indexes.
+     * @param {Array} [argPos] The argument positions of the new function.
+     * @param {number} [arity] The arity of `func`.
      * @returns {Function} Returns the new wrapped function.
      */
-    function createWrapper(func, bitmask, arity, thisArg, partialArgs, partialHolders, partialRightArgs, partialRightHolders) {
+    function createWrapper(func, bitmask, thisArg, partials, holders, argPos, arity) {
       var isBindKey = bitmask & BIND_KEY_FLAG;
       if (!isBindKey && !isFunction(func)) {
         throw new TypeError(FUNC_ERROR_TEXT);
       }
-      var isPartial = bitmask & PARTIAL_FLAG;
-      if (isPartial && !partialArgs.length) {
-        bitmask &= ~PARTIAL_FLAG;
-        isPartial = false;
-        partialArgs = partialHolders = null;
+      var length = partials ? partials.length : 0;
+      if (!length) {
+        bitmask &= ~(PARTIAL_FLAG | PARTIAL_RIGHT_FLAG);
+        partials = holders = null;
       }
-      var isPartialRight = bitmask & PARTIAL_RIGHT_FLAG;
-      if (isPartialRight && !partialRightArgs.length) {
-        bitmask &= ~PARTIAL_RIGHT_FLAG;
-        isPartialRight = false;
-        partialRightArgs = partialRightHolders = null;
+      if (partials && !holders) {
+        holders = [];
+      }
+      var oldPartials = partials,
+          oldHolders = holders,
+          isPartial = bitmask & PARTIAL_FLAG,
+          isPartialRight = bitmask & PARTIAL_RIGHT_FLAG;
+
+      if (!isPartial) {
+        var partialsRight = partials,
+            holdersRight = holders;
+
+        partials = holders = null;
       }
       var data = (data = !isBindKey && getData(func)) && data !== true && data;
       if (data) {
@@ -9867,45 +10245,59 @@ process.chdir = function (dir) {
         func = data[0];
         bitmask |= funcBitmask;
 
-        // use metadata `arity` if not provided
-        if (arity == null) {
-          arity = data[2];
-        }
         // use metadata `thisArg` if available
         if (funcIsBind) {
-          thisArg = data[3];
+          thisArg = data[2];
         }
         // set if currying a bound function
         if (!isBind && funcIsBind) {
           bitmask |= CURRY_BOUND_FLAG;
         }
-        // append partial left arguments
-        var funcArgs = data[4];
-        if (funcArgs) {
-          var funcHolders = data[5];
-          partialArgs = isPartial ? composeArgs(funcArgs, funcHolders, partialArgs) : baseSlice(funcArgs);
-          partialHolders = isPartial ? replaceHolders(partialArgs, PLACEHOLDER) : baseSlice(funcHolders);
+        // compose partial arguments
+        var value = data[3];
+        if (value) {
+          var funcHolders = data[4];
+          partials = isPartial ? composeArgs(partials, value, funcHolders) : baseSlice(value);
+          holders = isPartial ? replaceHolders(partials, PLACEHOLDER) : baseSlice(funcHolders);
         }
-        // prepend partial right arguments
-        funcArgs = data[6];
-        if (funcArgs) {
-          funcHolders = data[7];
-          partialRightArgs = isPartialRight ? composeArgsRight(funcArgs, funcHolders, partialRightArgs) : baseSlice(funcArgs);
-          partialRightHolders = isPartialRight ? replaceHolders(partialRightArgs, PLACEHOLDER) : baseSlice(funcHolders);
+        // compose partial right arguments
+        value = data[5];
+        if (value) {
+          funcHolders = data[6];
+          partialsRight = isPartialRight ? composeArgsRight(partialsRight, value, funcHolders) : baseSlice(value);
+          holdersRight = isPartialRight ? replaceHolders(partialsRight, PLACEHOLDER) : baseSlice(funcHolders);
+        }
+        // append argument positions
+        value = data[7];
+        if (value) {
+          value = baseSlice(value);
+          if (argPos) {
+            push.apply(value, argPos);
+          }
+          argPos = value;
+        }
+        // use metadata `arity` if not provided
+        if (arity == null) {
+          arity = data[8];
         }
       }
       if (arity == null) {
         arity = isBindKey ? 0 : func.length;
+      } else {
+        arity = nativeMax(+arity || 0, 0);
+      }
+      if (oldPartials) {
+        arity = nativeMax(arity - (oldPartials.length - oldHolders.length), 0);
       }
       if (bitmask == BIND_FLAG) {
         var result = createBindWrapper(func, thisArg);
-      } else if ((bitmask == PARTIAL_FLAG || bitmask == (BIND_FLAG | PARTIAL_FLAG)) && !partialHolders.length) {
-        result = createPartialWrapper(func, bitmask, partialArgs, thisArg);
+      } else if ((bitmask == PARTIAL_FLAG || bitmask == (BIND_FLAG | PARTIAL_FLAG)) && !holders.length) {
+        result = createPartialWrapper(func, bitmask, partials, thisArg);
       } else {
-        result = createHybridWrapper(func, bitmask, arity, thisArg, partialArgs, partialHolders, partialRightArgs, partialRightHolders);
+        result = createHybridWrapper(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, arity);
       }
       var setter = data ? baseSetData : setData;
-      return setter(result, [func, bitmask, arity, thisArg, partialArgs, partialHolders, partialRightArgs, partialRightHolders]);
+      return setter(result, [func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, arity]);
     }
 
     /**
@@ -9950,17 +10342,45 @@ process.chdir = function (dir) {
     }
 
     /**
+     * Gets the view, applying any `transforms` to the `start` and `end` positions.
+     *
+     * @private
+     * @param {number} start The start of the view.
+     * @param {number} end The end of the view.
+     * @param {Array} [transforms] The transformations to apply to the view.
+     * @returns {Object} Returns an object containing the `start` and `end`
+     *  positions of the view.
+     */
+    function getView(start, end, transforms) {
+      var index = -1,
+          length = transforms ? transforms.length : 0;
+
+      while (++index < length) {
+        var data = transforms[index],
+            size = data.size;
+
+        switch (data.type) {
+          case 'drop':      start += size; break;
+          case 'dropRight': end -= size; break;
+          case 'take':      end = nativeMin(end, start + size); break;
+          case 'takeRight': start = nativeMax(start, end - size); break;
+        }
+      }
+      return { 'start': start, 'end': end };
+    }
+
+    /**
      * Initializes an array clone.
      *
      * @private
-     * @param {*} value The value to clone.
+     * @param {Array} array The array to clone.
      * @param {boolean} [isDeep=false] Specify a deep clone.
-     * @returns {*} Returns the initialized clone value.
+     * @returns {Array} Returns the initialized array clone.
      */
     function initArrayClone(array, isDeep) {
       var index = -1,
           length = array.length,
-          result = array.constructor(length);
+          result = new array.constructor(length);
 
       if (!isDeep) {
         while (++index < length) {
@@ -9979,16 +10399,16 @@ process.chdir = function (dir) {
      * Initializes an object clone.
      *
      * @private
-     * @param {*} value The value to clone.
+     * @param {Object} object The object to clone.
      * @param {boolean} [isDeep=false] Specify a deep clone.
-     * @returns {*} Returns the initialized clone value.
+     * @returns {null|Object} Returns the initialized object clone.
      */
     function initObjectClone(object, isDeep) {
-      var className = toString.call(object);
-      if (!cloneableClasses[className] || isHostObject(object)) {
-        return object;
+      if (!isCloneable(object)) {
+        return null;
       }
       var Ctor = object.constructor,
+          className = toString.call(object),
           isArgs = className == argsClass || (!lodash.support.argsClass && isArguments(object)),
           isObj = className == objectClass;
 
@@ -10025,7 +10445,7 @@ process.chdir = function (dir) {
           return new Ctor(object);
 
         case regexpClass:
-          result = Ctor(object.source, reFlags.exec(object));
+          result = new Ctor(object.source, reFlags.exec(object));
           result.lastIndex = object.lastIndex;
       }
       return result;
@@ -10039,8 +10459,53 @@ process.chdir = function (dir) {
      * @returns {boolean} Returns `true` if `value` is an array-like object, else `false`.
      */
     function isArrayLike(value) {
-      return (value && typeof value == 'object' && typeof value.length == 'number' &&
-        arrayLikeClasses[toString.call(value)]) || false;
+      return (value && typeof value == 'object' && isLength(value.length) &&
+        (arrayLikeClasses[toString.call(value)] || (!lodash.support.argsClass && isArguments(value)))) || false;
+    }
+
+    /**
+     * Checks if `value` is cloneable.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is cloneable, else `false`.
+     */
+    function isCloneable(value) {
+      return (value && cloneableClasses[toString.call(value)] && !isHostObject(value)) || false;
+    }
+
+    /**
+     * Checks if the provided arguments are from an iteratee call.
+     *
+     * @private
+     * @param {*} value The potential iteratee value argument.
+     * @param {*} index The potential iteratee index or key argument.
+     * @param {*} object The potential iteratee object argument.
+     * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+     */
+    function isIterateeCall(value, index, object) {
+      if (!isObject(object)) {
+        return false;
+      }
+      var type = typeof index;
+      if (type == 'number') {
+        var length = object.length,
+            prereq = isLength(length) && isIndex(index, length);
+      } else {
+        prereq = type == 'string';
+      }
+      return prereq && object[index] === value;
+    }
+
+    /**
+     * Checks if `value` is valid array-like length.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+     */
+    function isLength(value) {
+      return typeof value == 'number' && value > -1 && value <= MAX_SAFE_INTEGER;
     }
 
     /**
@@ -10101,6 +10566,28 @@ process.chdir = function (dir) {
     }
 
     /**
+     * Reorder `array` according to the specified indexes where the element at
+     * the first index is assigned as the first element, the element at
+     * the second index is assigned as the second element, and so on.
+     *
+     * @private
+     * @param {Array} array The array to reorder.
+     * @param {Array} indexes The arranged array indexes.
+     * @returns {Array} Returns `array`.
+     */
+    function reorder(array, indexes) {
+      var arrLength = array.length,
+          length = nativeMin(indexes.length, arrLength),
+          oldArray = baseSlice(array);
+
+      while (length--) {
+        var index = indexes[length];
+        array[length] = isIndex(index, arrLength) ? oldArray[index] : undefined;
+      }
+      return array;
+    }
+
+    /**
      * Sets metadata for `func`.
      *
      * **Note:** If this function becomes hot, i.e. is invoked a lot in a short
@@ -10158,7 +10645,7 @@ process.chdir = function (dir) {
       // enumerable properties.
       var result;
       if (support.ownLast) {
-        baseForIn(value, function(value, key, object) {
+        baseForIn(value, function(subValue, key, object) {
           result = hasOwnProperty.call(object, key);
           return false;
         });
@@ -10167,7 +10654,7 @@ process.chdir = function (dir) {
       // In most environments an object's own properties are iterated before
       // its inherited properties. If the last iterated property is an object's
       // own property then there are no inherited enumerable properties.
-      baseForIn(value, function(value, key) {
+      baseForIn(value, function(subValue, key) {
         result = key;
       });
       return typeof result == 'undefined' || hasOwnProperty.call(value, result);
@@ -10183,23 +10670,20 @@ process.chdir = function (dir) {
      */
     function shimKeys(object) {
       var props = keysIn(object),
-          length = props.length,
-          objLength = length && object.length,
+          propsLength = props.length,
+          length = propsLength && object.length,
           support = lodash.support;
 
-      var allowIndexes = typeof objLength == 'number' && objLength > 0 &&
+      var allowIndexes = typeof length == 'number' && length > 0 &&
         (isArray(object) || (support.nonEnumStrings && isString(object)) ||
           (support.nonEnumArgs && isArguments(object)));
 
-      var keyIndex,
-          index = -1,
-          maxIndex = objLength - 1,
+      var index = -1,
           result = [];
 
-      while (++index < length) {
+      while (++index < propsLength) {
         var key = props[index];
-        if ((allowIndexes && (keyIndex = +key, keyIndex > -1 && keyIndex <= maxIndex && keyIndex % 1 == 0)) ||
-            hasOwnProperty.call(object, key)) {
+        if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
           result.push(key);
         }
       }
@@ -10217,8 +10701,7 @@ process.chdir = function (dir) {
       if (value == null) {
         return [];
       }
-      var length = value.length;
-      if (!(typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER)) {
+      if (!isLength(value.length)) {
         return values(value);
       }
       if (lodash.support.unindexedChars && isString(value)) {
@@ -10271,12 +10754,13 @@ process.chdir = function (dir) {
      * // => [['a', 'b', 'c'], ['d']]
      */
     function chunk(array, size, guard) {
+      size = (guard || size == null) ? 1 : nativeMax(+size || 1, 1);
+
       var index = 0,
           length = array ? array.length : 0,
           resIndex = -1,
-          result = [];
+          result = Array(ceil(length / size));
 
-      size = (guard || size == null) ? 1 : nativeMax(+size || 1, 1);
       while (index < length) {
         result[++resIndex] = slice(array, index, (index += size));
       }
@@ -10342,7 +10826,7 @@ process.chdir = function (dir) {
           break;
         }
       }
-      return baseDifference(arguments[index], baseFlatten(arguments, false, true, ++index));
+      return baseDifference(value, baseFlatten(arguments, false, true, ++index));
     }
 
     /**
@@ -10434,26 +10918,25 @@ process.chdir = function (dir) {
      * // => [1]
      *
      * var users = [
-     *   { 'user': 'barney',  'employer': 'slate' },
-     *   { 'user': 'fred',    'employer': 'slate', 'blocked': true },
-     *   { 'user': 'pebbles', 'employer': 'na',    'blocked': true }
+     *   { 'user': 'barney',  'status': 'busy', 'active': false },
+     *   { 'user': 'fred',    'status': 'busy', 'active': true },
+     *   { 'user': 'pebbles', 'status': 'away', 'active': true }
      * ];
      *
      * // using "_.pluck" callback shorthand
-     * _.pluck(_.dropRightWhile(users, 'blocked'), 'user');
+     * _.pluck(_.dropRightWhile(users, 'active'), 'user');
      * // => ['barney']
      *
      * // using "_.where" callback shorthand
-     * _.pluck(_.dropRightWhile(users, { 'employer': 'na' }), 'user');
+     * _.pluck(_.dropRightWhile(users, { 'status': 'away' }), 'user');
      * // => ['barney', 'fred']
      */
     function dropRightWhile(array, predicate, thisArg) {
-      var length = array ? array.length : 0,
-          index = length;
+      var length = array ? array.length : 0;
 
       predicate = getCallback(predicate, thisArg, 3);
-      while (index-- && predicate(array[index], index, array)) {}
-      return slice(array, 0, index + 1);
+      while (length-- && predicate(array[length], length, array)) {}
+      return slice(array, 0, length + 1);
     }
 
     /**
@@ -10483,17 +10966,17 @@ process.chdir = function (dir) {
      * // => [3]
      *
      * var users = [
-     *   { 'user': 'barney',  'employer': 'slate', 'blocked': true },
-     *   { 'user': 'fred',    'employer': 'slate' },
-     *   { 'user': 'pebbles', 'employer': 'na',    'blocked': true }
+     *   { 'user': 'barney',  'status': 'busy', 'active': true },
+     *   { 'user': 'fred',    'status': 'busy', 'active': false },
+     *   { 'user': 'pebbles', 'status': 'away', 'active': true }
      * ];
      *
      * // using "_.pluck" callback shorthand
-     * _.pluck(_.dropWhile(users, 'blocked'), 'user');
+     * _.pluck(_.dropWhile(users, 'active'), 'user');
      * // => ['fred', 'pebbles']
      *
      * // using "_.where" callback shorthand
-     * _.pluck(_.dropWhile(users, { 'employer': 'slate' }), 'user');
+     * _.pluck(_.dropWhile(users, { 'status': 'busy' }), 'user');
      * // => ['pebbles']
      */
     function dropWhile(array, predicate, thisArg) {
@@ -10528,22 +11011,20 @@ process.chdir = function (dir) {
      * @example
      *
      * var users = [
-     *   { 'user': 'barney',  'age': 36 },
-     *   { 'user': 'fred',    'age': 40, 'blocked': true },
-     *   { 'user': 'pebbles', 'age': 1 }
+     *   { 'user': 'barney',  'age': 36, 'active': false },
+     *   { 'user': 'fred',    'age': 40, 'active': true },
+     *   { 'user': 'pebbles', 'age': 1,  'active': false }
      * ];
      *
-     * _.findIndex(users, function(chr) {
-     *   return chr.age < 20;
-     * });
-     * // => 2
-     *
-     * // using "_.where" callback shorthand
-     * _.findIndex(users, { 'age': 36 });
+     * _.findIndex(users, function(chr) { return chr.age < 40; });
      * // => 0
      *
+     * // using "_.where" callback shorthand
+     * _.findIndex(users, { 'age': 1 });
+     * // => 2
+     *
      * // using "_.pluck" callback shorthand
-     * _.findIndex(users, 'blocked');
+     * _.findIndex(users, 'active');
      * // => 1
      */
     function findIndex(array, predicate, thisArg) {
@@ -10582,23 +11063,21 @@ process.chdir = function (dir) {
      * @example
      *
      * var users = [
-     *   { 'user': 'barney',  'age': 36, 'blocked': true },
-     *   { 'user': 'fred',    'age': 40 },
-     *   { 'user': 'pebbles', 'age': 1,  'blocked': true }
+     *   { 'user': 'barney',  'age': 36, 'active': true },
+     *   { 'user': 'fred',    'age': 40, 'active': false },
+     *   { 'user': 'pebbles', 'age': 1,  'active': false }
      * ];
      *
-     * _.findLastIndex(users, function(chr) {
-     *   return chr.age > 30;
-     * });
-     * // => 1
+     * _.findLastIndex(users, function(chr) { return chr.age < 40; });
+     * // => 2
      *
      * // using "_.where" callback shorthand
-     * _.findLastIndex(users, { 'age': 36 });
-     * // => 0
+     * _.findLastIndex(users, { 'age': 40});
+     * // => 1
      *
      * // using "_.pluck" callback shorthand
-     * _.findLastIndex(users, 'blocked');
-     * // => 2
+     * _.findLastIndex(users, 'active');
+     * // => 0
      */
     function findLastIndex(array, predicate, thisArg) {
       var length = array ? array.length : 0;
@@ -10742,8 +11221,8 @@ process.chdir = function (dir) {
     }
 
     /**
-     * Creates an array of unique values present in all provided arrays using
-     * `SameValueZero` for equality comparisons.
+     * Creates an array of unique values in all provided arrays using `SameValueZero`
+     * for equality comparisons.
      *
      * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
      * e.g. `===`, except that `NaN` matches `NaN`. See the
@@ -10766,14 +11245,13 @@ process.chdir = function (dir) {
           argsLength = arguments.length,
           caches = [],
           indexOf = getIndexOf(),
-          prereq = createCache && indexOf == baseIndexOf;
+          isCommon = indexOf == baseIndexOf;
 
       while (++argsIndex < argsLength) {
         var value = arguments[argsIndex];
         if (isArray(value) || isArguments(value)) {
           args.push(value);
-          caches.push(prereq && value.length >= 120 &&
-            createCache(argsIndex && value));
+          caches.push(isCommon && value.length >= 120 && createCache(argsIndex && value));
         }
       }
       argsLength = args.length;
@@ -10940,7 +11418,7 @@ process.chdir = function (dir) {
      * // => [10, 20]
      */
     function pullAt(array) {
-      return basePullAt(array, baseFlatten(arguments, false, false, 1));
+      return basePullAt(array || [], baseFlatten(arguments, false, false, 1));
     }
 
     /**
@@ -11013,17 +11491,17 @@ process.chdir = function (dir) {
     }
 
     /**
-     * Slices `array` from the `start` index up to, but not including, the `end` index.
+     * Creates a slice of `array` from `start` up to, but not including, `end`.
      *
-     * **Note:** This function is used instead of `Array#slice` to support node lists
-     * in IE < 9 and to ensure dense arrays are returned.
+     * **Note:** This function is used instead of `Array#slice` to support node
+     * lists in IE < 9 and to ensure dense arrays are returned.
      *
      * @static
      * @memberOf _
      * @category Array
      * @param {Array} array The array to slice.
-     * @param {number} [start=0] The start index.
-     * @param {number} [end=array.length] The end index.
+     * @param {number} [start=0] The start position.
+     * @param {number} [end=array.length] The end position.
      * @returns {Array} Returns the slice of `array`.
      */
     function slice(array, start, end) {
@@ -11220,26 +11698,25 @@ process.chdir = function (dir) {
      * // => [2, 3]
      *
      * var users = [
-     *   { 'user': 'barney',  'employer': 'slate' },
-     *   { 'user': 'fred',    'employer': 'slate', 'blocked': true },
-     *   { 'user': 'pebbles', 'employer': 'na',    'blocked': true }
+     *   { 'user': 'barney',  'status': 'busy', 'active': false },
+     *   { 'user': 'fred',    'status': 'busy', 'active': true },
+     *   { 'user': 'pebbles', 'status': 'away', 'active': true }
      * ];
      *
      * // using "_.pluck" callback shorthand
-     * _.pluck(_.takeRightWhile(users, 'blocked'), 'user');
+     * _.pluck(_.takeRightWhile(users, 'active'), 'user');
      * // => ['fred', 'pebbles']
      *
      * // using "_.where" callback shorthand
-     * _.pluck(_.takeRightWhile(users, { 'employer': 'na' }), 'user');
+     * _.pluck(_.takeRightWhile(users, { 'status': 'away' }), 'user');
      * // => ['pebbles']
      */
     function takeRightWhile(array, predicate, thisArg) {
-      var length = array ? array.length : 0,
-          index = length;
+      var length = array ? array.length : 0;
 
       predicate = getCallback(predicate, thisArg, 3);
-      while (index-- && predicate(array[index], index, array)) {}
-      return slice(array, index + 1);
+      while (length-- && predicate(array[length], length, array)) {}
+      return slice(array, length + 1);
     }
 
     /**
@@ -11269,17 +11746,17 @@ process.chdir = function (dir) {
      * // => [1, 2]
      *
      * var users = [
-     *   { 'user': 'barney',  'employer': 'slate', 'blocked': true },
-     *   { 'user': 'fred',    'employer': 'slate' },
-     *   { 'user': 'pebbles', 'employer': 'na',    'blocked': true }
+     *   { 'user': 'barney',  'status': 'busy', 'active': true },
+     *   { 'user': 'fred',    'status': 'busy', 'active': false },
+     *   { 'user': 'pebbles', 'status': 'away', 'active': true }
      * ];
      *
      * // using "_.pluck" callback shorthand
-     * _.pluck(_.takeWhile(users, 'blocked'), 'user');
+     * _.pluck(_.takeWhile(users, 'active'), 'user');
      * // => ['barney']
      *
      * // using "_.where" callback shorthand
-     * _.pluck(_.takeWhile(users, { 'employer': 'slate' }), 'user');
+     * _.pluck(_.takeWhile(users, { 'status': 'busy' }), 'user');
      * // => ['barney', 'fred']
      */
     function takeWhile(array, predicate, thisArg) {
@@ -11502,25 +11979,25 @@ process.chdir = function (dir) {
      * @alias object
      * @category Array
      * @param {Array} props The property names.
-     * @param {Array} [vals=[]] The property values.
+     * @param {Array} [values=[]] The property values.
      * @returns {Object} Returns the new object.
      * @example
      *
      * _.zipObject(['fred', 'barney'], [30, 40]);
      * // => { 'fred': 30, 'barney': 40 }
      */
-    function zipObject(props, vals) {
+    function zipObject(props, values) {
       var index = -1,
           length = props ? props.length : 0,
           result = {};
 
-      if (!vals && length && !isArray(props[0])) {
-        vals = [];
+      if (!values && length && !isArray(props[0])) {
+        values = [];
       }
       while (++index < length) {
         var key = props[index];
-        if (vals) {
-          result[key] = vals[index];
+        if (values) {
+          result[key] = values[index];
         } else if (key) {
           result[key[0]] = key[1];
         }
@@ -11538,7 +12015,7 @@ process.chdir = function (dir) {
      * @memberOf _
      * @category Chain
      * @param {*} value The value to wrap.
-     * @returns {Object} Returns the new `LodashWrapper` object.
+     * @returns {Object} Returns the new `lodash` object.
      * @example
      *
      * var users = [
@@ -11608,30 +12085,13 @@ process.chdir = function (dir) {
       return interceptor.call(thisArg, value);
     }
 
-    /*------------------------------------------------------------------------*/
-
-    /**
-     * A fast path for creating `lodash` wrapper objects.
-     *
-     * @private
-     * @param {*} value The value to wrap.
-     * @param {boolean} [chainAll=false] Enable chaining for all methods.
-     * @param {Array} [queue=[]] Actions to peform to resolve the unwrapped value.
-     * @returns {Object} Returns a `LodashWrapper` instance.
-     */
-    function LodashWrapper(value, chainAll, queue) {
-      this.__chain__ = !!chainAll;
-      this.__queue__ = queue || [];
-      this.__wrapped__ = value;
-    }
-
     /**
      * Enables explicit method chaining on the wrapper object.
      *
      * @name chain
      * @memberOf _
      * @category Chain
-     * @returns {*} Returns the `LodashWrapper` object.
+     * @returns {*} Returns the `lodash` object.
      * @example
      *
      * var users = [
@@ -11663,7 +12123,7 @@ process.chdir = function (dir) {
      * @name chain
      * @memberOf _
      * @category Chain
-     * @returns {Object} Returns the new reversed `LodashWrapper` object.
+     * @returns {Object} Returns the new reversed `lodash` object.
      * @example
      *
      * var array = [1, 2, 3];
@@ -11732,131 +12192,6 @@ process.chdir = function (dir) {
     /*------------------------------------------------------------------------*/
 
     /**
-     * Wraps `value` as a `LazyWrapper` object.
-     *
-     * @private
-     * @param {*} value The value to wrap.
-     * @returns {Object} Returns a `LazyWrapper` instance.
-     */
-    function LazyWrapper(value) {
-      this.dir = 1;
-      this.dropCount = 0;
-      this.filtered = false;
-      this.iteratees = [];
-      this.takeCount = POSITIVE_INFINITY;
-      this.views = [];
-      this.wrapped = value;
-    }
-
-    /**
-     * Creates a clone of the `LazyWrapper` object.
-     *
-     * @private
-     * @name clone
-     * @memberOf LazyWrapper
-     * @returns {Object} Returns the cloned `LazyWrapper` object.
-     */
-    function lazyClone() {
-      var result = new LazyWrapper(this.wrapped);
-      result.dir = this.dir;
-      result.dropCount = this.dropCount;
-      result.filtered = this.filtered;
-      result.takeCount = this.takeCount;
-      push.apply(result.iteratees, this.iteratees);
-      push.apply(result.views, this.views);
-      return result;
-    }
-
-    /**
-     * Reverses the direction of lazy iteration.
-     *
-     * @private
-     * @name reverse
-     * @memberOf LazyWrapper
-     * @returns {Object} Returns the new reversed `LazyWrapper` object.
-     */
-    function lazyReverse() {
-      var filtered = this.filtered,
-          result = filtered ? new LazyWrapper(this) : this.clone();
-
-      result.dir = this.dir * -1;
-      result.filtered = filtered;
-      return result;
-    }
-
-    /**
-     * Extracts the unwrapped value from its wrapper.
-     *
-     * @private
-     * @name value
-     * @memberOf LazyWrapper
-     * @returns {*} Returns the unwrapped value.
-     */
-    function lazyValue() {
-      var array = this.wrapped.value(),
-          length = array.length,
-          start = 0,
-          end = length,
-          views = this.views,
-          viewIndex = -1,
-          viewsLength = views.length;
-
-      while (++viewIndex < viewsLength) {
-        var view = views[viewIndex],
-            size = view.size;
-
-        switch (view.type) {
-          case 'drop':      start += size; break;
-          case 'dropRight': end -= size; break;
-          case 'take':      end = nativeMin(end, start + size); break;
-          case 'takeRight': start = nativeMax(start, end - size); break;
-        }
-      }
-      var dir = this.dir,
-          dropCount = this.dropCount,
-          droppedCount = 0,
-          doneDropping = !dropCount,
-          takeCount = nativeMin(end - start, this.takeCount - dropCount),
-          isRight = dir < 0,
-          index = isRight ? end : start - 1,
-          iteratees = this.iteratees,
-          iterateesLength = iteratees.length,
-          resIndex = 0,
-          result = [];
-
-      outer:
-      while (length-- && resIndex < takeCount) {
-        var iterateesIndex = -1,
-            value = array[index += dir];
-
-        while (++iterateesIndex < iterateesLength) {
-          var data = iteratees[iterateesIndex],
-              iteratee = data.iteratee,
-              computed = iteratee(value, index, array),
-              type = data.type;
-
-          if (type == LAZY_MAP_FLAG) {
-            value = computed;
-          } else if (!computed) {
-            if (type == LAZY_FILTER_FLAG) {
-              continue outer;
-            } else {
-              break outer;
-            }
-          }
-        }
-        if (doneDropping) {
-          result[resIndex++] = value;
-        } else {
-          doneDropping = ++droppedCount >= dropCount;
-        }
-      }
-      return isRight ? result.reverse() : result;
-    }
-
-    /*------------------------------------------------------------------------*/
-
-    /**
      * Creates an array of elements corresponding to the specified keys, or indexes,
      * of the collection. Keys may be specified as individual arguments or as arrays
      * of keys.
@@ -11877,18 +12212,16 @@ process.chdir = function (dir) {
      * // => ['fred', 'pebbles']
      */
     function at(collection) {
-      var length = collection ? collection.length : 0;
-
-      if (typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER) {
+      if (!collection || isLength(collection.length)) {
         collection = toIterable(collection);
       }
       return baseAt(collection, baseFlatten(arguments, false, false, 1));
     }
 
     /**
-     * Checks if `value` is present in `collection` using  `SameValueZero` for
-     * equality comparisons. If `fromIndex` is negative, it is used as the offset
-     * from the end of the collection.
+     * Checks if `value` is in `collection` using `SameValueZero` for equality
+     * comparisons. If `fromIndex` is negative, it is used as the offset from
+     * the end of the collection.
      *
      * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
      * e.g. `===`, except that `NaN` matches `NaN`. See the
@@ -11900,7 +12233,7 @@ process.chdir = function (dir) {
      * @alias include
      * @category Collection
      * @param {Array|Object|string} collection The collection to search.
-     * @param {*} target The value to check for.
+     * @param {*} target The value to search for.
      * @param {number} [fromIndex=0] The index to search from.
      * @returns {boolean} Returns `true` if a matching element is found, else `false`.
      * @example
@@ -11920,7 +12253,7 @@ process.chdir = function (dir) {
     function contains(collection, target, fromIndex) {
       var length = collection ? collection.length : 0;
 
-      if (!(typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER)) {
+      if (!isLength(length)) {
         collection = values(collection);
         length = collection.length;
       }
@@ -12052,17 +12385,17 @@ process.chdir = function (dir) {
      * // => [2, 4]
      *
      * var users = [
-     *   { 'user': 'barney', 'age': 36 },
-     *   { 'user': 'fred',   'age': 40, 'blocked': true }
+     *   { 'user': 'barney', 'age': 36, 'active': false },
+     *   { 'user': 'fred',   'age': 40, 'active': true }
      * ];
      *
      * // using "_.pluck" callback shorthand
-     * _.filter(users, 'blocked');
-     * // => [{ 'user': 'fred', 'age': 40, 'blocked': true }]
+     * _.pluck(_.filter(users, 'active'), 'user');
+     * // => ['fred']
      *
      * // using "_.where" callback shorthand
-     * _.filter(users, { 'age': 36 });
-     * // => [{ 'user': 'barney', 'age': 36 }]
+     * _.pluck(_.filter(users, { 'age': 36 }), 'user');
+     * // => ['barney']
      */
     function filter(collection, predicate, thisArg) {
       var func = isArray(collection) ? arrayFilter : baseFilter;
@@ -12096,23 +12429,21 @@ process.chdir = function (dir) {
      * @example
      *
      * var users = [
-     *   { 'user': 'barney',  'age': 36 },
-     *   { 'user': 'fred',    'age': 40, 'blocked': true },
-     *   { 'user': 'pebbles', 'age': 1 }
+     *   { 'user': 'barney',  'age': 36, 'active': false },
+     *   { 'user': 'fred',    'age': 40, 'active': true },
+     *   { 'user': 'pebbles', 'age': 1,  'active': false }
      * ];
      *
-     * _.find(users, function(chr) {
-     *   return chr.age < 40;
-     * });
-     * // => { 'user': 'barney', 'age': 36 }
+     * _.result(_.find(users, function(chr) { return chr.age < 40; }), 'user');
+     * // => 'barney'
      *
      * // using "_.where" callback shorthand
-     * _.find(users, { 'age': 1 });
-     * // =>  { 'user': 'pebbles', 'age': 1 }
+     * _.result(_.find(users, { 'age': 1 }), 'user');
+     * // => 'pebbles'
      *
      * // using "_.pluck" callback shorthand
-     * _.find(users, 'blocked');
-     * // => { 'user': 'fred', 'age': 40, 'blocked': true }
+     * _.result(_.find(users, 'active'), 'user');
+     * // => 'fred'
      */
     function find(collection, predicate, thisArg) {
       if (isArray(collection)) {
@@ -12160,15 +12491,15 @@ process.chdir = function (dir) {
      * @example
      *
      * var users = [
-     *   { 'user': 'barney', 'age': 36, 'employer': 'slate' },
-     *   { 'user': 'fred',   'age': 40, 'employer': 'slate' }
+     *   { 'user': 'barney', 'age': 36, 'status': 'busy' },
+     *   { 'user': 'fred',   'age': 40, 'status': 'busy' }
      * ];
      *
-     * _.findWhere(users, { 'employer': 'slate' });
-     * // => { 'user': 'barney', 'age': 36, 'employer': 'slate' }
+     * _.findWhere(users, { 'status': 'busy' });
+     * // => { 'user': 'barney', 'age': 36, 'status': 'busy' }
      *
      * _.findWhere(users, { 'age': 40 });
-     * // =>  { 'user': 'fred', 'age': 40, 'employer': 'slate' }
+     * // =>  { 'user': 'fred', 'age': 40, 'status': 'busy' }
      */
     function findWhere(collection, source) {
       return find(collection, matches(source));
@@ -12431,38 +12762,30 @@ process.chdir = function (dir) {
      * // => { 'user': 'fred', 'age': 40 };
      */
     function max(collection, iteratee, thisArg) {
-      iteratee = isIterateeCall(collection, iteratee, thisArg) ? null : iteratee;
-
-      var computed = NEGATIVE_INFINITY,
-          noIteratee = iteratee == null,
+      if (thisArg && isIterateeCall(collection, iteratee, thisArg)) {
+        iteratee = null;
+      }
+      var noIteratee = iteratee == null,
           isArr = noIteratee && isArray(collection),
-          isStr = !isArr && isString(collection),
-          result = computed;
+          isStr = !isArr && isString(collection);
 
       if (noIteratee && !isStr) {
-        var index = -1,
-            iterable = toIterable(collection),
-            length = iterable.length;
-
-        while (++index < length) {
-          var value = iterable[index];
-          if (value > result) {
-            result = value;
-          }
-        }
-      } else {
-        iteratee = (noIteratee && isStr)
-          ? charAtCallback
-          : getCallback(iteratee, thisArg, 3);
-
-        baseEach(collection, function(value, index, collection) {
-          var current = iteratee(value, index, collection);
-          if (current > computed || (current === NEGATIVE_INFINITY && current === result)) {
-            computed = current;
-            result = value;
-          }
-        });
+        return arrayMax(isArr ? collection : toIterable(collection));
       }
+      var computed = NEGATIVE_INFINITY,
+          result = computed;
+
+      iteratee = (noIteratee && isStr)
+        ? charAtCallback
+        : getCallback(iteratee, thisArg, 3);
+
+      baseEach(collection, function(value, index, collection) {
+        var current = iteratee(value, index, collection);
+        if (current > computed || (current === NEGATIVE_INFINITY && current === result)) {
+          computed = current;
+          result = value;
+        }
+      });
       return result;
     }
 
@@ -12510,38 +12833,30 @@ process.chdir = function (dir) {
      * // => { 'user': 'barney', 'age': 36 };
      */
     function min(collection, iteratee, thisArg) {
-      iteratee = isIterateeCall(collection, iteratee, thisArg) ? null : iteratee;
-
-      var computed = POSITIVE_INFINITY,
-          noIteratee = iteratee == null,
+      if (thisArg && isIterateeCall(collection, iteratee, thisArg)) {
+        iteratee = null;
+      }
+      var noIteratee = iteratee == null,
           isArr = noIteratee && isArray(collection),
-          isStr = !isArr && isString(collection),
-          result = computed;
+          isStr = !isArr && isString(collection);
 
       if (noIteratee && !isStr) {
-        var index = -1,
-            iterable = toIterable(collection),
-            length = iterable.length;
-
-        while (++index < length) {
-          var value = iterable[index];
-          if (value < result) {
-            result = value;
-          }
-        }
-      } else {
-        iteratee = (noIteratee && isStr)
-          ? charAtCallback
-          : getCallback(iteratee, thisArg, 3);
-
-        baseEach(collection, function(value, index, collection) {
-          var current = iteratee(value, index, collection);
-          if (current < computed || (current === POSITIVE_INFINITY && current === result)) {
-            computed = current;
-            result = value;
-          }
-        });
+        return arrayMin(isArr ? collection : toIterable(collection));
       }
+      var computed = POSITIVE_INFINITY,
+          result = computed;
+
+      iteratee = (noIteratee && isStr)
+        ? charAtCallback
+        : getCallback(iteratee, thisArg, 3);
+
+      baseEach(collection, function(value, index, collection) {
+        var current = iteratee(value, index, collection);
+        if (current < computed || (current === POSITIVE_INFINITY && current === result)) {
+          computed = current;
+          result = value;
+        }
+      });
       return result;
     }
 
@@ -12576,9 +12891,9 @@ process.chdir = function (dir) {
      * // => [[1, 3], [2]]
      *
      * var users = [
-     *   { 'user': 'barney',  'age': 36 },
-     *   { 'user': 'fred',    'age': 40, 'blocked': true },
-     *   { 'user': 'pebbles', 'age': 1 }
+     *   { 'user': 'barney',  'age': 36, 'active': false },
+     *   { 'user': 'fred',    'age': 40, 'active': true },
+     *   { 'user': 'pebbles', 'age': 1,  'active': false }
      * ];
      *
      * // using "_.where" callback shorthand
@@ -12586,7 +12901,7 @@ process.chdir = function (dir) {
      * // => [['pebbles'], ['barney', 'fred']]
      *
      * // using "_.pluck" callback shorthand
-     * _.map(_.partition(users, 'blocked'), function(array) { return _.pluck(array, 'user'); });
+     * _.map(_.partition(users, 'active'), function(array) { return _.pluck(array, 'user'); });
      * // => [['fred'], ['barney', 'pebbles']]
      */
     var partition = createAggregator(function(result, value, key) {
@@ -12703,17 +13018,17 @@ process.chdir = function (dir) {
      * // => [1, 3]
      *
      * var users = [
-     *   { 'user': 'barney', 'age': 36 },
-     *   { 'user': 'fred',   'age': 40, 'blocked': true }
+     *   { 'user': 'barney', 'age': 36, 'active': false },
+     *   { 'user': 'fred',   'age': 40, 'active': true }
      * ];
      *
      * // using "_.pluck" callback shorthand
-     * _.reject(users, 'blocked');
-     * // => [{ 'user': 'barney', 'age': 36 }]
+     * _.pluck(_.reject(users, 'active'), 'user');
+     * // => ['barney']
      *
      * // using "_.where" callback shorthand
-     * _.reject(users, { 'age': 36 });
-     * // => [{ 'user': 'fred', 'age': 40, 'blocked': true }]
+     * _.pluck(_.reject(users, { 'age': 36 }), 'user');
+     * // => ['fred']
      */
     function reject(collection, predicate, thisArg) {
       var func = isArray(collection) ? arrayFilter : baseFilter;
@@ -12807,9 +13122,7 @@ process.chdir = function (dir) {
      */
     function size(collection) {
       var length = collection ? collection.length : 0;
-      return (typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER)
-        ? length
-        : keys(collection).length;
+      return isLength(length) ? length : keys(collection).length;
     }
 
     /**
@@ -12842,12 +13155,12 @@ process.chdir = function (dir) {
      * // => true
      *
      * var users = [
-     *   { 'user': 'barney', 'age': 36 },
-     *   { 'user': 'fred',   'age': 40, 'blocked': true }
+     *   { 'user': 'barney', 'age': 36, 'active': false },
+     *   { 'user': 'fred',   'age': 40, 'active': true }
      * ];
      *
      * // using "_.pluck" callback shorthand
-     * _.some(users, 'blocked');
+     * _.some(users, 'active');
      * // => true
      *
      * // using "_.where" callback shorthand
@@ -12912,14 +13225,15 @@ process.chdir = function (dir) {
      * // = > [['barney', 26], ['barney', 36], ['fred', 30], ['fred', 40]]
      */
     function sortBy(collection, iteratee, thisArg) {
-      iteratee = isIterateeCall(collection, iteratee, thisArg) ? null : iteratee;
-
+      if (thisArg && isIterateeCall(collection, iteratee, thisArg)) {
+        iteratee = null;
+      }
       var index = -1,
           length = collection ? collection.length : 0,
           multi = iteratee && isArray(iteratee),
           result = [];
 
-      if (typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER) {
+      if (isLength(length)) {
         result.length = length;
       }
       if (!multi) {
@@ -12962,7 +13276,7 @@ process.chdir = function (dir) {
      */
     function toArray(collection) {
       var length = collection ? collection.length : 0;
-      if (typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER) {
+      if (isLength(length)) {
         return (lodash.support.unindexedChars && isString(collection))
           ? collection.split('')
           : baseSlice(collection);
@@ -12984,8 +13298,8 @@ process.chdir = function (dir) {
      * @example
      *
      * var users = [
-     *   { 'user': 'barney', 'age': 36, 'employer': 'slate', 'pets': ['hoppy'] },
-     *   { 'user': 'fred',   'age': 40, 'employer': 'slate', 'pets': ['baby puss', 'dino'] }
+     *   { 'user': 'barney', 'age': 36, 'status': 'busy', 'pets': ['hoppy'] },
+     *   { 'user': 'fred',   'age': 40, 'status': 'busy', 'pets': ['baby puss', 'dino'] }
      * ];
      *
      * _.pluck(_.where(users, { 'age': 36 }), 'user');
@@ -12994,7 +13308,7 @@ process.chdir = function (dir) {
      * _.pluck(_.where(users, { 'pets': ['dino'] }), 'user');
      * // => ['fred']
      *
-     * _.pluck(_.where(users, { 'employer': 'slate' }), 'user');
+     * _.pluck(_.where(users, { 'status': 'busy' }), 'user');
      * // => ['barney', 'fred']
      */
     function where(collection, source) {
@@ -13107,13 +13421,14 @@ process.chdir = function (dir) {
      * // => 'hi fred'
      */
     function bind(func, thisArg) {
-      if (arguments.length < 3) {
-        return createWrapper(func, BIND_FLAG, null, thisArg);
-      }
-      var args = slice(arguments, 2),
-          holders = replaceHolders(args, bind.placeholder);
+      var bitmask = BIND_FLAG;
+      if (arguments.length > 2) {
+        var partials = slice(arguments, 2),
+            holders = replaceHolders(partials, bind.placeholder);
 
-      return basePartial(func, BIND_FLAG | PARTIAL_FLAG, args, holders, thisArg);
+        bitmask |= PARTIAL_FLAG;
+      }
+      return createWrapper(func, bitmask, thisArg, partials, holders);
     }
 
     /**
@@ -13188,17 +13503,17 @@ process.chdir = function (dir) {
     function bindKey(object, key) {
       var bitmask = BIND_FLAG | BIND_KEY_FLAG;
       if (arguments.length > 2) {
-        var args = slice(arguments, 2),
-            holders = replaceHolders(args, bindKey.placeholder);
+        var partials = slice(arguments, 2),
+            holders = replaceHolders(partials, bindKey.placeholder);
+
+        bitmask |= PARTIAL_FLAG;
       }
-      return args
-        ? createWrapper(key, bitmask, null, object, args, holders)
-        : createWrapper(key, bitmask, null, object);
+      return createWrapper(key, bitmask, object, partials, holders);
     }
 
     /**
      * Creates a function that accepts one or more arguments of `func` that when
-     * called either invokes `func` returning its result if all `func` arguments
+     * called either invokes `func` returning its result, if all `func` arguments
      * have been provided, or returns a function that accepts one or more of the
      * remaining `func` arguments, and so on. The arity of `func` can be specified
      * if `func.length` is not sufficient.
@@ -13215,7 +13530,7 @@ process.chdir = function (dir) {
      * @example
      *
      * var curried = _.curry(function(a, b, c) {
-     *   console.log([a, b, c]);
+     *   return [a, b, c];
      * });
      *
      * curried(1)(2)(3);
@@ -13228,7 +13543,7 @@ process.chdir = function (dir) {
      * // => [1, 2, 3]
      */
     function curry(func, arity, guard) {
-      var result = baseCurry(func, CURRY_FLAG, guard ? null : arity);
+      var result = createWrapper(func, CURRY_FLAG, null, null, null, null, guard ? null : arity);
       result.placeholder = curry.placeholder;
       return result;
     }
@@ -13249,7 +13564,7 @@ process.chdir = function (dir) {
      * @example
      *
      * var curried = _.curryRight(function(a, b, c) {
-     *   console.log([a, b, c]);
+     *   return [a, b, c];
      * });
      *
      * curried(3)(2)(1);
@@ -13262,7 +13577,7 @@ process.chdir = function (dir) {
      * // => [1, 2, 3]
      */
     function curryRight(func, arity, guard) {
-      var result = baseCurry(func, CURRY_RIGHT_FLAG, guard ? null : arity);
+      var result = createWrapper(func, CURRY_RIGHT_FLAG, null, null, null, null, guard ? null : arity);
       result.placeholder = curryRight.placeholder;
       return result;
     }
@@ -13462,8 +13777,8 @@ process.chdir = function (dir) {
       if (!isFunction(func)) {
         throw new TypeError(FUNC_ERROR_TEXT);
       }
-      var args = slice(arguments, 1);
-      return setTimeout(function() { func.apply(undefined, args); }, 1);
+      var args = arguments;
+      return setTimeout(function() { func.apply(undefined, slice(args, 1)); }, 1);
     }
 
     /**
@@ -13486,8 +13801,8 @@ process.chdir = function (dir) {
       if (!isFunction(func)) {
         throw new TypeError(FUNC_ERROR_TEXT);
       }
-      var args = slice(arguments, 2);
-      return setTimeout(function() { func.apply(undefined, args); }, wait);
+      var args = arguments;
+      return setTimeout(function() { func.apply(undefined, slice(args, 2)); }, wait);
     }
 
     /**
@@ -13687,7 +14002,7 @@ process.chdir = function (dir) {
      * initialize();
      * // `initialize` invokes `createApplication` once
      */
-    var once = basePartial(before,PARTIAL_FLAG, [2], []);
+    var once = createWrapper(before, PARTIAL_FLAG, null, [2]);
 
     /**
      * Creates a function that invokes `func` with `partial` arguments prepended
@@ -13711,10 +14026,10 @@ process.chdir = function (dir) {
      * // => 'hello fred'
      */
     function partial(func) {
-      var args = slice(arguments, 1),
-          holders = replaceHolders(args, partial.placeholder);
+      var partials = slice(arguments, 1),
+          holders = replaceHolders(partials, partial.placeholder);
 
-      return basePartial(func, PARTIAL_FLAG, args, holders);
+      return createWrapper(func, PARTIAL_FLAG, null, partials, holders);
     }
 
     /**
@@ -13749,10 +14064,43 @@ process.chdir = function (dir) {
      * // => { 'a': { 'b': { 'c': 1, 'd': 2 } } }
      */
     function partialRight(func) {
-      var args = slice(arguments, 1),
-          holders = replaceHolders(args, partialRight.placeholder);
+      var partials = slice(arguments, 1),
+          holders = replaceHolders(partials, partialRight.placeholder);
 
-      return basePartial(func, PARTIAL_RIGHT_FLAG, args, holders);
+      return createWrapper(func, PARTIAL_RIGHT_FLAG, null, partials, holders);
+    }
+
+    /**
+     * Creates a function that invokes `func` with arguments arranged according
+     * to the specified indexes where the argument value at the first index is
+     * provided as the first argument, the argument value at the second index is
+     * provided as the second argument, and so on.
+     *
+     * @static
+     * @memberOf _
+     * @category Function
+     * @param {Function} func The function to rearrange arguments for.
+     * @param {...(number|number[])} [indexes] The arranged argument indexes,
+     *  specified as individual indexes or arrays of indexes.
+     * @returns {Function} Returns the new function.
+     * @example
+     *
+     * var rearged = _.rearg(function(a, b, c) {
+     *   return [a, b, c];
+     * }, 2, 0, 1);
+     *
+     * rearged('b', 'c', 'a')
+     * // => ['a', 'b', 'c']
+     *
+     * var map = _.rearg(_.map, [1, 0]);
+     * map(function(n) { return n * 3; }, [1, 2, 3]);
+     * // => [3, 6, 9]
+     */
+    function rearg(func) {
+      var indexes = baseFlatten(arguments, false, false, 1);
+      return indexes.length
+        ? createWrapper(func, REARG_FLAG, null, null, null, [indexes])
+        : createWrapper(func);
     }
 
     /**
@@ -13834,64 +14182,8 @@ process.chdir = function (dir) {
      * // => '<p>fred, barney, &amp; pebbles</p>'
      */
     function wrap(value, wrapper) {
-      return basePartial(wrapper, PARTIAL_FLAG, [value], []);
-    }
-
-    /*------------------------------------------------------------------------*/
-
-    /**
-     * Creates the cache used by `_.memoize`.
-     *
-     * @private
-     * @static
-     * @name Cache
-     * @memberOf _.memoize
-     */
-    function MemCache() {
-      this.__wrapped__ = {};
-    }
-
-    /**
-     * Gets the value associated with `key`.
-     *
-     * @private
-     * @name get
-     * @memberOf _.memoize.Cache
-     * @param {string} key The key of the value to retrieve.
-     * @returns {*} Returns the cached value.
-     */
-    function memGet(key) {
-      return this.__wrapped__[key];
-    }
-
-    /**
-     * Checks if an entry for `key` exists.
-     *
-     * @private
-     * @name get
-     * @memberOf _.memoize.Cache
-     * @param {string} key The name of the entry to check.
-     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-     */
-    function memHas(key) {
-      return key != '__proto__' && hasOwnProperty.call(this.__wrapped__, key);
-    }
-
-    /**
-     * Sets the value associated with `key`.
-     *
-     * @private
-     * @name get
-     * @memberOf _.memoize.Cache
-     * @param {string} key The key of the value to set.
-     * @param {*} value The value to set.
-     * @returns {Object} Returns the cache object.
-     */
-    function memSet(key, value) {
-      if (key != '__proto__') {
-        this.__wrapped__[key] = value;
-      }
-      return this;
+      wrapper = wrapper == null ? identity : wrapper;
+      return createWrapper(wrapper, PARTIAL_FLAG, null, [value]);
     }
 
     /*------------------------------------------------------------------------*/
@@ -13903,10 +14195,11 @@ process.chdir = function (dir) {
      * cloning is handled by the method instead. The `customizer` is bound to
      * `thisArg` and invoked with two argument; (value, index|key).
      *
-     * **Note:** This method is loosely based on the structured clone algorithm. Functions
-     * and DOM nodes are **not** cloned. The enumerable properties of `arguments` objects and
-     * objects created by constructors other than `Object` are cloned to plain `Object` objects.
-     * See the [HTML5 specification](http://www.w3.org/TR/html5/infrastructure.html#internal-structured-cloning-algorithm)
+     * **Note:** This method is loosely based on the structured clone algorithm.
+     * The enumerable properties of `arguments` objects and objects created by
+     * constructors other than `Object` are cloned to plain `Object` objects. An
+     * empty object is returned for uncloneable values such as functions, DOM nodes,
+     * Maps, Sets, and WeakMaps. See the [HTML5 specification](http://www.w3.org/TR/html5/infrastructure.html#internal-structured-cloning-algorithm)
      * for more details.
      *
      * @static
@@ -13959,10 +14252,11 @@ process.chdir = function (dir) {
      * is handled by the method instead. The `customizer` is bound to `thisArg`
      * and invoked with two argument; (value, index|key).
      *
-     * **Note:** This method is loosely based on the structured clone algorithm. Functions
-     * and DOM nodes are **not** cloned. The enumerable properties of `arguments` objects and
-     * objects created by constructors other than `Object` are cloned to plain `Object` objects.
-     * See the [HTML5 specification](http://www.w3.org/TR/html5/infrastructure.html#internal-structured-cloning-algorithm)
+     * **Note:** This method is loosely based on the structured clone algorithm.
+     * The enumerable properties of `arguments` objects and objects created by
+     * constructors other than `Object` are cloned to plain `Object` objects. An
+     * empty object is returned for uncloneable values such as functions, DOM nodes,
+     * Maps, Sets, and WeakMaps. See the [HTML5 specification](http://www.w3.org/TR/html5/infrastructure.html#internal-structured-cloning-algorithm)
      * for more details.
      *
      * @static
@@ -14018,15 +14312,14 @@ process.chdir = function (dir) {
      */
     function isArguments(value) {
       var length = (value && typeof value == 'object') ? value.length : undefined;
-      return (typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER &&
-        toString.call(value) == argsClass) || false;
+      return (isLength(length) && toString.call(value) == argsClass) || false;
     }
     // fallback for environments without a `[[Class]]` for `arguments` objects
     if (!support.argsClass) {
       isArguments = function(value) {
         var length = (value && typeof value == 'object') ? value.length : undefined;
-        return (typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER &&
-          hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee')) || false;
+        return (isLength(length) && hasOwnProperty.call(value, 'callee') &&
+          !propertyIsEnumerable.call(value, 'callee')) || false;
       };
     }
 
@@ -14151,9 +14444,8 @@ process.chdir = function (dir) {
         return true;
       }
       var length = value.length;
-      if ((typeof length == 'number' && length > -1 && length <= MAX_SAFE_INTEGER) &&
-          (isArray(value) || isString(value) || isArguments(value) ||
-            (typeof value == 'object' && isFunction(value.splice)))) {
+      if (isLength(length) && (isArray(value) || isString(value) || isArguments(value) ||
+          (typeof value == 'object' && isFunction(value.splice)))) {
         return !length;
       }
       return !keys(value).length;
@@ -14276,14 +14568,18 @@ process.chdir = function (dir) {
      * // => false
      */
     function isFunction(value) {
-      // avoid a Chakra bug in IE 11
-      // https://github.com/jashkenas/underscore/issues/1621
+      // Use `|| false` to avoid a Chakra bug in compatibility modes of IE 11.
+      // See https://github.com/jashkenas/underscore/issues/1621.
       return typeof value == 'function' || false;
     }
-    // fallback for older versions of Chrome and Safari
-    if (isFunction(/x/)) {
+    // fallback for environments that return incorrect `typeof` operator results
+    if (isFunction(/x/) || !Uint8Array || !isFunction(Uint8Array)) {
       isFunction = function(value) {
-        return typeof value == 'function' && toString.call(value) == funcClass;
+        // the use of `Object#toString` avoids issues with the `typeof` operator
+        // in older versions of Chrome and Safari which return 'function' for
+        // regexes and modern Safari which returns 'object' for typed array
+        // constructors
+        return toString.call(value) == funcClass;
       };
     }
 
@@ -14310,8 +14606,8 @@ process.chdir = function (dir) {
      * // => false
      */
     function isObject(value) {
-      // avoid a V8 bug in Chrome 19-20
-      // https://code.google.com/p/v8/issues/detail?id=2291
+      // Avoid a V8 bug in Chrome 19-20.
+      // See https://code.google.com/p/v8/issues/detail?id=2291.
       var type = typeof value;
       return type == 'function' || (value && type == 'object') || false;
     }
@@ -14365,10 +14661,13 @@ process.chdir = function (dir) {
      * // => false
      */
     function isNative(value) {
-      if (isFunction(value)) {
+      if (value == null) {
+        return false;
+      }
+      if (toString.call(value) == funcClass) {
         return reNative.test(fnToString.call(value));
       }
-      return (value && typeof value == 'object' &&
+      return (typeof value == 'object' &&
         (isHostObject(value) ? reNative : reHostCtor).test(value)) || false;
     }
 
@@ -14543,15 +14842,15 @@ process.chdir = function (dir) {
      * @returns {Object} Returns the destination object.
      * @example
      *
-     * _.assign({ 'user': 'fred' }, { 'age': 40 }, { 'employer': 'slate' });
-     * // => { 'user': 'fred', 'age': 40, 'employer': 'slate' }
+     * _.assign({ 'user': 'fred' }, { 'age': 40 }, { 'status': 'busy' });
+     * // => { 'user': 'fred', 'age': 40, 'status': 'busy' }
      *
      * var defaults = _.partialRight(_.assign, function(value, other) {
      *   return typeof value == 'undefined' ? other : value;
      * });
      *
-     * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred', 'employer': 'slate' });
-     * // => { 'user': 'barney', 'age': 36, 'employer': 'slate' }
+     * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred', 'status': 'busy' });
+     * // => { 'user': 'barney', 'age': 36, 'status': 'busy' }
      */
     var assign = createAssigner(baseAssign);
 
@@ -14609,8 +14908,8 @@ process.chdir = function (dir) {
      * @returns {Object} Returns the destination object.
      * @example
      *
-     * _.defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred', 'employer': 'slate' });
-     * // => { 'user': 'barney', 'age': 36, 'employer': 'slate' }
+     * _.defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred', 'status': 'busy' });
+     * // => { 'user': 'barney', 'age': 36, 'status': 'busy' }
      */
     function defaults(object) {
       if (object == null) {
@@ -14644,14 +14943,12 @@ process.chdir = function (dir) {
      * @example
      *
      * var users = {
-     *   'barney': { 'age': 36 },
-     *   'fred': { 'age': 40, 'blocked': true },
-     *   'pebbles': { 'age': 1 }
+     *   'barney':  { 'age': 36, 'active': true },
+     *   'fred':    { 'age': 40, 'active': false },
+     *   'pebbles': { 'age': 1,  'active': true }
      * };
      *
-     * _.findKey(users, function(chr) {
-     *   return chr.age < 40;
-     * });
+     * _.findKey(users, function(chr) { return chr.age < 40; });
      * // => 'barney' (iteration order is not guaranteed)
      *
      * // using "_.where" callback shorthand
@@ -14659,8 +14956,8 @@ process.chdir = function (dir) {
      * // => 'pebbles'
      *
      * // using "_.pluck" callback shorthand
-     * _.findKey(users, 'blocked');
-     * // => 'fred'
+     * _.findKey(users, 'active');
+     * // => 'barney'
      */
     function findKey(object, predicate, thisArg) {
       predicate = getCallback(predicate, thisArg, 3);
@@ -14690,22 +14987,20 @@ process.chdir = function (dir) {
      * @example
      *
      * var users = {
-     *   'barney': { 'age': 36, 'blocked': true },
-     *   'fred': { 'age': 40 },
-     *   'pebbles': { 'age': 1, 'blocked': true }
+     *   'barney':  { 'age': 36, 'active': true },
+     *   'fred':    { 'age': 40, 'active': false },
+     *   'pebbles': { 'age': 1,  'active': true }
      * };
      *
-     * _.findLastKey(users, function(chr) {
-     *   return chr.age < 40;
-     * });
-     * // => returns `pebbles`, assuming `_.findKey` returns `barney`
+     * _.findLastKey(users, function(chr) { return chr.age < 40; });
+     * // => returns `pebbles` assuming `_.findKey` returns `barney`
      *
      * // using "_.where" callback shorthand
      * _.findLastKey(users, { 'age': 40 });
      * // => 'fred'
      *
      * // using "_.pluck" callback shorthand
-     * _.findLastKey(users, 'blocked');
+     * _.findLastKey(users, 'active');
      * // => 'pebbles'
      */
     function findLastKey(object, predicate, thisArg) {
@@ -14866,10 +15161,9 @@ process.chdir = function (dir) {
     }
 
     /**
-     * Creates an object composed of the inverted keys and values of the given
-     * object. If the given object contains duplicate values, subsequent values
-     * overwrite property assignments of previous values unless `multiValue`
-     * is `true`.
+     * Creates an object composed of the inverted keys and values of `object`.
+     * If `object` contains duplicate values, subsequent values overwrite property
+     * assignments of previous values unless `multiValue` is `true`.
      *
      * @static
      * @memberOf _
@@ -14984,11 +15278,10 @@ process.chdir = function (dir) {
         (isArray(object) || (support.nonEnumStrings && isString(object)) ||
           (support.nonEnumArgs && isArguments(object))) && length) || 0;
 
-      var keyIndex,
-          Ctor = object.constructor,
+      var Ctor = object.constructor,
           index = -1,
-          isProto = typeof Ctor == 'function' && Ctor.prototype === object,
-          maxIndex = length - 1,
+          proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto,
+          isProto = proto === object,
           result = Array(length),
           skipIndexes = length > 0,
           skipErrorProps = support.enumErrorProps && (object === errorProto || object instanceof Error),
@@ -15000,26 +15293,28 @@ process.chdir = function (dir) {
       // Lo-Dash skips the `constructor` property when it infers it is iterating
       // over a `prototype` object because IE < 9 can't set the `[[Enumerable]]`
       // attribute of an existing property and the `constructor` property of a
-      // prototype defaults to non-enumerable.
+      // prototype defaults to non-enumerable
       for (var key in object) {
-        if (!(isProto && key == 'constructor') &&
-            !(skipProto && key == 'prototype') &&
+        if (!(skipProto && key == 'prototype') &&
             !(skipErrorProps && (key == 'message' || key == 'name')) &&
-            !(skipIndexes && (keyIndex = +key, keyIndex > -1 && keyIndex <= maxIndex && keyIndex % 1 == 0))) {
+            !(skipIndexes && isIndex(key, length)) &&
+            !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
           result.push(key);
         }
       }
       if (support.nonEnumShadows && object !== objectProto) {
-        index = -1;
-        length = shadowedProps.length;
+        var className = object === stringProto ? stringClass : object === errorProto ? errorClass : toString.call(object),
+            nonEnums = nonEnumProps[className] || nonEnumProps[objectClass];
 
-        if (isProto) {
-          var className = object === stringProto ? stringClass : object === errorProto ? errorClass : toString.call(object),
-              nonEnum = nonEnumProps[className];
+        if (className == objectClass) {
+          proto = objectProto;
         }
-        while (++index < length) {
-          key = shadowedProps[index];
-          if (!(nonEnum && nonEnum[key]) && hasOwnProperty.call(object, key)) {
+        length = shadowedProps.length;
+        while (length--) {
+          key = shadowedProps[length];
+          var nonEnum = nonEnums[key];
+          if (!(isProto && nonEnum) &&
+              (nonEnum ? hasOwnProperty.call(object, key) : object[key] !== proto[key])) {
             result.push(key);
           }
         }
@@ -15055,7 +15350,7 @@ process.chdir = function (dir) {
      * // => { 'a': 3, 'b': 6, 'c': 9 }
      *
      * var users = {
-     *   'fred': { 'user': 'fred', 'age': 40 },
+     *   'fred':    { 'user': 'fred',    'age': 40 },
      *   'pebbles': { 'user': 'pebbles', 'age': 1 }
      * };
      *
@@ -15116,7 +15411,7 @@ process.chdir = function (dir) {
      * _.merge(food, otherFood, function(a, b) {
      *   return _.isArray(a) ? a.concat(b) : undefined;
      * });
-     * // => { 'fruits': ['apple', 'banana'], 'vegetables': ['beet', 'carrot] }
+     * // => { 'fruits': ['apple', 'banana'], 'vegetables': ['beet', 'carrot'] }
      */
     var merge = createAssigner(baseMerge);
 
@@ -15162,7 +15457,7 @@ process.chdir = function (dir) {
     }
 
     /**
-     * Creates a two dimensional array of a given object's key-value pairs,
+     * Creates a two dimensional array of the key-value pairs for `object`,
      * e.g. `[[key1, value1], [key2, value2]]`.
      *
      * @static
@@ -15260,11 +15555,13 @@ process.chdir = function (dir) {
 
       var isArr = isArrayLike(object);
       if (accumulator == null) {
-        if (isArr) {
-          accumulator = [];
-        } else if (isObject(object)) {
+        if (isArr || isObject(object)) {
           var Ctor = object.constructor;
-          accumulator = baseCreate(typeof Ctor == 'function' && Ctor.prototype);
+          if (isArr) {
+            accumulator = isArray(object) ? new Ctor : [];
+          } else {
+            accumulator = baseCreate(typeof Ctor == 'function' && Ctor.prototype);
+          }
         } else {
           accumulator = {};
         }
@@ -15390,7 +15687,7 @@ process.chdir = function (dir) {
     }
 
     /**
-     * Checks if `string` ends with a given target string.
+     * Checks if `string` ends with the given target string.
      *
      * @static
      * @memberOf _
@@ -15398,8 +15695,7 @@ process.chdir = function (dir) {
      * @param {string} [string=''] The string to search.
      * @param {string} [target] The string to search for.
      * @param {number} [position=string.length] The position to search from.
-     * @returns {boolean} Returns `true` if the given string ends with the
-     *  target string, else `false`.
+     * @returns {boolean} Returns `true` if `string` ends with `target`, else `false`.
      * @example
      *
      * _.endsWith('abc', 'c');
@@ -15657,7 +15953,7 @@ process.chdir = function (dir) {
     });
 
     /**
-     * Checks if `string` starts with a given target string.
+     * Checks if `string` starts with the given target string.
      *
      * @static
      * @memberOf _
@@ -15665,8 +15961,7 @@ process.chdir = function (dir) {
      * @param {string} [string=''] The string to search.
      * @param {string} [target] The string to search for.
      * @param {number} [position=0] The position to search from.
-     * @returns {boolean} Returns `true` if the given string starts with the
-     *  target string, else `false`.
+     * @returns {boolean} Returns `true` if `string` starts with `target`, else `false`.
      * @example
      *
      * _.startsWith('abc', 'a');
@@ -15787,7 +16082,7 @@ process.chdir = function (dir) {
       // https://github.com/olado/doT
       var settings = lodash.templateSettings;
 
-      if (isIterateeCall(string, options, otherOptions)) {
+      if (otherOptions && isIterateeCall(string, options, otherOptions)) {
         options = otherOptions = null;
       }
       string = String(string == null ? '' : string);
@@ -16255,15 +16550,15 @@ process.chdir = function (dir) {
         }
       }
       var index = length,
-          flags = Array(length),
-          vals = Array(length);
+          values = Array(length),
+          strictCompareFlags = Array(length);
 
       while (index--) {
         value = source[props[index]];
         var isStrict = isStrictComparable(value);
 
-        flags[index] = isStrict;
-        vals[index] = isStrict ? value : baseClone(value);
+        values[index] = isStrict ? value : baseClone(value, true, clonePassthru);
+        strictCompareFlags[index] = isStrict;
       }
       return function(object) {
         index = length;
@@ -16271,13 +16566,19 @@ process.chdir = function (dir) {
           return !index;
         }
         while (index--) {
-          if (flags[index] ? vals[index] !== object[props[index]] : !hasOwnProperty.call(object, props[index])) {
+          if (strictCompareFlags[index]
+                ? values[index] !== object[props[index]]
+                : !hasOwnProperty.call(object, props[index])
+              ) {
             return false;
           }
         }
         index = length;
         while (index--) {
-          if (flags[index] ? !hasOwnProperty.call(object, props[index]) : !baseIsEqual(vals[index], object[props[index]], null, true)) {
+          if (strictCompareFlags[index]
+                ? !hasOwnProperty.call(object, props[index])
+                : !baseIsEqual(values[index], object[props[index]], null, true)
+              ) {
             return false;
           }
         }
@@ -16420,8 +16721,8 @@ process.chdir = function (dir) {
      * `undefined` or `0`, a `radix` of `10` is used unless `value` is a hexadecimal,
      * in which case a `radix` of `16` is used.
      *
-     * **Note:** This method avoids differences in native ES3 and ES5 `parseInt`
-     * implementations. See the [ES5 spec](http://es5.github.io/#E) for more details.
+     * **Note:** This method aligns with the ES5 implementation of `parseInt`.
+     * See the [ES5 spec](http://es5.github.io/#E) for more details.
      *
      * @static
      * @memberOf _
@@ -16443,7 +16744,7 @@ process.chdir = function (dir) {
       parseInt = function(value, radix, guard) {
         // Firefox < 21 and Opera < 15 follow ES3 for `parseInt` and
         // Chrome fails to trim leading <BOM> whitespace characters.
-        // See https://code.google.com/p/v8/issues/detail?id=3109
+        // See https://code.google.com/p/v8/issues/detail?id=3109.
         value = trim(value);
         radix = guard ? 0 : +radix;
         return nativeParseInt(value, radix || (reHexPrefix.test(value) ? 16 : 10));
@@ -16451,8 +16752,8 @@ process.chdir = function (dir) {
     }
 
     /**
-     * Creates a "_.pluck" style function which returns the `key` value of a
-     * given object.
+     * Creates a "_.pluck" style function which returns the property value
+     * of `key` on a given object.
      *
      * @static
      * @memberOf _
@@ -16469,13 +16770,39 @@ process.chdir = function (dir) {
      * var getName = _.property('user');
      *
      * _.map(users, getName);
-     * // => ['barney', 'fred']
+     * // => ['fred', barney']
      *
-     * _.sortBy(users, getName);
-     * // => [{ 'user': 'barney', 'age': 36 }, { 'user': 'fred',   'age': 40 }]
+     * _.pluck(_.sortBy(users, getName), 'user');
+     * // => ['barney', 'fred']
      */
     function property(key) {
+      key = String(key);
       return function(object) {
+        return object == null ? undefined : object[key];
+      };
+    }
+
+    /**
+     * The inverse of `_.property`; this method creates a function which returns
+     * the property value of a given key on `object`.
+     *
+     * @static
+     * @memberOf _
+     * @category Utility
+     * @param {Object} object The object to inspect.
+     * @returns {Function} Returns the new function.
+     * @example
+     *
+     * var fred = { 'user': 'fred', 'age': 40, 'active': true };
+     * _.map(['age', 'active'], _.propertyOf(fred));
+     * // => [40, true]
+     *
+     * var object = { 'a': 3, 'b': 1, 'c': 2 };
+     * _.sortBy(['a', 'b', 'c'], _.propertyOf(object));
+     * // => ['b', 'c', 'a']
+     */
+    function propertyOf(object) {
+      return function(key) {
         return object == null ? undefined : object[key];
       };
     }
@@ -16544,7 +16871,7 @@ process.chdir = function (dir) {
 
     /**
      * Creates an array of numbers (positive and/or negative) progressing from
-     * `start` up to but not including `end`. If `start` is less than `end` a
+     * `start` up to, but not including, `end`. If `start` is less than `end` a
      * zero-length range is created unless a negative `step` is specified.
      *
      * @static
@@ -16630,8 +16957,8 @@ process.chdir = function (dir) {
      * _.result(object, 'age');
      * // => 40
      *
-     * _.result(object, 'employer', 'slate');
-     * // => 'slate'
+     * _.result(object, 'status', 'busy');
+     * // => 'busy'
      */
     function result(object, key, defaultValue) {
       var value = object == null ? undefined : object[key];
@@ -16659,7 +16986,7 @@ process.chdir = function (dir) {
      * // => [3, 6, 4]
      *
      * _.times(3, function(n) { mage.castSpell(n); });
-     * // => invokes `mage.castSpell(n)` three times, passing `n` of `0`, `1`, and `2` respectively
+     * // => invokes `mage.castSpell(n)` three times with `n` of `0`, `1`, and `2` respectively
      *
      * _.times(3, function(n) { this.cast(n); }, mage);
      * // => also invokes `mage.castSpell(n)` three times
@@ -16707,13 +17034,16 @@ process.chdir = function (dir) {
     // ensure `new LodashWrapper` is an instance of `lodash`
     LodashWrapper.prototype = lodash.prototype;
 
-    // add functions to the memoize cache
-    MemCache.prototype.get = memGet;
-    MemCache.prototype.has = memHas;
-    MemCache.prototype.set = memSet;
+    // add functions to the `Map` cache
+    MapCache.prototype.get = mapGet;
+    MapCache.prototype.has = mapHas;
+    MapCache.prototype.set = mapSet;
+
+    // add functions to the `Set` cache
+    SetCache.prototype.push = cachePush;
 
     // assign cache to `_.memoize`
-    memoize.Cache = MemCache;
+    memoize.Cache = MapCache;
 
     // add functions that return wrapped values when chaining
     lodash.after = after;
@@ -16777,9 +17107,11 @@ process.chdir = function (dir) {
     lodash.pick = pick;
     lodash.pluck = pluck;
     lodash.property = property;
+    lodash.propertyOf = propertyOf;
     lodash.pull = pull;
     lodash.pullAt = pullAt;
     lodash.range = range;
+    lodash.rearg = rearg;
     lodash.reject = reject;
     lodash.remove = remove;
     lodash.rest = rest;
@@ -16960,15 +17292,18 @@ process.chdir = function (dir) {
       LazyWrapper.prototype[methodName] = function(iteratee, thisArg) {
         iteratee = getCallback(iteratee, thisArg, 3);
 
-        var result = this.clone();
-        result.filtered = isFilter || result.filtered;
-        result.iteratees.push({ 'iteratee': iteratee, 'type': lazyIterateeTypes[methodName] });
+        var result = this.clone(),
+            filtered = result.filtered,
+            iteratees = result.iteratees || (result.iteratees = []);
+
+        result.filtered = filtered || index == LAZY_FILTER_FLAG || (index == LAZY_WHILE_FLAG && result.dir < 0);
+        iteratees.push({ 'iteratee': iteratee, 'type': index });
         return result;
       };
     });
 
     // add `LazyWrapper` methods for `_.drop` and `_.take` variants
-    arrayEach(['drop', 'take'], function(methodName) {
+    arrayEach(['drop', 'take'], function(methodName, index) {
       var countName = methodName + 'Count',
           whileName = methodName + 'While';
 
@@ -16976,14 +17311,13 @@ process.chdir = function (dir) {
         n = n == null ? 1 : nativeMax(+n || 0, 0);
 
         var result = this.clone();
-        if (this.filtered) {
-          result[countName] = n;
-          return result;
+        if (result.filtered) {
+          var value = result[countName];
+          result[countName] = index ? nativeMin(value, n) : (value + n);
+        } else {
+          var views = result.views || (result.views = []);
+          views.push({ 'size': n, 'type': methodName + (result.dir < 0 ? 'Right' : '') });
         }
-        result.views.push({
-          'size': n,
-          'type': methodName + (result.dir < 0 ? 'Right' : '')
-        });
         return result;
       };
 
@@ -16992,9 +17326,7 @@ process.chdir = function (dir) {
       };
 
       LazyWrapper.prototype[methodName + 'RightWhile'] = function(predicate, thisArg) {
-        var result = this.reverse()[whileName](predicate, thisArg);
-        result.filtered = true;
-        return result.reverse();
+        return this.reverse()[whileName](predicate, thisArg).reverse();
       };
     });
 
@@ -17038,7 +17370,18 @@ process.chdir = function (dir) {
       });
     };
 
-    // add `LazyWrapper` methods to `LodashWrapper`
+    LazyWrapper.prototype.slice = function(start, end) {
+      start = start == null ? 0 : (+start || 0);
+      var result = start < 0 ? this.takeRight(-start) : this.drop(start);
+
+      if (typeof end != 'undefined') {
+        end = (+end || 0);
+        result = end < 0 ? result.dropRight(-end) : result.take(end - start);
+      }
+      return result;
+    };
+
+    // add `LazyWrapper` methods to `lodash.prototype`
     baseForOwn(LazyWrapper.prototype, function(func, methodName) {
       var retUnwrapped = /^(?:first|last)$/.test(methodName);
 
@@ -17049,12 +17392,9 @@ process.chdir = function (dir) {
             isLazy = value instanceof LazyWrapper;
 
         if (retUnwrapped && !chainAll) {
-          if (isLazy) {
-            return func.apply(value, args);
-          }
-          var otherArgs = [this.value()];
-          push.apply(otherArgs, args);
-          return lodash[methodName].apply(lodash, otherArgs);
+          return isLazy
+            ? func.call(value)
+            : lodash[methodName](this.value());
         }
         if (isLazy || isArray(value)) {
           var result = func.apply(isLazy ? value : new LazyWrapper(this), args);
@@ -17068,7 +17408,7 @@ process.chdir = function (dir) {
       };
     });
 
-    // add `Array.prototype` functions to `LodashWrapper`
+    // add `Array.prototype` functions to `lodash.prototype`
     arrayEach(['concat', 'join', 'pop', 'push', 'shift', 'sort', 'splice', 'unshift'], function(methodName) {
       var arrayFunc = arrayProto[methodName],
           chainName = /^(?:push|sort|unshift)$/.test(methodName) ? 'tap' : 'thru',
@@ -17152,7 +17492,7 @@ process.chdir = function (dir) {
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],84:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -17242,7 +17582,7 @@ process.chdir = function (dir) {
     return _.property(value);
   };
   _.iteratee = function(value, context) {
-    return cb(value, context);
+    return cb(value, context, Infinity);
   };
 
   // Collection Functions
@@ -17324,15 +17664,13 @@ process.chdir = function (dir) {
 
   // Return the first value which passes a truth test. Aliased as `detect`.
   _.find = _.detect = function(obj, predicate, context) {
-    var result;
-    predicate = cb(predicate, context);
-    _.some(obj, function(value, index, list) {
-      if (predicate(value, index, list)) {
-        result = value;
-        return true;
-      }
-    });
-    return result;
+    var key;
+    if (obj.length === +obj.length) {
+      key = _.findIndex(obj, predicate, context);
+    } else {
+      key = _.findKey(obj, predicate, context);
+    }
+    if (key !== void 0 && key !== -1) return obj[key];
   };
 
   // Return all the elements that pass a truth test.
@@ -17757,7 +18095,7 @@ process.chdir = function (dir) {
     var i = 0, length = array && array.length;
     if (typeof isSorted == 'number') {
       i = isSorted < 0 ? Math.max(0, length + isSorted) : isSorted;
-    } else if (isSorted) {
+    } else if (isSorted && length) {
       i = _.sortedIndex(array, item);
       return array[i] === item ? i : -1;
     }
@@ -17771,6 +18109,16 @@ process.chdir = function (dir) {
       idx = from < 0 ? idx + from + 1 : Math.min(idx, from + 1);
     }
     while (--idx >= 0) if (array[idx] === item) return idx;
+    return -1;
+  };
+
+  // Returns the first index on an array-like that passes a predicate test
+  _.findIndex = function(array, predicate, context) {
+    predicate = cb(predicate, context);
+    var length = array != null ? array.length : 0;
+    for (var i = 0; i < length; i++) {
+      if (predicate(array[i], i, array)) return i;
+    }
     return -1;
   };
 
@@ -17800,24 +18148,28 @@ process.chdir = function (dir) {
   // Reusable constructor function for prototype setting.
   var Ctor = function(){};
 
+  // Determines whether to execute a function as a constructor
+  // or a normal function with the provided arguments
+  var executeBound = function(sourceFunc, boundFunc, context, callingContext, args) {
+    if (!(callingContext instanceof boundFunc)) return sourceFunc.apply(context, args);
+    Ctor.prototype = sourceFunc.prototype;
+    var self = new Ctor;
+    Ctor.prototype = null;
+    var result = sourceFunc.apply(self, args);
+    if (_.isObject(result)) return result;
+    return self;
+  };
+
   // Create a function bound to a given object (assigning `this`, and arguments,
   // optionally). Delegates to **ECMAScript 5**'s native `Function.bind` if
   // available.
   _.bind = function(func, context) {
-    var args, bound;
     if (nativeBind && func.bind === nativeBind) return nativeBind.apply(func, slice.call(arguments, 1));
-    if (!_.isFunction(func)) throw new TypeError('Bind must be called on a function');
-    args = slice.call(arguments, 2);
-    bound = function() {
-      if (!(this instanceof bound)) return func.apply(context, args.concat(slice.call(arguments)));
-      Ctor.prototype = func.prototype;
-      var self = new Ctor;
-      Ctor.prototype = null;
-      var result = func.apply(self, args.concat(slice.call(arguments)));
-      if (_.isObject(result)) return result;
-      return self;
+    if (!_.isFunction(func)) throw TypeError('Bind must be called on a function');
+    var args = slice.call(arguments, 2);
+    return function bound() {
+      return executeBound(func, bound, context, this, args.concat(slice.call(arguments)));
     };
-    return bound;
   };
 
   // Partially apply a function by creating a version that has had some of its
@@ -17825,14 +18177,14 @@ process.chdir = function (dir) {
   // as a placeholder, allowing any combination of arguments to be pre-filled.
   _.partial = function(func) {
     var boundArgs = slice.call(arguments, 1);
-    return function() {
+    return function bound() {
       var position = 0;
       var args = boundArgs.slice();
       for (var i = 0, length = args.length; i < length; i++) {
         if (args[i] === _) args[i] = arguments[position++];
       }
       while (position < arguments.length) args.push(arguments[position++]);
-      return func.apply(this, args);
+      return executeBound(func, bound, this, this, args);
     };
   };
 
@@ -17991,9 +18343,8 @@ process.chdir = function (dir) {
     return function() {
       if (--times > 0) {
         memo = func.apply(this, arguments);
-      } else {
-        func = null;
       }
+      if (times <= 1) func = null;
       return memo;
     };
   };
@@ -18010,22 +18361,38 @@ process.chdir = function (dir) {
   var nonEnumerableProps = ['constructor', 'valueOf', 'isPrototypeOf', 'toString',
                       'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
 
-  // Retrieve the names of an object's properties.
+  function collectNonEnumProps(obj, keys) {
+    var nonEnumIdx = nonEnumerableProps.length;
+    var proto = typeof obj.constructor === 'function' ? FuncProto : ObjProto;
+
+    while (nonEnumIdx--) {
+      var prop = nonEnumerableProps[nonEnumIdx];
+      if (prop === 'constructor' ? _.has(obj, prop) : prop in obj &&
+        obj[prop] !== proto[prop] && !_.contains(keys, prop)) {
+        keys.push(prop);
+      }
+    }
+  }
+
+  // Retrieve the names of an object's own properties.
   // Delegates to **ECMAScript 5**'s native `Object.keys`
   _.keys = function(obj) {
     if (!_.isObject(obj)) return [];
     if (nativeKeys) return nativeKeys(obj);
     var keys = [];
     for (var key in obj) if (_.has(obj, key)) keys.push(key);
-
     // Ahem, IE < 9.
-    if (hasEnumBug) {
-      var nonEnumIdx = nonEnumerableProps.length;
-      while (nonEnumIdx--) {
-        var prop = nonEnumerableProps[nonEnumIdx];
-        if (_.has(obj, prop) && !_.contains(keys, prop)) keys.push(prop);
-      }
-    }
+    if (hasEnumBug) collectNonEnumProps(obj, keys);
+    return keys;
+  };
+
+  // Retrieve all the property names of an object.
+  _.keysIn = function(obj) {
+    if (!_.isObject(obj)) return [];
+    var keys = [];
+    for (var key in obj) keys.push(key);
+    // Ahem, IE < 9.
+    if (hasEnumBug) collectNonEnumProps(obj, keys);
     return keys;
   };
 
@@ -18082,6 +18449,16 @@ process.chdir = function (dir) {
       }
     }
     return obj;
+  };
+
+  // Returns the first key on an object that passes a predicate test
+  _.findKey = function(obj, predicate, context) {
+    predicate = cb(predicate, context);
+    var keys = _.keys(obj), key;
+    for (var i = 0, length = keys.length; i < length; i++) {
+      key = keys[i];
+      if (predicate(obj[key], key, obj)) return key;
+    }
   };
 
   // Return a copy of the object only containing the whitelisted properties.
@@ -18204,36 +18581,32 @@ process.chdir = function (dir) {
     // Add the first object to the stack of traversed objects.
     aStack.push(a);
     bStack.push(b);
-    var size, result;
+
     // Recursively compare objects and arrays.
     if (areArrays) {
       // Compare array lengths to determine if a deep comparison is necessary.
-      size = a.length;
-      result = size === b.length;
-      if (result) {
-        // Deep compare the contents, ignoring non-numeric properties.
-        while (size--) {
-          if (!(result = eq(a[size], b[size], aStack, bStack))) break;
-        }
+      length = a.length;
+      if (length !== b.length) return false;
+      // Deep compare the contents, ignoring non-numeric properties.
+      while (length--) {
+        if (!(eq(a[length], b[length], aStack, bStack))) return false;
       }
     } else {
       // Deep compare objects.
       var keys = _.keys(a), key;
-      size = keys.length;
+      length = keys.length;
       // Ensure that both objects contain the same number of properties before comparing deep equality.
-      result = _.keys(b).length === size;
-      if (result) {
-        while (size--) {
-          // Deep compare each member
-          key = keys[size];
-          if (!(result = _.has(b, key) && eq(a[key], b[key], aStack, bStack))) break;
-        }
+      if (_.keys(b).length !== length) return false;
+      while (length--) {
+        // Deep compare each member
+        key = keys[length];
+        if (!(_.has(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
       }
     }
     // Remove the first object from the stack of traversed objects.
     aStack.pop();
     bStack.pop();
-    return result;
+    return true;
   };
 
   // Perform a deep comparison to check if two objects are equal.
@@ -18349,6 +18722,13 @@ process.chdir = function (dir) {
       return obj == null ? void 0 : obj[key];
     };
   };
+  
+  // Generates a function for a given object that returns a given property (including those of ancestors) 
+  _.propertyOf = function(obj) {
+    return obj == null ? function(){} : function(key) {
+      return obj[key];
+    };
+  };
 
   // Returns a predicate for checking whether an object has a given set of `key:value` pairs.
   _.matches = function(attrs) {
@@ -18419,9 +18799,9 @@ process.chdir = function (dir) {
   _.result = function(object, property, fallback) {
     var value = object == null ? void 0 : object[property];
     if (value === void 0) {
-      return fallback;
+      value = fallback;
     }
-    return _.isFunction(value) ? object[property]() : value;
+    return _.isFunction(value) ? value.call(object) : value;
   };
 
   // Generate a unique integer id (unique within the entire client session).
@@ -18593,7 +18973,7 @@ process.chdir = function (dir) {
   }
 }.call(this));
 
-},{}],85:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 'use strict';
 
 /**
@@ -18629,7 +19009,7 @@ module.exports = function fastAssign (target) {
   return target;
 };
 
-},{}],86:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 'use strict';
 
 /**
@@ -18656,7 +19036,7 @@ module.exports = function fastCloneObject (input) {
   return cloned;
 };
 
-},{}],87:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 'use strict';
 
 var bindInternal3 = require('../function/bindInternal3');
@@ -18686,7 +19066,7 @@ module.exports = function fastFilterObject (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":73}],88:[function(require,module,exports){
+},{"../function/bindInternal3":76}],91:[function(require,module,exports){
 'use strict';
 
 var bindInternal3 = require('../function/bindInternal3');
@@ -18711,7 +19091,7 @@ module.exports = function fastForEachObject (subject, fn, thisContext) {
   }
 };
 
-},{"../function/bindInternal3":73}],89:[function(require,module,exports){
+},{"../function/bindInternal3":76}],92:[function(require,module,exports){
 'use strict';
 
 exports.assign = require('./assign');
@@ -18721,7 +19101,27 @@ exports.forEach = require('./forEach');
 exports.map = require('./map');
 exports.reduce = require('./reduce');
 exports.reduceRight = require('./reduceRight');
-},{"./assign":85,"./clone":86,"./filter":87,"./forEach":88,"./map":90,"./reduce":91,"./reduceRight":92}],90:[function(require,module,exports){
+exports.keys = require('./keys');
+exports.values = require('./values');
+},{"./assign":88,"./clone":89,"./filter":90,"./forEach":91,"./keys":93,"./map":94,"./reduce":95,"./reduceRight":96,"./values":97}],93:[function(require,module,exports){
+'use strict';
+
+/**
+ * Object.keys() shim for ES3 environments.
+ *
+ * @param  {Object} obj The object to get keys for.
+ * @return {Array}      The array of keys.
+ */
+module.exports = typeof Object.keys === "function" ? Object.keys : function fastKeys (obj) {
+  var keys = [];
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      keys.push(key);
+    }
+  }
+  return keys;
+};
+},{}],94:[function(require,module,exports){
 'use strict';
 
 var bindInternal3 = require('../function/bindInternal3');
@@ -18749,7 +19149,7 @@ module.exports = function fastMapObject (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":73}],91:[function(require,module,exports){
+},{"../function/bindInternal3":76}],95:[function(require,module,exports){
 'use strict';
 
 var bindInternal4 = require('../function/bindInternal4');
@@ -18788,7 +19188,7 @@ module.exports = function fastReduceObject (subject, fn, initialValue, thisConte
   return result;
 };
 
-},{"../function/bindInternal4":74}],92:[function(require,module,exports){
+},{"../function/bindInternal4":77}],96:[function(require,module,exports){
 'use strict';
 
 var bindInternal4 = require('../function/bindInternal4');
@@ -18827,7 +19227,28 @@ module.exports = function fastReduceRightObject (subject, fn, initialValue, this
   return result;
 };
 
-},{"../function/bindInternal4":74}],93:[function(require,module,exports){
+},{"../function/bindInternal4":77}],97:[function(require,module,exports){
+'use strict';
+
+/**
+ * # Values
+ * Return all the (enumerable) property values for an object.
+ * Like Object.keys() but for values.
+ *
+ * @param  {Object} obj The object to retrieve values from.
+ * @return {Array}      An array containing property values.
+ */
+module.exports = function fastValues (obj) {
+  var keys = Object.keys(obj),
+      length = keys.length,
+      values = new Array(length);
+
+  for (var i = 0; i < length; i++) {
+    values[i] = obj[keys[i]];
+  }
+  return values;
+};
+},{}],98:[function(require,module,exports){
 'use strict';
 
 var reduceArray = require('./array/reduce'),
@@ -18852,7 +19273,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
     return reduceObject(subject, fn, initialValue, thisContext);
   }
 };
-},{"./array/reduce":10,"./object/reduce":91}],94:[function(require,module,exports){
+},{"./array/reduce":11,"./object/reduce":95}],99:[function(require,module,exports){
 'use strict';
 
 var reduceRightArray = require('./array/reduceRight'),
@@ -18877,11 +19298,11 @@ module.exports = function fastReduceRight (subject, fn, initialValue, thisContex
     return reduceRightObject(subject, fn, initialValue, thisContext);
   }
 };
-},{"./array/reduceRight":11,"./object/reduceRight":92}],95:[function(require,module,exports){
+},{"./array/reduceRight":12,"./object/reduceRight":96}],100:[function(require,module,exports){
 'use strict';
 
 exports.intern = require('./intern');
-},{"./intern":96}],96:[function(require,module,exports){
+},{"./intern":101}],101:[function(require,module,exports){
 'use strict';
 
 // Compilers such as V8 use string interning to make string comparison very fast and efficient,
@@ -18938,7 +19359,7 @@ module.exports = function fastIntern (string) {
   delete container[interned];
   return interned;
 };
-},{}],97:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 exports.concat_0_0_0 = function fastConcat () {
   var length = arguments.length,
       arr = [],
@@ -19342,4 +19763,4 @@ exports.assign_0_0_4c = function fastAssign (target) {
   return target;
 };
 
-},{}]},{},[41])
+},{}]},{},[42])

@@ -4,6 +4,10 @@ var Benchmark = require('benchmark'),
 
 
 run([
+  bench('Native Object.keys().map() value extractor vs fast.values()', require('./values')),
+
+  bench('Native .reduce() plucker vs fast.pluck()', require('./pluck')),
+
 
   bench('Object.assign() vs fast.assign()', require('./assign')),
   bench('Object.assign() vs fast.assign() (3 arguments)', require('./assign-3')),

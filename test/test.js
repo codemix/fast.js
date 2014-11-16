@@ -856,6 +856,36 @@ describe('fast.intern()', function () {
   });
 });
 
+describe('fast.pluck()', function () {
+  it('should pluck some values from an array', function () {
+    fast.pluck('a', [{a: 1}, {a: 2}, {a: 3}]).should.eql([1,2,3]);
+  });
+  it('should pluck some values from an array, including misses', function () {
+    fast.pluck('a', [{a: 1}, {a: 2}, {b: 4}, {a: 3}]).should.eql([1,2,3]);
+  });
+  it('should pluck some values from an array, including undefined / null values', function () {
+    fast.pluck('a', [{a: 1}, undefined, null, null, {a: 2}, {a: 3}]).should.eql([1,2,3]);
+  });
+});
+
+describe('fast.values()', function () {
+  it('should retrieve the values of an object', function () {
+    fast.values({a: 1, b: 2, c: 3}).should.eql([1,2,3]);
+  });
+  it('should retrieve the values of an object, skipping non-enumerable values', function () {
+    var input = {a: 1, b: 2, c: 3};
+    Object.defineProperty(input, 'd', {value: 4});
+    fast.values(input).should.eql([1,2,3]);
+  });
+  it('should retrieve the values of an object, skipping inherited properties', function () {
+    var input = Object.create({z: 9});
+    input.a = 1;
+    input.b = 2;
+    input.c = 3;
+    fast.values(input).should.eql([1,2,3]);
+  });
+});
+
 describe('Fast', function () {
   var input = fast([1,2,3,4,5,6]);
 

@@ -82,7 +82,7 @@ module.exports = function fastEvery (subject, fn, thisContext) {
   return true;
 };
 
-},{"../function/bindInternal3":20}],4:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":21}],4:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -110,7 +110,7 @@ module.exports = function fastFilter (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":20}],5:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":21}],5:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -133,7 +133,7 @@ module.exports = function fastForEach (subject, fn, thisContext) {
   }
 };
 
-},{"../function/bindInternal3":20}],6:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":21}],6:[function(_dereq_,module,exports){
 'use strict';
 
 exports.clone = _dereq_('./clone');
@@ -144,10 +144,11 @@ exports.forEach = _dereq_('./forEach');
 exports.indexOf = _dereq_('./indexOf');
 exports.lastIndexOf = _dereq_('./lastIndexOf');
 exports.map = _dereq_('./map');
+exports.pluck = _dereq_('./pluck');
 exports.reduce = _dereq_('./reduce');
 exports.reduceRight = _dereq_('./reduceRight');
 exports.some = _dereq_('./some');
-},{"./clone":1,"./concat":2,"./every":3,"./filter":4,"./forEach":5,"./indexOf":7,"./lastIndexOf":8,"./map":9,"./reduce":10,"./reduceRight":11,"./some":12}],7:[function(_dereq_,module,exports){
+},{"./clone":1,"./concat":2,"./every":3,"./filter":4,"./forEach":5,"./indexOf":7,"./lastIndexOf":8,"./map":9,"./pluck":10,"./reduce":11,"./reduceRight":12,"./some":13}],7:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -239,7 +240,32 @@ module.exports = function fastMap (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":20}],10:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":21}],10:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * # Pluck
+ * Pluck the property with the given name from an array of objects.
+ *
+ * @param  {String} field The name of the field to pluck.
+ * @param  {Array}  input The values to pluck from.
+ * @return {Array}        The plucked array of values.
+ */
+module.exports = function fastPluck (field, input) {
+  var length = input.length,
+      plucked = [],
+      count = 0,
+      value, i;
+
+  for (i = 0; i < length; i++) {
+    value = input[i];
+    if (value != null && value[field] !== undefined) {
+      plucked[count++] = value[field];
+    }
+  }
+  return plucked;
+};
+},{}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('../function/bindInternal4');
@@ -276,7 +302,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal4":21}],11:[function(_dereq_,module,exports){
+},{"../function/bindInternal4":22}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('../function/bindInternal4');
@@ -313,7 +339,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal4":21}],12:[function(_dereq_,module,exports){
+},{"../function/bindInternal4":22}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -340,7 +366,7 @@ module.exports = function fastSome (subject, fn, thisContext) {
   return false;
 };
 
-},{"../function/bindInternal3":20}],13:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":21}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var cloneArray = _dereq_('./array/clone');
@@ -369,7 +395,7 @@ module.exports = function clone (input) {
   }
 };
 
-},{"./array/clone":1,"./object/clone":29}],14:[function(_dereq_,module,exports){
+},{"./array/clone":1,"./object/clone":30}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var filterArray = _dereq_('./array/filter'),
@@ -393,7 +419,7 @@ module.exports = function fastFilter (subject, fn, thisContext) {
     return filterObject(subject, fn, thisContext);
   }
 };
-},{"./array/filter":4,"./object/filter":30}],15:[function(_dereq_,module,exports){
+},{"./array/filter":4,"./object/filter":31}],16:[function(_dereq_,module,exports){
 'use strict';
 
 var forEachArray = _dereq_('./array/forEach'),
@@ -416,7 +442,7 @@ module.exports = function fastForEach (subject, fn, thisContext) {
     return forEachObject(subject, fn, thisContext);
   }
 };
-},{"./array/forEach":5,"./object/forEach":31}],16:[function(_dereq_,module,exports){
+},{"./array/forEach":5,"./object/forEach":32}],17:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -437,7 +463,7 @@ module.exports = function fastApply (subject, thisContext, args) {
   return thisContext !== undefined ? applyWithContext(subject, thisContext, args) : applyNoContext(subject, args);
 };
 
-},{"./applyNoContext":17,"./applyWithContext":18}],17:[function(_dereq_,module,exports){
+},{"./applyNoContext":18,"./applyWithContext":19}],18:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -468,7 +494,7 @@ module.exports = function applyNoContext (subject, args) {
   }
 };
 
-},{}],18:[function(_dereq_,module,exports){
+},{}],19:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -499,7 +525,7 @@ module.exports = function applyWithContext (subject, thisContext, args) {
   }
 };
 
-},{}],19:[function(_dereq_,module,exports){
+},{}],20:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -572,7 +598,7 @@ module.exports = function fastBind (fn, thisContext) {
   }
 };
 
-},{"./applyNoContext":17,"./applyWithContext":18}],20:[function(_dereq_,module,exports){
+},{"./applyNoContext":18,"./applyWithContext":19}],21:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -585,7 +611,7 @@ module.exports = function bindInternal3 (func, thisContext) {
   };
 };
 
-},{}],21:[function(_dereq_,module,exports){
+},{}],22:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -598,7 +624,7 @@ module.exports = function bindInternal4 (func, thisContext) {
   };
 };
 
-},{}],22:[function(_dereq_,module,exports){
+},{}],23:[function(_dereq_,module,exports){
 'use strict';
 
 exports.apply = _dereq_('./apply');
@@ -607,7 +633,7 @@ exports.partial = _dereq_('./partial');
 exports.partialConstructor = _dereq_('./partialConstructor');
 exports.try = _dereq_('./try');
 
-},{"./apply":16,"./bind":19,"./partial":23,"./partialConstructor":24,"./try":25}],23:[function(_dereq_,module,exports){
+},{"./apply":17,"./bind":20,"./partial":24,"./partialConstructor":25,"./try":26}],24:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -651,7 +677,7 @@ module.exports = function fastPartial (fn) {
   };
 };
 
-},{"./applyWithContext":18}],24:[function(_dereq_,module,exports){
+},{"./applyWithContext":19}],25:[function(_dereq_,module,exports){
 'use strict';
 
 var applyWithContext = _dereq_('./applyWithContext');
@@ -698,7 +724,7 @@ module.exports = function fastPartialConstructor (fn) {
   };
 };
 
-},{"./applyWithContext":18}],25:[function(_dereq_,module,exports){
+},{"./applyWithContext":19}],26:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -735,7 +761,7 @@ module.exports = function fastTry (fn) {
   }
 };
 
-},{}],26:[function(_dereq_,module,exports){
+},{}],27:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -771,17 +797,20 @@ Fast['function'] = Fast.fn = _dereq_('./function');
 Fast.object = _dereq_('./object');
 Fast.string = _dereq_('./string');
 
+
+Fast.apply = Fast['function'].apply;
+Fast.bind = Fast['function'].bind;
+Fast.partial = Fast['function'].partial;
+Fast.partialConstructor = Fast['function'].partialConstructor;
+Fast['try'] = Fast.attempt = Fast['function']['try'];
+
+Fast.assign = Fast.object.assign;
+Fast.cloneObject = Fast.object.clone; // @deprecated use fast.object.clone()
+Fast.keys = Fast.object.keys;
+Fast.values = Fast.object.values;
+
+
 Fast.clone = _dereq_('./clone');
-
-Fast.apply = _dereq_('./function/apply');
-Fast.bind = _dereq_('./function/bind');
-Fast.partial = _dereq_('./function/partial');
-Fast.partialConstructor = _dereq_('./function/partialConstructor');
-Fast['try'] = Fast.attempt = _dereq_( './function/try' );
-
-Fast.assign = _dereq_('./object/assign');
-Fast.cloneObject = _dereq_('./object/clone');
-
 Fast.map = _dereq_('./map');
 Fast.filter = _dereq_('./filter');
 Fast.forEach = _dereq_('./forEach');
@@ -789,15 +818,16 @@ Fast.reduce = _dereq_('./reduce');
 Fast.reduceRight = _dereq_('./reduceRight');
 
 
-Fast.cloneArray = _dereq_('./array/clone');
+Fast.cloneArray = Fast.array.clone; // @deprecated use fast.array.clone()
 
-Fast.concat = _dereq_('./array/concat');
-Fast.some = _dereq_('./array/some');
-Fast.every = _dereq_('./array/every');
-Fast.indexOf = _dereq_('./array/indexOf');
-Fast.lastIndexOf = _dereq_('./array/lastIndexOf');
+Fast.concat = Fast.array.concat;
+Fast.some = Fast.array.some;
+Fast.every = Fast.array.every;
+Fast.indexOf = Fast.array.indexOf;
+Fast.lastIndexOf = Fast.array.lastIndexOf;
+Fast.pluck = Fast.array.pluck;
 
-Fast.intern = _dereq_('./string/intern');
+Fast.intern = Fast.string.intern;
 
 
 /**
@@ -973,7 +1003,7 @@ Object.defineProperty(Fast.prototype, 'length', {
   }
 });
 
-},{"./array":6,"./array/clone":1,"./array/concat":2,"./array/every":3,"./array/indexOf":7,"./array/lastIndexOf":8,"./array/some":12,"./clone":13,"./filter":14,"./forEach":15,"./function":22,"./function/apply":16,"./function/bind":19,"./function/partial":23,"./function/partialConstructor":24,"./function/try":25,"./map":27,"./object":32,"./object/assign":28,"./object/clone":29,"./reduce":36,"./reduceRight":37,"./string":38,"./string/intern":39}],27:[function(_dereq_,module,exports){
+},{"./array":6,"./clone":14,"./filter":15,"./forEach":16,"./function":23,"./map":28,"./object":33,"./reduce":39,"./reduceRight":40,"./string":41}],28:[function(_dereq_,module,exports){
 'use strict';
 
 var mapArray = _dereq_('./array/map'),
@@ -997,7 +1027,7 @@ module.exports = function fastMap (subject, fn, thisContext) {
     return mapObject(subject, fn, thisContext);
   }
 };
-},{"./array/map":9,"./object/map":33}],28:[function(_dereq_,module,exports){
+},{"./array/map":9,"./object/map":35}],29:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -1033,7 +1063,7 @@ module.exports = function fastAssign (target) {
   return target;
 };
 
-},{}],29:[function(_dereq_,module,exports){
+},{}],30:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -1060,7 +1090,7 @@ module.exports = function fastCloneObject (input) {
   return cloned;
 };
 
-},{}],30:[function(_dereq_,module,exports){
+},{}],31:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -1090,7 +1120,7 @@ module.exports = function fastFilterObject (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":20}],31:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":21}],32:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -1115,7 +1145,7 @@ module.exports = function fastForEachObject (subject, fn, thisContext) {
   }
 };
 
-},{"../function/bindInternal3":20}],32:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":21}],33:[function(_dereq_,module,exports){
 'use strict';
 
 exports.assign = _dereq_('./assign');
@@ -1125,7 +1155,27 @@ exports.forEach = _dereq_('./forEach');
 exports.map = _dereq_('./map');
 exports.reduce = _dereq_('./reduce');
 exports.reduceRight = _dereq_('./reduceRight');
-},{"./assign":28,"./clone":29,"./filter":30,"./forEach":31,"./map":33,"./reduce":34,"./reduceRight":35}],33:[function(_dereq_,module,exports){
+exports.keys = _dereq_('./keys');
+exports.values = _dereq_('./values');
+},{"./assign":29,"./clone":30,"./filter":31,"./forEach":32,"./keys":34,"./map":35,"./reduce":36,"./reduceRight":37,"./values":38}],34:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * Object.keys() shim for ES3 environments.
+ *
+ * @param  {Object} obj The object to get keys for.
+ * @return {Array}      The array of keys.
+ */
+module.exports = typeof Object.keys === "function" ? Object.keys : function fastKeys (obj) {
+  var keys = [];
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      keys.push(key);
+    }
+  }
+  return keys;
+};
+},{}],35:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal3 = _dereq_('../function/bindInternal3');
@@ -1153,7 +1203,7 @@ module.exports = function fastMapObject (subject, fn, thisContext) {
   return result;
 };
 
-},{"../function/bindInternal3":20}],34:[function(_dereq_,module,exports){
+},{"../function/bindInternal3":21}],36:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('../function/bindInternal4');
@@ -1192,7 +1242,7 @@ module.exports = function fastReduceObject (subject, fn, initialValue, thisConte
   return result;
 };
 
-},{"../function/bindInternal4":21}],35:[function(_dereq_,module,exports){
+},{"../function/bindInternal4":22}],37:[function(_dereq_,module,exports){
 'use strict';
 
 var bindInternal4 = _dereq_('../function/bindInternal4');
@@ -1231,7 +1281,28 @@ module.exports = function fastReduceRightObject (subject, fn, initialValue, this
   return result;
 };
 
-},{"../function/bindInternal4":21}],36:[function(_dereq_,module,exports){
+},{"../function/bindInternal4":22}],38:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * # Values
+ * Return all the (enumerable) property values for an object.
+ * Like Object.keys() but for values.
+ *
+ * @param  {Object} obj The object to retrieve values from.
+ * @return {Array}      An array containing property values.
+ */
+module.exports = function fastValues (obj) {
+  var keys = Object.keys(obj),
+      length = keys.length,
+      values = new Array(length);
+
+  for (var i = 0; i < length; i++) {
+    values[i] = obj[keys[i]];
+  }
+  return values;
+};
+},{}],39:[function(_dereq_,module,exports){
 'use strict';
 
 var reduceArray = _dereq_('./array/reduce'),
@@ -1256,7 +1327,7 @@ module.exports = function fastReduce (subject, fn, initialValue, thisContext) {
     return reduceObject(subject, fn, initialValue, thisContext);
   }
 };
-},{"./array/reduce":10,"./object/reduce":34}],37:[function(_dereq_,module,exports){
+},{"./array/reduce":11,"./object/reduce":36}],40:[function(_dereq_,module,exports){
 'use strict';
 
 var reduceRightArray = _dereq_('./array/reduceRight'),
@@ -1281,11 +1352,11 @@ module.exports = function fastReduceRight (subject, fn, initialValue, thisContex
     return reduceRightObject(subject, fn, initialValue, thisContext);
   }
 };
-},{"./array/reduceRight":11,"./object/reduceRight":35}],38:[function(_dereq_,module,exports){
+},{"./array/reduceRight":12,"./object/reduceRight":37}],41:[function(_dereq_,module,exports){
 'use strict';
 
 exports.intern = _dereq_('./intern');
-},{"./intern":39}],39:[function(_dereq_,module,exports){
+},{"./intern":42}],42:[function(_dereq_,module,exports){
 'use strict';
 
 // Compilers such as V8 use string interning to make string comparison very fast and efficient,
@@ -1342,6 +1413,6 @@ module.exports = function fastIntern (string) {
   delete container[interned];
   return interned;
 };
-},{}]},{},[26])
-(26)
+},{}]},{},[27])
+(27)
 });

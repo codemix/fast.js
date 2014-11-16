@@ -33,17 +33,20 @@ Fast['function'] = Fast.fn = require('./function');
 Fast.object = require('./object');
 Fast.string = require('./string');
 
+
+Fast.apply = Fast['function'].apply;
+Fast.bind = Fast['function'].bind;
+Fast.partial = Fast['function'].partial;
+Fast.partialConstructor = Fast['function'].partialConstructor;
+Fast['try'] = Fast.attempt = Fast['function']['try'];
+
+Fast.assign = Fast.object.assign;
+Fast.cloneObject = Fast.object.clone; // @deprecated use fast.object.clone()
+Fast.keys = Fast.object.keys;
+Fast.values = Fast.object.values;
+
+
 Fast.clone = require('./clone');
-
-Fast.apply = require('./function/apply');
-Fast.bind = require('./function/bind');
-Fast.partial = require('./function/partial');
-Fast.partialConstructor = require('./function/partialConstructor');
-Fast['try'] = Fast.attempt = require( './function/try' );
-
-Fast.assign = require('./object/assign');
-Fast.cloneObject = require('./object/clone'); // @deprecated use fast.object.clone()
-
 Fast.map = require('./map');
 Fast.filter = require('./filter');
 Fast.forEach = require('./forEach');
@@ -51,15 +54,16 @@ Fast.reduce = require('./reduce');
 Fast.reduceRight = require('./reduceRight');
 
 
-Fast.cloneArray = require('./array/clone'); // @deprecated use fast.array.clone()
+Fast.cloneArray = Fast.array.clone; // @deprecated use fast.array.clone()
 
-Fast.concat = require('./array/concat');
-Fast.some = require('./array/some');
-Fast.every = require('./array/every');
-Fast.indexOf = require('./array/indexOf');
-Fast.lastIndexOf = require('./array/lastIndexOf');
+Fast.concat = Fast.array.concat;
+Fast.some = Fast.array.some;
+Fast.every = Fast.array.every;
+Fast.indexOf = Fast.array.indexOf;
+Fast.lastIndexOf = Fast.array.lastIndexOf;
+Fast.pluck = Fast.array.pluck;
 
-Fast.intern = require('./string/intern');
+Fast.intern = Fast.string.intern;
 
 
 /**

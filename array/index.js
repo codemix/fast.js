@@ -8,6 +8,7 @@ exports.forEach = require('./forEach');
 exports.indexOf = require('./indexOf');
 exports.lastIndexOf = require('./lastIndexOf');
 exports.map = require('./map');
+exports.pluck = require('./pluck');
 exports.reduce = require('./reduce');
 exports.reduceRight = require('./reduceRight');
 exports.some = require('./some');

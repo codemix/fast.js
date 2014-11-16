@@ -28,3 +28,21 @@ exports.fns = function () {
     return fns[pointer % 20];
   };
 };
+
+
+exports.valueStream = function (length, func) {
+  var values = new Array(length),
+      i;
+  for (i = 0; i < length; i++) {
+    values[i] = func();
+  }
+
+  var index = 0;
+  return function getValue () {
+    index++;
+    if (index >= length) {
+      index = 0;
+    }
+    return values[index];
+  }
+}

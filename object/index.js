@@ -7,3 +7,5 @@ exports.forEach = require('./forEach');
 exports.map = require('./map');
 exports.reduce = require('./reduce');
 exports.reduceRight = require('./reduceRight');
+exports.keys = require('./keys');
+exports.values = require('./values');
