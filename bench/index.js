@@ -4,6 +4,11 @@ var Benchmark = require('benchmark'),
 
 
 run([
+
+  bench('Native .fill() vs fast.fill() (3 items)', require('./fill-3')),
+  bench('Native .fill() vs fast.fill() (10 items)', require('./fill-10')),
+  bench('Native .fill() vs fast.fill() (1000 items)', require('./fill-1000')),
+
   bench('Native .reduce() plucker vs fast.pluck()', require('./pluck')),
   bench('Native Object.keys().map() value extractor vs fast.values()', require('./values')),
 
