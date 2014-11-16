@@ -1402,9 +1402,9 @@ var Benchmark = require('benchmark'),
 
 
 run([
+  bench('Native .reduce() plucker vs fast.pluck()', require('./pluck')),
   bench('Native Object.keys().map() value extractor vs fast.values()', require('./values')),
 
-  bench('Native .reduce() plucker vs fast.pluck()', require('./pluck')),
 
 
   bench('Object.assign() vs fast.assign()', require('./assign')),
@@ -1915,9 +1915,29 @@ var fast = require('../'),
     utils = require('./utils'),
     history = require('../test/history');
 
+var getValues = utils.valueStream(20, function () {
+  var values = [];
+  for (var i = 0, limit = Math.ceil(Math.random() * 100); i < limit; i++) {
+    if (i % 7 === 0) {
+      values[i] = null;
+    }
+    else if (i % 3 === 0) {
+      values[i] = true;
+    }
+    else {
+      values[i] = {
+        a: Math.random(),
+        b: Math.random(),
+        c: Math.random()
+      };
+      values[i]['wat'+Math.floor(Math.random()*120)] = Math.random();
+    }
+  }
+  return values;
+});
 
 exports['Native Array::reduce() plucker'] = function () {
-  var values = generateValues();
+  var values = getValues();
   return values.reduce(function (plucked, item) {
     if (item != null && item.b !== undefined) {
       plucked.push(item.b);
@@ -1927,32 +1947,20 @@ exports['Native Array::reduce() plucker'] = function () {
 };
 
 exports['fast.pluck()'] = function () {
-  var values = generateValues();
+  var values = getValues();
   return fast.pluck('b', values);
 };
 
 exports['underscore.pluck()'] = function () {
-  var values = generateValues();
+  var values = getValues();
   return underscore.pluck(values, 'b');
 };
 
 exports['lodash.pluck()'] = function () {
-  var values = generateValues();
+  var values = getValues();
   return lodash.pluck(values, 'b');
 };
 
-
-function generateValues () {
-  var values = [];
-  for (var i = 0, limit = 10; i < limit; i++) {
-    values[i] = i % 7 === 0 ? null : i % 3 === 0 ? true : {
-      a: Math.random(),
-      b: Math.random(),
-      c: Math.random()
-    };
-  }
-  return values;
-}
 },{"../":82,"../test/history":102,"./utils":67,"lodash":86,"underscore":87}],55:[function(require,module,exports){
 var fast = require('../'),
     underscore = require('underscore'),
