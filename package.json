@@ -43,6 +43,6 @@
     "underscore": "git://github.com/jashkenas/underscore.git#master",
     "lodash": "git://github.com/lodash/lodash.git#master",
     "browserify": "~4.1.11",
-    "uglifyjs": "~2.3.6"
+    "uglify-js": "~2.3.6"
   }
 }
