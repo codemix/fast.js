@@ -861,10 +861,10 @@ describe('fast.pluck()', function () {
     fast.pluck([{a: 1}, {a: 2}, {a: 3}], 'a').should.eql([1,2,3]);
   });
   it('should pluck some values from an array, including misses', function () {
-    fast.pluck([{a: 1}, {a: 2}, {b: 4}, {a: 3}], 'a').should.eql([1,2,3]);
+    fast.pluck([{a: 1}, {a: 2}, {b: 4}, {a: 3}], 'a').should.eql([1,2,undefined,3]);
   });
   it('should pluck some values from an array, including undefined / null values', function () {
-    fast.pluck([{a: 1}, undefined, null, null, {a: 2}, {a: 3}], 'a').should.eql([1,2,3]);
+    fast.pluck([{a: 1}, undefined, null, null, {a: 2}, {a: 3}], 'a').should.eql([1,undefined, undefined, undefined,2,3]);
   });
 });
 

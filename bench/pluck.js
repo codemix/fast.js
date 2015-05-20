@@ -28,7 +28,7 @@ var getValues = utils.valueStream(20, function () {
 exports['Native Array::reduce() plucker'] = function () {
   var values = getValues();
   return values.reduce(function (plucked, item) {
-    if (item != null && item.b !== undefined) {
+    if (item != null) {
       plucked.push(item.b);
     }
     return plucked;
