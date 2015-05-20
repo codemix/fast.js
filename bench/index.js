@@ -5,7 +5,7 @@ var Benchmark = require('benchmark'),
 
 run([
 
-  bench('Native .fill() vs fast.fill() (3 items)', require('./fill-3')),
+  /*bench('Native .fill() vs fast.fill() (3 items)', require('./fill-3')),
   bench('Native .fill() vs fast.fill() (10 items)', require('./fill-10')),
   bench('Native .fill() vs fast.fill() (1000 items)', require('./fill-1000')),
 
@@ -21,7 +21,7 @@ run([
   bench('Native string comparison vs fast.intern() (short)', require('./intern-short')),
   bench('Native string comparison vs fast.intern() (medium)', require('./intern-medium')),
   bench('Native string comparison vs fast.intern() (long)', require('./intern-long')),
-
+*/
   bench('Native try {} catch (e) {} vs fast.try()', require('./try')),
   bench('Native try {} catch (e) {} vs fast.try() (single function call)', require('./try-fn')),
 
@@ -83,7 +83,6 @@ run([
   bench('Native .concat() vs fast.concat() (10 items)', require('./concat-10')),
   bench('Native .concat() vs fast.concat() (1000 items)', require('./concat-1000')),
   bench('Native .concat() vs fast.concat() (1000 items, using apply)', require('./concat-1000-apply'))
-
 ]);
 
 function bench (title, config) {
