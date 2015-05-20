@@ -1,6 +1,6 @@
-var fast = require('../'),
+var fastForEach = require('../array/forEach'),
     underscore = require('underscore'),
-    lodash = require('lodash'),
+    lodashArrayEach = require('lodash/internal/arrayEach'),
     history = require('../test/history'),
     utils = require('./utils');
 
@@ -20,7 +20,7 @@ exports['Array::forEach()'] = function () {
 
 exports['fast.forEach()'] = function () {
   global.BENCH_ACC = 0;
-  fast.forEach(input, fns());
+  fastForEach(input, fns());
 };
 
 exports['fast.forEach() v0.0.2a'] = function () {
@@ -45,5 +45,5 @@ exports['underscore.forEach()'] = function () {
 
 exports['lodash.forEach()'] = function () {
   global.BENCH_ACC = 0;
-  lodash.forEach(input, fns());
+  lodashArrayEach(input, fns());
 };
