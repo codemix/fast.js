@@ -3,9 +3,9 @@
 var bindInternal4 = require('../function/bindInternal4');
 
 /**
- * # Reduce
+ * # Reduce Right
  *
- * A fast object `.reduce()` implementation.
+ * A fast object `.reduceRight()` implementation.
  *
  * @param  {Object}   subject      The object to reduce over.
  * @param  {Function} fn           The reducer function.
