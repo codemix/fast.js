@@ -14,6 +14,7 @@ Fast.js is a collection of micro-optimisations aimed at making writing very fast
 ##What to Use fast.js for and When to Use It
 
 Use fast.js whenever you want to squeeze the speed juice out of your JavaScript code. Its methods can be up to 5 times faster than their native counterparts so it is a great tool if you'll be writing computationally expensive code.
+
 However, *don't* use fast.js for writing front-end JavaScript that will run on the browser, or in any case where speed is not crucial.
 
 ## Installation
