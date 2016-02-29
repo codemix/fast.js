@@ -4,8 +4,7 @@
 [![Build Status](https://travis-ci.org/codemix/fast.js.svg?branch=master)](https://travis-ci.org/codemix/fast.js)
 
 ## Introduction
-
-Fast.js is your solution for easily writing fast JavaScript programs. This library contains a collection of micro-optimizations which can make your JavaScript up to 5x faster. It produces faster userland (user space) reimplementations for several common builtin native JavaScript functions. Userland is the memory area where normal programs and applications run. Fast.js has fast replacements for  built-in native methods such as `.forEach`, `.map`, `.reduce` etc., as well as common utility methods such as `.clone`. 
+Fast.js is your solution for easily writing very fast JavaScript programs like web servers. This library contains a collection of small changes, for several common builtin native JavaScript functions, which make writing fast JavaScript programs easier. These micro-optimizations are capable of making your programs up to 5 times faster.  It includes fast replacements for several built-in native methods such as .forEach, .map, .reduce etc, as well as common utility methods such as .clone.  
 
 > Note: fast.js is very young and in active development. The current version is optimised for V8 (chrome / node.js) and may not perform well in other JavaScript engines, so you may not want to use it in the browser at this point. Please read the [caveats section](#caveats) before using fast.js.
 
