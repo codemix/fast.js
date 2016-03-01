@@ -17,8 +17,6 @@ Use fast.js whenever you want to squeeze the speed juice out of your JavaScript 
 
 However, *don't* use fast.js for writing front-end JavaScript that will run on the browser, or in any case where speed is not crucial. 
 
-Fast.js is useful in nodejs and writing webservers.
-
 ## Installation
 
 Via [npm](https://npmjs.org/package/fast.js):
