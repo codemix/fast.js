@@ -7,3 +7,4 @@ ci/environments/sm
 
 ci/environments/v8/v8-git-mirror
 ci/environments/v8/bench.js
+/.idea/*

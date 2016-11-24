@@ -13,7 +13,7 @@ var forEachArray = require('./array/forEach'),
  * @param  {Object}       thisContext The context for the visitor.
  */
 module.exports = function fastForEach (subject, fn, thisContext) {
-  if (subject instanceof Array) {
+  if (subject instanceof Array || subject instanceof NodeList) {
     return forEachArray(subject, fn, thisContext);
   }
   else {
