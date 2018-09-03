@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "Faster user-land reimplementations of native functions with extra helpers.",
   "main": "index.js",
+  "typings": "index.d.ts",
   "scripts": {
     "jshint": "jshint ./",
     "pretest": "npm run jshint",
@@ -33,16 +34,20 @@
   },
   "homepage": "https://github.com/codemix/fast.js",
   "devDependencies": {
-    "expect.js": "~0.3.1",
-    "should": "~4.0.4",
-    "mocha": "~1.20.1",
+    "@types/expect.js": "^0.3.29",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.9.4",
     "benchmark": "~1.0.0",
-    "microtime": "~0.6.0",
+    "browserify": "~4.1.11",
+    "expect.js": "~0.3.1",
     "istanbul": "~0.2.11",
     "jshint": "~2.5.1",
-    "underscore": "git://github.com/jashkenas/underscore.git#master",
     "lodash": "git://github.com/lodash/lodash.git#master",
-    "browserify": "~4.1.11",
-    "uglify-js": "~2.3.6"
+    "microtime": "^2.1.8",
+    "mocha": "~1.20.1",
+    "should": "~4.0.4",
+    "typescript": "^2.9.2",
+    "uglify-js": "~2.3.6",
+    "underscore": "git://github.com/jashkenas/underscore.git#master"
   }
 }
