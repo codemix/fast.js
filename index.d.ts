@@ -118,6 +118,8 @@ export interface Fast<T> {
    * Item length
    */
   readonly length: number
+
+  readonly [n: number]: T
 }
 
 /**
@@ -137,4 +139,4 @@ export interface Fast<T> {
  * @param {Array} value The value to wrap
  * @return Fast instance
  */
-export default function Fast<T> (value: Array<T>): Fast<T>
+export default function Fast<T> (value: ArrayLike<T>): Fast<T>
